@@ -1,0 +1,13 @@
+* text=auto eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+*.php text eol=lf
+
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore
