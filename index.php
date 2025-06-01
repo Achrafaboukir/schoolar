@@ -4,39 +4,49 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Define base path
+define('BASE_PATH', '/schoolar/schoolar');
+
+// Load dependencies
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/routes.php';
+require_once __DIR__ . '/classes/JWT.php';
+
 // Load environment variables
-require_once 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// Set headers for CORS and JSON
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
-
-// Handle preflight requests
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-// Database connection
+// Create database connection
 try {
     $db = new PDO(
-        "mysql:host=" . getenv('DB_HOST') . ";dbname=" . getenv('DB_NAME'),
-        getenv('DB_USER'),
-        getenv('DB_PASS')
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME,
+        DB_USER,
+        DB_PASSWORD
     );
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
-    exit();
+    die("Connection failed: " . $e->getMessage());
 }
 
-// Initialize router and handle request
-require_once 'routes.php';
+// Initialize router
 $router = new Router($db);
+
+// Get the request path
+$request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$script_name = dirname($_SERVER['SCRIPT_NAME']);
+
+// Remove script path from request URI if it exists
+if (strpos($request_uri, $script_name) === 0) {
+    $request_uri = substr($request_uri, strlen($script_name));
+}
+
+// Set content type based on request
+$content_type = isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false
+    ? 'application/json'
+    : 'text/html';
+header('Content-Type: ' . $content_type);
+
+// Handle the request
 $router->handleRequest(); 

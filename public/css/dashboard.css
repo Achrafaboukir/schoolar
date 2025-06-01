@@ -1,0 +1,326 @@
+/* Dashboard Layout */
+:root {
+    --primary-color: #7F56D9;
+    --sidebar-bg: #1D2939;
+    --text-light: #D0D5DD;
+    --text-dark: #101828;
+    --border-color: #E4E7EC;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F9FAFB;
+    color: var(--text-dark);
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 280px;
+    background: var(--sidebar-bg);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    background: #FF5733;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+.brand-name {
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-item {
+    margin: 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    color: var(--text-light);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-item.active .nav-link {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.nav-link i {
+    font-size: 20px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Top Navigation */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.page-title {
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: #667085;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+    background: #F9FAFB;
+    color: var(--text-dark);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.stat-icon.students {
+    background: rgba(127, 86, 217, 0.1);
+    color: var(--primary-color);
+}
+
+.stat-icon.teachers {
+    background: rgba(255, 86, 48, 0.1);
+    color: #FF5630;
+}
+
+.stat-icon.courses {
+    background: rgba(255, 171, 0, 0.1);
+    color: #FFAB00;
+}
+
+.stat-icon.feedback {
+    background: rgba(54, 179, 126, 0.1);
+    color: #36B37E;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #667085;
+}
+
+/* Tables */
+.table-section {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-top: 24px;
+}
+
+.table-header {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.table-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    font-weight: 500;
+    color: #667085;
+    background: #F9FAFB;
+}
+
+.data-table td {
+    color: var(--text-dark);
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: rgba(54, 179, 126, 0.1);
+    color: #36B37E;
+}
+
+.status-badge.inactive {
+    background: rgba(240, 68, 56, 0.1);
+    color: #F04438;
+}
+
+.table-pagination {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.page-numbers {
+    display: flex;
+    gap: 2px;
+}
+
+.page-numbers button {
+    min-width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: #667085;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-numbers button:hover,
+.page-numbers button.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+} 
