@@ -9,7 +9,7 @@
             <i class="fas fa-user-graduate"></i>
         </div>
         <div class="stat-info">
-            <div class="stat-value">932</div>
+            <div class="stat-value">{{ $stats['total_students'] }}</div>
             <div class="stat-label">Students</div>
         </div>
     </div>
@@ -19,7 +19,7 @@
             <i class="fas fa-chalkboard-teacher"></i>
         </div>
         <div class="stat-info">
-            <div class="stat-value">754</div>
+            <div class="stat-value">{{ $stats['total_teachers'] }}</div>
             <div class="stat-label">Teachers</div>
         </div>
     </div>
@@ -29,104 +29,106 @@
             <i class="fas fa-book"></i>
         </div>
         <div class="stat-info">
-            <div class="stat-value">40</div>
+            <div class="stat-value">{{ $stats['total_courses'] }}</div>
             <div class="stat-label">Courses</div>
         </div>
     </div>
 
     <div class="stat-card">
-        <div class="stat-icon feedback">
-            <i class="fas fa-comments"></i>
+        <div class="stat-icon groups">
+            <i class="fas fa-users"></i>
         </div>
         <div class="stat-info">
-            <div class="stat-value">32</div>
-            <div class="stat-label">Feedback</div>
+            <div class="stat-value">{{ $stats['total_groups'] }}</div>
+            <div class="stat-label">Groups</div>
         </div>
     </div>
 </div>
 
 <div class="table-section">
     <div class="table-header">
-        <h2 class="table-title">Teachers</h2>
+        <h2 class="table-title">Teachers Overview</h2>
         <a href="{{ url('/teachers') }}" class="btn btn-link">See all</a>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
+                <th>Teacher</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Courses</th>
+                <th>Contact</th>
             </tr>
         </thead>
         <tbody>
+            @foreach($teachers as $teacher)
             <tr>
-                <td>1</td>
-                <td>Achraf aboukir</td>
-                <td>Aboukrachraf@gmail.com</td>
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        @if($teacher->photo)
+                            <img src="{{ asset($teacher->photo) }}" alt="{{ $teacher->full_name }}" class="rounded-circle" width="32" height="32">
+                        @else
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        @endif
+                        <div>
+                            <div class="fw-medium">{{ $teacher->full_name }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ $teacher->department }}</td>
+                <td>
+                    <span class="status-badge {{ strtolower($teacher->status) }}">
+                        {{ $teacher->status }}
+                    </span>
+                </td>
+                <td>
+                    <div class="d-flex flex-column">
+                        <div class="fw-medium">{{ $teacher->teachingCourses->count() }} Courses</div>
+                        <div class="text-muted small">
+                            @foreach($teacher->teachingCourses->take(2) as $course)
+                                {{ $course->title }}{{ !$loop->last ? ', ' : '' }}
+                            @endforeach
+                            @if($teacher->teachingCourses->count() > 2)
+                                <span class="text-muted">...</span>
+                            @endif
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex flex-column">
+                        <div>{{ $teacher->email }}</div>
+                        <div class="text-muted small">{{ $teacher->number }}</div>
+                    </div>
+                </td>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>Achraf aboukir</td>
-                <td>Aboukrachraf@gmail.com</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Achraf aboukir</td>
-                <td>Aboukrachraf@gmail.com</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Achraf aboukir</td>
-                <td>Aboukrachraf@gmail.com</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Achraf aboukir</td>
-                <td>Aboukrachraf@gmail.com</td>
-            </tr>
+            @endforeach
         </tbody>
     </table>
 </div>
 
 <div class="table-section">
     <div class="table-header">
-        <h2 class="table-title">Courses</h2>
+        <h2 class="table-title">Recent Courses</h2>
         <a href="{{ url('/courses') }}" class="btn btn-link">See all</a>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Title</th>
                 <th>Teacher</th>
+                <th>Group</th>
             </tr>
         </thead>
         <tbody>
+            @foreach($teachers->flatMap->teachingCourses->take(5) as $course)
             <tr>
-                <td>1</td>
-                <td>Course 1</td>
-                <td>Achraf Aboukir</td>
+                <td>{{ $course->title }}</td>
+                <td>{{ $course->teacher->full_name }}</td>
+                <td>{{ $course->group->name }}</td>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>Course 2</td>
-                <td>Achraf Aboukir</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Course 4</td>
-                <td>Achraf Aboukir</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Course 5</td>
-                <td>Achraf Aboukir</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Course 6</td>
-                <td>Achraf Aboukir</td>
-            </tr>
+            @endforeach
         </tbody>
     </table>
 </div>

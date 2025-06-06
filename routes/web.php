@@ -25,6 +25,11 @@ Route::resource('groups', GroupController::class);
 
 // Teacher routes
 Route::prefix('teachers')->name('teachers.')->group(function () {
+    Route::get('/', [TeacherController::class, 'index'])->name('index');
+    Route::post('/', [TeacherController::class, 'store'])->name('store');
+    Route::put('/{teacher}', [TeacherController::class, 'update'])->name('update');
+    Route::delete('/{teacher}', [TeacherController::class, 'destroy'])->name('destroy');
+    
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
     Route::get('/courses', [TeacherController::class, 'myCourses'])->name('courses.index');
     Route::get('/courses/create', [TeacherController::class, 'createCourse'])->name('courses.create');

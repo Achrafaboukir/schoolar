@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Course;
+use App\Models\Role;
 
 class DashboardController extends Controller
 {
@@ -14,7 +15,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // For testing purposes, we'll show some basic stats
+        // Get teachers with their courses and basic stats
+        $teacherRole = Role::where('is_teacher', true)->first();
+        $teachers = User::where('role_id', $teacherRole->id)
+            ->with(['teachingCourses', 'teachingCourses.group'])
+            ->take(5)
+            ->get();
+
         $stats = [
             'total_teachers' => User::whereHas('role', function($query) {
                 $query->where('is_teacher', true);
@@ -26,6 +33,6 @@ class DashboardController extends Controller
             'total_courses' => Course::count(),
         ];
 
-        return view('dashboard', compact('stats'));
+        return view('dashboard', compact('stats', 'teachers'));
     }
 }
