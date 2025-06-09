@@ -55,4 +55,30 @@ class RoleController extends Controller
         $role->save();
         return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
     }
+
+    public function createForm()
+    {
+        return view('roles._form', [
+            'action' => route('roles.store'),
+            'method' => 'POST',
+            'submitLabel' => 'Save Role',
+        ]);
+    }
+
+    public function editForm(Role $role)
+    {
+        return view('roles._form', [
+            'action' => route('roles.update', $role),
+            'method' => 'PUT',
+            'submitLabel' => 'Update Role',
+            'role' => $role
+        ]);
+    }
+
+    // Add a show method to satisfy resourceful route requirements
+    public function show(Role $role)
+    {
+        // You can customize this as needed, for now just show the edit view or a simple view
+        return redirect()->route('roles.edit', $role);
+    }
 }

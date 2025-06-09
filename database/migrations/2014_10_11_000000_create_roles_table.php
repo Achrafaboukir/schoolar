@@ -20,6 +20,7 @@ class CreateRolesTable extends Migration
             $table->string('permissions');
             $table->tinyInteger('is_deleted')->default(0);
             $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
         });
 
@@ -51,4 +52,4 @@ class CreateRolesTable extends Migration
     {
         Schema::dropIfExists('roles');
     }
-} 
+}

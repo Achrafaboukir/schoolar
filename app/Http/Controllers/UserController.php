@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = \App\Models\Role::where('is_deleted', false)->get();
+        $roles = Role::where('is_deleted', false)->get();
         return view('users.create', compact('roles'));
     }
 
@@ -82,7 +82,7 @@ class UserController extends Controller
         if ($user->isSuperAdmin()) {
             abort(403);
         }
-        $roles = \App\Models\Role::where('is_deleted', false)->get();
+        $roles = Role::where('is_deleted', false)->get();
         return view('users.edit', compact('user', 'roles'));
     }
 
@@ -178,5 +178,11 @@ class UserController extends Controller
         // For now, we'll just flash it to the session
         return redirect()->route('users.index')
             ->with('success', "Password reset successfully. New password: {$newPassword}");
+    }
+
+    // Add a show method to satisfy resourceful route requirements
+    public function show(User $user)
+    {
+        return redirect()->route('users.edit', $user);
     }
 }

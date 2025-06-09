@@ -1,146 +1,101 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'User Management')
-
+@section('page-title', 'User management')
 @section('content')
-<div class="content-wrapper">
-    <div class="table-section">
-        <div class="table-header">
-            <div class="d-flex gap-3 align-items-center">
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        Add filter
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Role</a></li>
-                        <li><a class="dropdown-item" href="#">Status</a></li>
-                        <li><a class="dropdown-item" href="#">Date</a></li>
-                    </ul>
-                </div>
-                <div class="search-box flex-grow-1">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0">
-                            <i class="fas fa-search text-muted"></i>
-                        </span>
-                        <input type="text" class="form-control border-start-0" placeholder="Search users by name or email">
-                    </div>
-                </div>
+<div class="table-section">
+    <div class="table-header">
+        <div class="d-flex gap-3 align-items-center">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Add filter
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Status</a></li>
+                    <li><a class="dropdown-item" href="#">Group</a></li>
+                    <li><a class="dropdown-item" href="#">Date</a></li>
+                </ul>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary">Clear all</button>
-                <a href="{{ route('users.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>Add new user
-                </a>
+            <div class="search-box flex-grow-1">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" placeholder="Search for a user by name or email">
+                </div>
             </div>
         </div>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>ROLE</th>
-                    <th>STATUS</th>
-                    <th>NAME</th>
-                    <th>EMAIL</th>
-                    <th>NUMBER</th>
-                    <th>DEPARTMENT</th>
-                    <th>ACTIONS</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($users as $user)
-                <tr>
-                    <td>{{ $user->id }}</td>
-                    <td>{{ $user->role->name }}</td>
-                    <td><span class="status-badge {{ strtolower($user->status) }}">{{ $user->status }}</span></td>
-                    <td>{{ $user->firstname }} {{ $user->lastname }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->number }}</td>
-                    <td>{{ $user->department ?? '-' }}</td>
-                    <td>
-                        <div class="d-flex gap-2">
-                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-icon btn-outline-danger" 
-                                        onclick="return confirm('Are you sure you want to delete this user?')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-                            <a href="{{ route('users.edit', $user) }}" 
-                               class="btn btn-sm btn-icon btn-outline-primary">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <form action="{{ route('users.reset-password', $user) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-icon btn-outline-warning"
-                                        onclick="return confirm('Are you sure you want to reset this user\'s password?')">
-                                    <i class="fas fa-key"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="table-pagination">
-            <div>
-                <span class="text-muted">Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() ?? 0 }} results</span>
-            </div>
-            <div class="page-numbers">
-                {{ $users->links() }}
-            </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary">Clear all</button>
+            <button class="btn btn-primary" id="add-user-btn">
+                <i class="fas fa-plus me-2"></i>Add new user
+            </button>
         </div>
     </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($users as $user)
+            <tr>
+                <td>{{ $user->firstname }} {{ $user->lastname }}</td>
+                <td>{{ $user->email }}</td>
+                <td>{{ $user->role->name ?? '' }}</td>
+                <td>{{ $user->status }}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm edit-user-btn" data-id="{{ $user->id }}" title="Edit User"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm delete-user-btn" data-id="{{ $user->id }}" title="Delete User"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-warning btn-sm reset-password-user-btn" data-id="{{ $user->id }}" title="Reset Password"><i class="fas fa-key"></i></button>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    {{ $users->links() }}
 </div>
 
-@push('styles')
-<style>
-.content-wrapper {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+<!-- User CRUD Modal (AJAX content loaded here) -->
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" id="user-modal-content">
+      <!-- Modal content will be loaded here -->
+    </div>
+  </div>
+</div>
 
-.search-box .input-group {
-    border-radius: 8px;
-    overflow: hidden;
-}
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add User
+    document.getElementById('add-user-btn').addEventListener('click', function() {
+        fetch("{{ route('users.create-form') }}")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('user-modal-content').innerHTML = html;
+                new bootstrap.Modal(document.getElementById('userModal')).show();
+            });
+    });
 
-.search-box .form-control {
-    padding: 12px;
-}
+    // Edit User
+    document.querySelectorAll('.edit-user-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            fetch(`/users/${id}/edit-form`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('user-modal-content').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('userModal')).show();
+                });
+        });
+    });
 
-.search-box .input-group-text {
-    padding: 0 12px;
-}
-
-.btn-icon {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.status-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-}
-
-.status-badge.active {
-    background-color: #d1fae5;
-    color: #059669;
-}
-
-.status-badge.inactive {
-    background-color: #fee2e2;
-    color: #dc2626;
-}
-</style>
-@endpush 
+});
+</script>
+@endpush
+@endsection

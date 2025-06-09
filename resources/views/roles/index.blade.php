@@ -18,9 +18,9 @@
             </div>
             <div class="d-flex gap-2">
                 <button class="btn btn-outline-secondary">Clear all</button>
-                <a href="{{ route('roles.create') }}" class="btn btn-primary">
+                <button class="btn btn-primary" id="openAddRoleModal">
                     <i class="fas fa-plus me-2"></i>Add new role
-                </a>
+                </button>
             </div>
         </div>
         <table class="data-table">
@@ -51,7 +51,7 @@
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
-                            <a href="{{ route('roles.edit', $role) }}" class="btn btn-sm btn-icon btn-outline-primary">
+                            <a href="#" class="btn btn-sm btn-icon btn-outline-primary edit-role" data-form-url="{{ route('roles.edit-form', $role) }}">
                                 <i class="fas fa-edit"></i>
                             </a>
                         </div>
@@ -74,4 +74,64 @@
         </div>
     </div>
 </div>
+
+<!-- Add Role Modal -->
+<div class="modal fade" id="addRoleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg"><!-- modal-lg for large modal -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="addRoleModalBody">
+                <!-- Form will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Role Modal -->
+<div class="modal fade" id="editRoleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg"><!-- modal-lg for large modal -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="editRoleModalBody">
+                <!-- Form will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Open Add Role Modal and load form
+    document.getElementById('openAddRoleModal').addEventListener('click', function() {
+        fetch("{{ route('roles.create-form') }}")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('addRoleModalBody').innerHTML = html;
+                new bootstrap.Modal(document.getElementById('addRoleModal')).show();
+            });
+    });
+
+    // Open Edit Role Modal and load form
+    document.querySelectorAll('.edit-role').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-form-url');
+            fetch(url)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('editRoleModalBody').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('editRoleModal')).show();
+                });
+        });
+    });
+});
+</script>
+@endpush
 @endsection

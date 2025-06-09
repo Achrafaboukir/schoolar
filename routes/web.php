@@ -20,6 +20,10 @@ Route::get('/', function () {
 // Dashboard route
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+// Add AJAX-only routes for role form modals
+Route::get('/roles/create-form', [RoleController::class, 'createForm'])->name('roles.create-form');
+Route::get('/roles/{role}/edit-form', [RoleController::class, 'editForm'])->name('roles.edit-form');
+
 // Admin routes
 Route::resource('users', UserController::class);
 Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
@@ -75,6 +79,12 @@ Route::get('/courses/{courseId}/documents', function ($courseId) {
         'documents' => $documents
     ]);
 });
+
+// AJAX modal routes for user CRUD
+Route::get('users/create-form', [App\Http\Controllers\UserController::class, 'createForm'])->name('users.create-form');
+Route::get('users/{user}/edit-form', [App\Http\Controllers\UserController::class, 'editForm'])->name('users.edit-form');
+Route::get('users/{user}/delete-modal', [App\Http\Controllers\UserController::class, 'deleteModal'])->name('users.delete-modal');
+Route::get('users/{user}/reset-password-modal', [App\Http\Controllers\UserController::class, 'resetPasswordModal'])->name('users.reset-password-modal');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
