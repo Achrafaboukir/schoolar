@@ -54,7 +54,7 @@
                 <td>{{ $student->lastname }}</td>
                 <td>{{ $student->email }}</td>
                 <td>{{ $student->number }}</td>
-                <td>{{ $student->group }}</td>
+                <td>{{ $student->group->name }}</td>
                 <td>
                     <div class="d-flex gap-2">
                         <button class="btn btn-sm btn-icon btn-outline-danger delete-student" data-id="{{ $student->id }}">
@@ -105,16 +105,16 @@
                         <div class="col-md-6">
                             <label class="form-label">Status</label>
                             <select class="form-select" name="status" required>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Group</label>
                             <select class="form-select" name="group" required>
-                                <option value="3ISI">3ISI</option>
-                                <option value="4ISI">4ISI</option>
-                                <option value="5ISI">5ISI</option>
+                                @foreach($groups ?? [] as $group)
+                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -328,4 +328,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endpush 
+@endpush

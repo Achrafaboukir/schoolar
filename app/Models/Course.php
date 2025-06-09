@@ -17,12 +17,18 @@ class Course extends Model
         'group_id',
         'start_date',
         'end_date',
-        'status'
+        'status',
+        'is_deleted'
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
-        'end_date' => 'datetime'
+        'end_date' => 'datetime',
+        'status' => 'boolean',
+        'is_deleted' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime'
     ];
 
     /**
@@ -30,10 +36,9 @@ class Course extends Model
      */
     public function teacher()
     {
-        return $this->belongsTo(User::class, 'teacher_id')
-                    ->whereHas('role', function($query) {
-                        $query->where('is_teacher', true);
-                    });
+        return $this->belongsTo(User::class, 'teacher_id')->whereHas('role', function($query) {
+            $query->where('is_teacher', true);
+        });
     }
 
     /**
@@ -45,15 +50,11 @@ class Course extends Model
     }
 
     /**
-     * Get the students enrolled in the course.
+     * Get the students enrolled in the course through their group.
      */
     public function students()
     {
-        return $this->belongsToMany(User::class, 'course_student')
-                    ->whereHas('role', function($query) {
-                        $query->where('is_student', true);
-                    })
-                    ->withTimestamps();
+        return $this->hasManyThrough(Student::class, Group::class);
     }
 
     /**

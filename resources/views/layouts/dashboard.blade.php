@@ -48,9 +48,15 @@
                     </a>
                 </li>
                 <li class="nav-item {{ request()->is('events*') ? 'active' : '' }}">
-                    <a href="{{ url('/events') }}" class="nav-link">
-                        <i class="fas fa-calendar"></i>
-                        <span>Event</span>
+                    <a href="{{ url('/groups') }}" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Groups</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->is('departments*') ? 'active' : '' }}">
+                    <a href="{{ url('/departments') }}" class="nav-link">
+                        <i class="fas fa-building"></i>
+                        <span>Departments</span>
                     </a>
                 </li>
                 <li class="nav-item {{ request()->is('users*') ? 'active' : '' }}">
@@ -96,4 +102,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 </body>
-</html> 
+</html>

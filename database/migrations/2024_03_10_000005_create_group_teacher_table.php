@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateGroupTeacherTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('group_teacher', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('group_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamp('assigned_at')->useCurrent();
-            $table->timestamps();
-
-            $table->unique(['group_id', 'user_id']);
+            $table->integer('id')->autoIncrement();
+            $table->integer('group_id');
+            $table->integer('teacher_id');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            
+            // Add unique constraint instead of foreign keys
+            $table->unique(['group_id', 'teacher_id']);
         });
     }
 
@@ -29,4 +30,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('group_teacher');
     }
-};
+}

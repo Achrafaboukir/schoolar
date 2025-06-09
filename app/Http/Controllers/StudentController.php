@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\Group;
+
 
 class StudentController extends Controller
 {
@@ -15,7 +17,8 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::paginate(10);
-        return view('students.index', compact('students'));
+        $groups = Group::all();
+        return view('students.index', compact('students', 'groups'));
     }
 
     /**
@@ -29,7 +32,7 @@ class StudentController extends Controller
             'email' => 'required|email|unique:students',
             'number' => 'required|string|max:20',
             'group' => 'required|string|max:50',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|integer|in:0,1', 
             'date_of_birth' => 'required|date',
             'picture' => 'nullable|image|max:2048',
             'baccaloriat' => 'nullable|file|max:2048'

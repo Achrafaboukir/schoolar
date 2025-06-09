@@ -16,12 +16,10 @@ class Role extends Model
      */
     protected $fillable = [
         'name',
-        'slug',
-        'description',
         'is_teacher',
-        'is_student',
         'is_admin',
-        'is_super_admin'
+        'permissions',
+        'is_deleted'
     ];
 
     /**
@@ -31,9 +29,10 @@ class Role extends Model
      */
     protected $casts = [
         'is_teacher' => 'boolean',
-        'is_student' => 'boolean',
         'is_admin' => 'boolean',
-        'is_super_admin' => 'boolean'
+        'is_deleted' => 'boolean',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime'
     ];
 
     /**

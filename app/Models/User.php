@@ -20,19 +20,18 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_id',
         'firstname',
         'lastname',
         'email',
         'number',
+        'group_id',
         'password',
         'date_of_birth',
         'photo',
         'cv',
-        'baccaloriat',
-        'department',
-        'group_id',
-        'status'
+        'role_id',
+        'status',
+        'is_deleted'
     ];
 
     /**
@@ -42,7 +41,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -51,8 +49,12 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'date_of_birth' => 'date',
+        'status' => 'boolean',
+        'is_deleted' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
         'password' => 'hashed',
     ];
 
@@ -62,14 +64,6 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
-    }
-
-    /**
-     * Check if the user is a super admin.
-     */
-    public function isSuperAdmin()
-    {
-        return $this->role->is_super_admin;
     }
 
     /**
@@ -89,19 +83,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user is a student.
-     */
-    public function isStudent()
-    {
-        return $this->role->is_student;
-    }
-
-    /**
      * Get the courses that the user teaches (if teacher).
      */
     public function teachingCourses()
     {
         return $this->hasMany(Course::class, 'teacher_id');
+    }
+
+    /**
+     * Get the user's group.
+     */
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 
     /**
@@ -127,5 +121,10 @@ class User extends Authenticatable
     public function getFullNameAttribute()
     {
         return "{$this->firstname} {$this->lastname}";
+    }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'teacher_id');
     }
 }

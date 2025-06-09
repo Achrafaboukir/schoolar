@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('groups', function (Blueprint $table) {
-            $table->id();
+        Schema::create('departments', function (Blueprint $table) {
+            $table->integer('id')->autoIncrement();
             $table->string('name');
-            $table->string('department');
-            $table->integer('year');
-            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->text('description')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('departments');
     }
 };

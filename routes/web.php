@@ -8,6 +8,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\DepartmentController;
 
 // Public routes
 Route::get('/', function () {
@@ -22,6 +23,7 @@ Route::resource('users', UserController::class);
 Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
 Route::resource('roles', RoleController::class);
 Route::resource('groups', GroupController::class);
+Route::resource('departments', DepartmentController::class);
 
 // Teacher routes
 Route::prefix('teachers')->name('teachers.')->group(function () {

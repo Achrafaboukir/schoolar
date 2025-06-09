@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateStudentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,18 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id')->autoIncrement();
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email')->unique();
             $table->string('student_number')->unique();
             $table->string('password');
-            $table->string('group_id');
+            $table->integer('group_id');
             $table->date('date_of_birth');
             $table->string('photo')->nullable();
-            $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('is_deleted')->default(0);
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 
@@ -34,4 +36,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('students');
     }
-}; 
+} 

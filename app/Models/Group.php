@@ -12,10 +12,21 @@ class Group extends Model
 
     protected $fillable = [
         'name',
-        'department',
+        'department_id',
         'year',
         'status',
-        'description'
+        'description',
+        'is_deleted'
+    ];
+
+    protected $casts = [
+        'year' => 'integer',
+        'status' => 'boolean',
+        'department_id' => 'integer',
+        'is_deleted' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime'
     ];
 
     /**
@@ -23,8 +34,7 @@ class Group extends Model
      */
     public function students()
     {
-        return $this->belongsToMany(Student::class, 'group_student')
-                    ->withTimestamps();
+        return $this->hasMany(Student::class);
     }
 
     /**
@@ -32,11 +42,9 @@ class Group extends Model
      */
     public function teachers()
     {
-        return $this->belongsToMany(User::class, 'group_teacher')
-                    ->whereHas('role', function($query) {
-                        $query->where('is_teacher', true);
-                    })
-                    ->withTimestamps();
+        return $this->hasMany(User::class)->whereHas('role', function($query) {
+            $query->where('is_teacher', true);
+        });
     }
 
     /**

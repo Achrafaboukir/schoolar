@@ -3,14 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 
-class Student extends Authenticatable
+class Student extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -23,10 +20,11 @@ class Student extends Authenticatable
         'email',
         'student_number',
         'password',
+        'group_id',
         'date_of_birth',
         'photo',
         'status',
-        'baccaloriat'
+        'is_deleted'
     ];
 
     /**
@@ -36,7 +34,6 @@ class Student extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -45,55 +42,36 @@ class Student extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'date_of_birth' => 'date',
+        'status' => 'boolean',
+        'is_deleted' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
     /**
-     * Get the role associated with the student.
+     * Get the student's group.
      */
-    public function role()
+    public function group()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Group::class);
     }
 
     /**
-     * Get the groups this student belongs to.
-     */
-    public function groups()
-    {
-        return $this->belongsToMany(Group::class, 'group_student')
-                    ->withTimestamps();
-    }
-
-    /**
-     * Get the courses this student is enrolled in through their groups.
+     * Get the student's courses through their group.
      */
     public function courses()
     {
-        return $this->hasManyThrough(
-            Course::class,
-            Group::class,
-            'id', // Foreign key on group_student table...
-            'group_id', // Foreign key on courses table...
-            'id', // Local key on students table...
-            'id' // Local key on groups table...
-        );
+        return $this->hasManyThrough(Course::class, Group::class);
     }
 
     /**
-     * Get the feedback provided by the student.
+     * Get the student's full name.
      */
-    public function feedback()
+    public function getFullNameAttribute()
     {
-        return $this->hasMany(Feedback::class);
-    }
-
-    /**
-     * Get the quiz responses submitted by the student.
-     */
-    public function quizResponses()
-    {
-        return $this->hasMany(QuizResponse::class);
+        return "{$this->firstname} {$this->lastname}";
     }
 }

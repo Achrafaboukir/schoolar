@@ -104,6 +104,7 @@ body {
     min-height: 100vh;
     background: #F9FAFB;
     position: relative;
+    padding: 20px;
 }
 
 .content {
