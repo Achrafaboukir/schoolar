@@ -21,6 +21,11 @@
     @stack('styles')
 </head>
 <body>
+    <!-- Toggle Sidebar Button -->
+    <button class="toggle-sidebar-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <div class="dashboard-container">
         <!-- Sidebar -->
         <div class="sidebar">
@@ -65,6 +70,12 @@
                         <span>User</span>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->is('courses*') ? 'active' : '' }}">
+                    <a href="{{ url('/courses') }}" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Courses</span>
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -100,6 +111,12 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
     @stack('scripts')
 </body>
 </html>

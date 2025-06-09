@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         $users = User::with('role')
             ->whereHas('role', function($query) {
-                $query->where('is_super_admin', false);
+                $query->where('is_admin', true);
             })
             ->paginate(10);
 
@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::where('is_super_admin', false)->get();
+        $roles = \App\Models\Role::where('is_deleted', false)->get();
         return view('users.create', compact('roles'));
     }
 
@@ -82,8 +82,7 @@ class UserController extends Controller
         if ($user->isSuperAdmin()) {
             abort(403);
         }
-
-        $roles = Role::where('is_super_admin', false)->get();
+        $roles = \App\Models\Role::where('is_deleted', false)->get();
         return view('users.edit', compact('user', 'roles'));
     }
 
@@ -180,4 +179,4 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success', "Password reset successfully. New password: {$newPassword}");
     }
-} 
+}

@@ -72,4 +72,12 @@ class Course extends Model
     {
         return $this->hasMany(Quiz::class);
     }
+
+    /**
+     * Get the documents for the course.
+     */
+    public function documents()
+    {
+        return $this->hasMany(CourseDocument::class);
+    }
 }

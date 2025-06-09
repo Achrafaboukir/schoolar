@@ -1,0 +1,77 @@
+@extends('layouts.dashboard')
+
+@section('page-title', 'Edit User')
+
+@section('content')
+<div class="content-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Edit User</div>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('users.update', $user) }}" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="firstname" class="form-control" value="{{ $user->firstname }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="lastname" class="form-control" value="{{ $user->lastname }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select name="role_id" class="form-select" required>
+                                <option value="">Select Role</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Number</label>
+                            <input type="text" name="number" class="form-control" value="{{ $user->number }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <input type="text" name="department" class="form-control" value="{{ $user->department }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select" required>
+                                <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" name="date_of_birth" class="form-control" value="{{ $user->date_of_birth }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Photo</label>
+                            <input type="file" name="photo" class="form-control">
+                            @if($user->photo)
+                                <img src="{{ asset('storage/' . $user->photo) }}" alt="Photo" class="img-thumbnail mt-2" width="80">
+                            @endif
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">CV</label>
+                            <input type="file" name="cv" class="form-control">
+                            @if($user->cv)
+                                <a href="{{ asset('storage/' . $user->cv) }}" target="_blank" class="d-block mt-2">View CV</a>
+                            @endif
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update User</button>
+                        <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

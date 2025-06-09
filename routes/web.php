@@ -9,6 +9,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseDocumentController;
 
 // Public routes
 Route::get('/', function () {
@@ -48,6 +50,31 @@ Route::get('/students', [StudentController::class, 'index'])->name('students.ind
 Route::post('/students', [StudentController::class, 'store'])->name('students.store');
 Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
 Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+
+// Course routes
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
+Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
+Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
+
+// Course document routes
+Route::post('/courses/{courseId}/documents', [CourseDocumentController::class, 'store'])->name('course.documents.store');
+Route::delete('/course-documents/{id}', [CourseDocumentController::class, 'destroy'])->name('course.documents.destroy');
+
+Route::get('/courses/{courseId}/documents', function ($courseId) {
+    $course = \App\Models\Course::findOrFail($courseId);
+    $documents = $course->documents()
+        ->where('is_deleted', false)
+        ->get()
+        ->map(function ($doc) {
+            $doc->formatted_file_size = $doc->formatted_file_size;
+            return $doc;
+        });
+    
+    return response()->json([
+        'documents' => $documents
+    ]);
+});
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
