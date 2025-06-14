@@ -35,7 +35,7 @@
     </div>
 
     <div class="stat-card">
-        <div class="stat-icon groups">
+        <div class="stat-icon groups" style="color: #fff;">
             <i class="fas fa-users"></i>
         </div>
         <div class="stat-info">
