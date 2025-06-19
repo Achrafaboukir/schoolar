@@ -70,6 +70,12 @@
                         <span>User</span>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->is('roles*') ? 'active' : '' }}">
+                    <a href="{{ url('/roles') }}" class="nav-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Roles</span>
+                    </a>
+                </li>
                 <li class="nav-item {{ request()->is('courses*') ? 'active' : '' }}">
                     <a href="{{ url('/courses') }}" class="nav-link">
                         <i class="fas fa-book"></i>

@@ -38,9 +38,17 @@
                     <td>{{ $role->id }}</td>
                     <td>{{ $role->name }}</td>
                     <td>
-                        @foreach((array) json_decode($role->permissions, true) as $perm)
+                        @php
+                            $permissions = (array) json_decode($role->permissions, true);
+                            $totalPermissions = count($permissions);
+                            $displayPermissions = array_slice($permissions, 0, 3);
+                        @endphp
+                        @foreach($displayPermissions as $perm)
                             <span class="badge bg-light text-dark">{{ $perm }}</span>
                         @endforeach
+                        @if($totalPermissions > 3)
+                            <span class="badge bg-secondary text-white">+{{ $totalPermissions - 3 }} more</span>
+                        @endif
                     </td>
                     <td>
                         <div class="d-flex gap-2">

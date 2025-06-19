@@ -84,3 +84,45 @@
     <button type="submit" class="btn btn-primary">{{ $submitLabel }}</button>
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to check if any permission in a section is checked
+    function hasCheckedPermissions(sectionId) {
+        const checkboxes = document.querySelectorAll(`#${sectionId} input[type="checkbox"]`);
+        return Array.from(checkboxes).some(checkbox => checkbox.checked);
+    }
+
+    // Function to open accordion sections with checked permissions
+    function openSectionsWithCheckedPermissions() {
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const collapseId = item.querySelector('.accordion-collapse').id;
+            if (hasCheckedPermissions(collapseId)) {
+                const collapse = new bootstrap.Collapse(document.getElementById(collapseId), {
+                    toggle: false
+                });
+                collapse.show();
+            }
+        });
+    }
+
+    // Open sections with checked permissions on page load
+    openSectionsWithCheckedPermissions();
+
+    // Listen for checkbox changes to open sections when permissions are checked
+    document.addEventListener('change', function(e) {
+        if (e.target.type === 'checkbox' && e.target.name === 'permissions[]') {
+            const accordionItem = e.target.closest('.accordion-item');
+            const collapseId = accordionItem.querySelector('.accordion-collapse').id;
+            
+            if (e.target.checked) {
+                const collapse = new bootstrap.Collapse(document.getElementById(collapseId), {
+                    toggle: false
+                });
+                collapse.show();
+            }
+        }
+    });
+});
+</script>

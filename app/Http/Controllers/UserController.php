@@ -46,10 +46,11 @@ class UserController extends Controller
             'role_id' => 'required|exists:roles,id',
             'number' => 'required|string|max:20',
             'department' => 'required_if:is_teacher,true|string|max:100|nullable',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:1,0',
             'date_of_birth' => 'required|date',
             'photo' => 'nullable|image|max:2048',
-            'cv' => 'nullable|file|max:5120'
+            'cv' => 'nullable|file|max:5120',
+            'password' => 'required|string|min:6',
         ]);
 
         // Handle file uploads
@@ -65,8 +66,8 @@ class UserController extends Controller
             $validated['cv'] = $cvPath;
         }
 
-        // Generate random password
-        $validated['password'] = Hash::make(str_random(10));
+        // Hash the provided password
+        $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
 
@@ -79,9 +80,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        if ($user->isSuperAdmin()) {
-            abort(403);
-        }
+        
         $roles = Role::where('is_deleted', false)->get();
         return view('users.edit', compact('user', 'roles'));
     }
@@ -91,9 +90,6 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        if ($user->isSuperAdmin()) {
-            abort(403);
-        }
 
         $validated = $request->validate([
             'firstname' => 'required|string|max:255',
@@ -102,10 +98,11 @@ class UserController extends Controller
             'role_id' => 'required|exists:roles,id',
             'number' => 'required|string|max:20',
             'department' => 'required_if:is_teacher,true|string|max:100|nullable',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:1,0',
             'date_of_birth' => 'required|date',
             'photo' => 'nullable|image|max:2048',
-            'cv' => 'nullable|file|max:5120'
+            'cv' => 'nullable|file|max:5120',
+            'password' => 'nullable|string|min:6',
         ]);
 
         // Handle file uploads
@@ -129,6 +126,13 @@ class UserController extends Controller
             $cv = $request->file('cv');
             $cvPath = $cv->store('users/documents', 'public');
             $validated['cv'] = $cvPath;
+        }
+
+        // Only update password if provided
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
         }
 
         $user->update($validated);

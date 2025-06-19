@@ -75,6 +75,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user is a super admin.
+     */
+    public function isSuperAdmin()
+    {
+        return $this->role && $this->role->is_admin;
+    }
+
+    /**
      * Check if the user is a teacher.
      */
     public function isTeacher()

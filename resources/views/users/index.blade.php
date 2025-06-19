@@ -62,7 +62,7 @@
 
 <!-- User CRUD Modal (AJAX content loaded here) -->
 <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" id="user-modal-content">
       <!-- Modal content will be loaded here -->
     </div>
