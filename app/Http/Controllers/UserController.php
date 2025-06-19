@@ -185,4 +185,29 @@ class UserController extends Controller
     {
         return redirect()->route('users.edit', $user);
     }
+
+    // AJAX form for modal: create user
+    public function createForm()
+    {
+        $roles =Role::where('is_deleted', false)->get();
+        return view('users._form', [
+            'action' => route('users.store'),
+            'method' => 'POST',
+            'submitLabel' => 'Save User',
+            'roles' => $roles,
+        ]);
+    }
+
+    // AJAX form for modal: edit user
+    public function editForm(User $user)
+    {
+        $roles =Role::where('is_deleted', false)->get();
+        return view('users._form', [
+            'action' => route('users.update', $user),
+            'method' => 'PUT',
+            'submitLabel' => 'Update User',
+            'user' => $user,
+            'roles' => $roles,
+        ]);
+    }
 }
