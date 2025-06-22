@@ -20,6 +20,7 @@
                     @endif
                     
                     <form method="POST" action="{{ url('/register') }}">
+                        @csrf
                         <div class="mb-4">
                             <label for="name" class="form-label">Full Name</label>
                             <input type="text" class="form-control form-control-lg" id="name" name="name" required autofocus>

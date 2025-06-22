@@ -96,15 +96,37 @@
                     <button class="icon-btn">
                         <i class="fas fa-bell"></i>
                     </button>
-                    <button class="icon-btn">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                    <div class="user-profile">
-                        <span class="user-name">Nabila A.</span>
-                        <div class="avatar">
-                            <img src="https://ui-avatars.com/api/?name=Nabila+A&background=7F56D9&color=fff" alt="Profile">
-                        </div>
+                    <div class="dropdown">
+                        <button class="icon-btn dropdown-toggle" type="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('profile') }}">
+                                    <i class="fas fa-user me-2"></i>Modify Profile
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
+                    <a href="{{ route('profile') }}" class="user-profile text-decoration-none">
+                        <span class="user-name">{{ auth()->user()->firstname }} {{ auth()->user()->lastname }}</span>
+                        <div class="avatar">
+                            @if(auth()->user()->photo)
+                                <img src="{{ asset('storage/' . auth()->user()->photo) }}" alt="Profile">
+                            @else
+                                <img src="https://ui-avatars.com/api/?name={{ auth()->user()->firstname }}+{{ auth()->user()->lastname }}&background=7F56D9&color=fff" alt="Profile">
+                            @endif
+                        </div>
+                    </a>
                 </div>
             </nav>
 

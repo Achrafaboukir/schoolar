@@ -50,12 +50,11 @@ class User extends Authenticatable
      */
     protected $casts = [
         'date_of_birth' => 'date',
-        'status' => 'boolean',
+        'status' => 'integer',
         'is_deleted' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
-        'password' => 'hashed',
     ];
 
     /**
@@ -134,5 +133,26 @@ class User extends Authenticatable
     public function courses()
     {
         return $this->hasMany(Course::class, 'teacher_id');
+    }
+
+    /**
+     * Hash the password when setting it.
+     */
+    public function setPasswordAttribute($value)
+    {
+        // Only hash if the value is not already hashed
+        if (!empty($value) && !str_starts_with($value, '$2y$')) {
+            $this->attributes['password'] = bcrypt($value);
+        } else {
+            $this->attributes['password'] = $value;
+        }
+    }
+
+    /**
+     * Check if the user is active.
+     */
+    public function isActive()
+    {
+        return $this->status == 1;
     }
 }

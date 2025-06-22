@@ -19,6 +19,22 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        // Check if user exists and is active
+        $user = \App\Models\User::where('email', $credentials['email'])->first();
+        
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ])->onlyInput('email');
+        }
+
+        // Check if user is active
+        if (!$user->isActive()) {
+            return back()->withErrors([
+                'email' => 'Your account is not active. Please contact administrator.',
+            ])->onlyInput('email');
+        }
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended('/dashboard');

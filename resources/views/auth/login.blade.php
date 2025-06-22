@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - <?php echo config('app.name'); ?></title>
+    <title>Login - {{ config('app.name') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -14,30 +14,63 @@
                     <div class="card-body">
                         <h2 class="text-center mb-4">Login</h2>
                         
-                        <?php if (isset($error)): ?>
+                        @if (session('error'))
+                            <div class="alert alert-danger">{{ session('error') }}</div>
+                        @endif
+                        
+                        @if (session('status'))
+                            <div class="alert alert-info">{{ session('status') }}</div>
+                        @endif
+                        
+                        @if ($errors->any())
                             <div class="alert alert-danger">
-                                <?php echo htmlspecialchars($error); ?>
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
-                        <?php endif; ?>
+                        @endif
 
-                        <form method="POST" action="<?php echo url('/login'); ?>">
+                        <form method="POST" action="{{ route('login') }}">
+                            @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email address</label>
-                                <input type="email" 
-                                       class="form-control" 
-                                       id="email" 
-                                       name="email" 
-                                       value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>"
-                                       required>
+                                <input type="email"
+                                       class="form-control @error('email') is-invalid @enderror"
+                                       id="email"
+                                       name="email"
+                                       value="{{ old('email') }}"
+                                       required
+                                       autocomplete="email"
+                                       autofocus>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" 
-                                       class="form-control" 
-                                       id="password" 
-                                       name="password" 
-                                       required>
+                                <input type="password"
+                                       class="form-control @error('password') is-invalid @enderror"
+                                       id="password"
+                                       name="password"
+                                       required
+                                       autocomplete="current-password">
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="remember">
+                                    Remember Me
+                                </label>
                             </div>
 
                             <div class="d-grid gap-2">
@@ -46,8 +79,16 @@
                         </form>
 
                         <div class="text-center mt-3">
-                            <p>Don't have an account? <a href="<?php echo url('/register'); ?>">Register here</a></p>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}">Forgot Your Password?</a>
+                            @endif
                         </div>
+
+                        @if (Route::has('register'))
+                            <div class="text-center mt-2">
+                                <p>Don't have an account? <a href="{{ route('register') }}">Register here</a></p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -56,4 +97,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

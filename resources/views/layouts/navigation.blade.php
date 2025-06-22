@@ -12,16 +12,16 @@
             <ul class="navbar-nav me-auto">
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/dashboard') }}">Dashboard</a>
+                        <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                     </li>
-                    @if(Auth::user()->role === 'teacher')
+                    @if(Auth::user()->role && Auth::user()->role->is_teacher)
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/courses') }}">My Courses</a>
+                            <a class="nav-link" href="{{ route('teachers.courses.index') }}">My Courses</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/assignments') }}">Assignments</a>
                         </li>
-                    @elseif(Auth::user()->role === 'student')
+                    @elseif(Auth::user()->role && Auth::user()->role->is_student)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/courses/browse') }}">Browse Courses</a>
                         </li>
@@ -36,27 +36,31 @@
             <ul class="navbar-nav ms-auto">
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/login') }}">Login</a>
+                        <a class="nav-link" href="{{ route('login') }}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/register') }}">Register</a>
+                        <a class="nav-link" href="{{ route('register') }}">Register</a>
                     </li>
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ Auth::user()->name }}
+                            {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="dropdown-item" href="{{ url('/profile') }}">Profile</a>
+                                <a class="dropdown-item" href="{{ route('profile') }}">
+                                    <i class="fas fa-user me-2"></i>Profile
+                                </a>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
-                                <form action="{{ url('/logout') }}" method="POST">
+                                <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                     @csrf
-                                    <button type="submit" class="dropdown-item">Logout</button>
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
                                 </form>
                             </li>
                         </ul>
