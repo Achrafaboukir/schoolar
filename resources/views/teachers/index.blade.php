@@ -27,7 +27,7 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-secondary">Clear all</button>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+            <button class="btn btn-primary" id="add-teacher-btn">
                 <i class="fas fa-plus me-2"></i>Add new teacher
             </button>
         </div>
@@ -60,10 +60,7 @@
                         <button class="btn btn-sm btn-icon btn-outline-danger delete-teacher" data-id="{{ $teacher->id }}">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button class="btn btn-sm btn-icon btn-outline-primary edit-teacher" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editTeacherModal"
-                                data-teacher="{{ json_encode($teacher) }}">
+                        <button class="btn btn-sm btn-icon btn-outline-primary edit-teacher-btn" data-id="{{ $teacher->id }}">
                             <i class="fas fa-edit"></i>
                         </button>
                     </div>
@@ -82,137 +79,13 @@
     </div>
 </div>
 
-<!-- Add Teacher Modal -->
-<div class="modal fade" id="addTeacherModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Add new teacher</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addTeacherForm" action="{{ route('teachers.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">First name</label>
-                            <input type="text" class="form-control" name="firstname" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Last name</label>
-                            <input type="text" class="form-control" name="lastname" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" name="number" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Group</label>
-                            <select class="form-select" name="group_id" required>
-                                @foreach($groups as $group)
-                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Date of birth</label>
-                            <input type="date" class="form-control" name="date_of_birth" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Photo</label>
-                            <input type="file" class="form-control" name="photo" accept="image/*">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">CV</label>
-                            <input type="file" class="form-control" name="cv">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" name="status">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<!-- Teacher CRUD Modal (AJAX content loaded here) -->
+<div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="teacher-modal-content">
+      <!-- Modal content will be loaded here -->
     </div>
-</div>
-
-<!-- Edit Teacher Modal -->
-<div class="modal fade" id="editTeacherModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Edit teacher</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editTeacherForm" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">First name</label>
-                            <input type="text" class="form-control" name="firstname" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Last name</label>
-                            <input type="text" class="form-control" name="lastname" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" name="number" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Group</label>
-                            <select class="form-select" name="group_id" required>
-                                @foreach($groups as $group)
-                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Date of birth</label>
-                            <input type="date" class="form-control" name="date_of_birth" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Photo</label>
-                            <input type="file" class="form-control" name="photo" accept="image/*">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">CV</label>
-                            <input type="file" class="form-control" name="cv">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" name="status">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Save changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
@@ -296,22 +169,32 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Add Teacher
+    document.getElementById('add-teacher-btn').addEventListener('click', function() {
+        fetch("{{ route('teachers.create-form') }}")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('teacher-modal-content').innerHTML = html;
+                new bootstrap.Modal(document.getElementById('teacherModal')).show();
+                
+                // Add form submission handler
+                setupFormSubmission();
+            });
+    });
+
     // Edit Teacher
-    const editButtons = document.querySelectorAll('.edit-teacher');
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const teacher = JSON.parse(this.dataset.teacher);
-            const form = document.getElementById('editTeacherForm');
-            form.action = `/teachers/${teacher.id}`;
-            form.querySelector('[name="firstname"]').value = teacher.firstname;
-            form.querySelector('[name="lastname"]').value = teacher.lastname;
-            form.querySelector('[name="email"]').value = teacher.email;
-            form.querySelector('[name="number"]').value = teacher.number;
-            form.querySelector('[name="group_id"]').value = teacher.group_id;
-            form.querySelector('[name="status"]').value = teacher.status;
-            if (teacher.date_of_birth) {
-                form.querySelector('[name="date_of_birth"]').value = teacher.date_of_birth;
-            }
+    document.querySelectorAll('.edit-teacher-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            fetch(`/teachers/${id}/edit-form`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('teacher-modal-content').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('teacherModal')).show();
+                    
+                    // Add form submission handler
+                    setupFormSubmission();
+                });
         });
     });
 
@@ -326,6 +209,83 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.show();
         });
     });
+
+    // Setup AJAX form submission
+    function setupFormSubmission() {
+        const form = document.getElementById('teacherForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                // Disable submit button and show loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        // If there's a redirect, reload the page
+                        window.location.reload();
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        // Close modal and reload page
+                        bootstrap.Modal.getInstance(document.getElementById('teacherModal')).hide();
+                        window.location.reload();
+                    } else if (data && data.errors) {
+                        // Show validation errors
+                        showValidationErrors(data.errors);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // On error, reload page to show any flash messages
+                    window.location.reload();
+                })
+                .finally(() => {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                });
+            });
+        }
+    }
+
+    // Show validation errors
+    function showValidationErrors(errors) {
+        // Clear previous errors
+        document.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+        document.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.remove();
+        });
+
+        // Show new errors
+        Object.keys(errors).forEach(field => {
+            const input = document.querySelector(`[name="${field}"]`);
+            if (input) {
+                input.classList.add('is-invalid');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'invalid-feedback';
+                errorDiv.textContent = errors[field][0];
+                input.parentNode.appendChild(errorDiv);
+            }
+        });
+    }
 });
 </script>
 @endpush

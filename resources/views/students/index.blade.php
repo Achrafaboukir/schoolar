@@ -27,7 +27,7 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-secondary">Clear all</button>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+            <button class="btn btn-primary" id="add-student-btn">
                 <i class="fas fa-plus me-2"></i>Add new student
             </button>
         </div>
@@ -60,10 +60,7 @@
                         <button class="btn btn-sm btn-icon btn-outline-danger delete-student" data-id="{{ $student->id }}">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button class="btn btn-sm btn-icon btn-outline-primary edit-student" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editStudentModal"
-                                data-student="{{ json_encode($student) }}">
+                        <button class="btn btn-sm btn-icon btn-outline-primary edit-student-btn" data-id="{{ $student->id }}">
                             <i class="fas fa-edit"></i>
                         </button>
                     </div>
@@ -82,137 +79,13 @@
     </div>
 </div>
 
-<!-- Add Student Modal -->
-<div class="modal fade" id="addStudentModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Add new student</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addStudentForm" action="{{ route('students.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">First name</label>
-                            <input type="text" class="form-control" name="firstname" placeholder="Ex: AHMED" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Last name</label>
-                            <input type="text" class="form-control" name="lastname" placeholder="Ex: boujdan" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" name="status" required>
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Group</label>
-                            <select class="form-select" name="group" required>
-                                @foreach($groups ?? [] as $group)
-                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Ex: AHMED@GMAIL.COM" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Number</label>
-                            <input type="text" class="form-control" name="number" placeholder="Ex: 066665555" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Date of birth</label>
-                            <input type="date" class="form-control" name="date_of_birth" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Baccaloriat</label>
-                            <input type="file" class="form-control" name="baccaloriat">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Picture</label>
-                            <input type="file" class="form-control" name="picture">
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Validate</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<!-- Student CRUD Modal (AJAX content loaded here) -->
+<div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="studentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="student-modal-content">
+      <!-- Modal content will be loaded here -->
     </div>
-</div>
-
-<!-- Edit Student Modal -->
-<div class="modal fade" id="editStudentModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Edit student</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editStudentForm" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">First name</label>
-                            <input type="text" class="form-control" name="firstname" placeholder="Ex: AHMED" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Last name</label>
-                            <input type="text" class="form-control" name="lastname" placeholder="Ex: boujdan" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" name="status" required>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Group</label>
-                            <select class="form-select" name="group" required>
-                                <option value="3ISI">3ISI</option>
-                                <option value="4ISI">4ISI</option>
-                                <option value="5ISI">5ISI</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Ex: AHMED@GMAIL.COM" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Number</label>
-                            <input type="text" class="form-control" name="number" placeholder="Ex: 066665555" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Date of birth</label>
-                            <input type="date" class="form-control" name="date_of_birth">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Baccaloriat</label>
-                            <input type="file" class="form-control" name="baccaloriat">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Picture</label>
-                            <input type="file" class="form-control" name="picture">
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Validate</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
@@ -296,22 +169,32 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Add Student
+    document.getElementById('add-student-btn').addEventListener('click', function() {
+        fetch("{{ route('students.create-form') }}")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('student-modal-content').innerHTML = html;
+                new bootstrap.Modal(document.getElementById('studentModal')).show();
+                
+                // Add form submission handler
+                setupFormSubmission();
+            });
+    });
+
     // Edit Student
-    const editButtons = document.querySelectorAll('.edit-student');
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const student = JSON.parse(this.dataset.student);
-            const form = document.getElementById('editStudentForm');
-            form.action = `/students/${student.id}`;
-            form.querySelector('[name="firstname"]').value = student.firstname;
-            form.querySelector('[name="lastname"]').value = student.lastname;
-            form.querySelector('[name="email"]').value = student.email;
-            form.querySelector('[name="number"]').value = student.number;
-            form.querySelector('[name="group"]').value = student.group;
-            form.querySelector('[name="status"]').value = student.status;
-            if (student.date_of_birth) {
-                form.querySelector('[name="date_of_birth"]').value = student.date_of_birth;
-            }
+    document.querySelectorAll('.edit-student-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            fetch(`/students/${id}/edit-form`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('student-modal-content').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('studentModal')).show();
+                    
+                    // Add form submission handler
+                    setupFormSubmission();
+                });
         });
     });
 
@@ -326,6 +209,83 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.show();
         });
     });
+
+    // Setup AJAX form submission
+    function setupFormSubmission() {
+        const form = document.getElementById('studentForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                // Disable submit button and show loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        // If there's a redirect, reload the page
+                        window.location.reload();
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        // Close modal and reload page
+                        bootstrap.Modal.getInstance(document.getElementById('studentModal')).hide();
+                        window.location.reload();
+                    } else if (data && data.errors) {
+                        // Show validation errors
+                        showValidationErrors(data.errors);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // On error, reload page to show any flash messages
+                    window.location.reload();
+                })
+                .finally(() => {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                });
+            });
+        }
+    }
+
+    // Show validation errors
+    function showValidationErrors(errors) {
+        // Clear previous errors
+        document.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+        document.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.remove();
+        });
+
+        // Show new errors
+        Object.keys(errors).forEach(field => {
+            const input = document.querySelector(`[name="${field}"]`);
+            if (input) {
+                input.classList.add('is-invalid');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'invalid-feedback';
+                errorDiv.textContent = errors[field][0];
+                input.parentNode.appendChild(errorDiv);
+            }
+        });
+    }
 });
 </script>
 @endpush

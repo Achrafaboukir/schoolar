@@ -23,6 +23,13 @@ class GroupController extends Controller
         return view('groups.create', compact('departments'));
     }
 
+    // AJAX method to return create form for modal
+    public function createForm()
+    {
+        $departments = Department::all();
+        return view('groups.create-ajax', compact('departments'));
+    }
+
     // Store a newly created group in storage
     public function store(Request $request)
     {
@@ -40,6 +47,10 @@ class GroupController extends Controller
             'status' => $request->status,
         ]);
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Group created successfully.']);
+        }
+
         return redirect()->route('groups.index')->with('success', 'Group created successfully.');
     }
 
@@ -56,17 +67,33 @@ class GroupController extends Controller
         return view('groups.edit', compact('group', 'departments'));
     }
 
+    // AJAX method to return edit form for modal
+    public function editForm(Group $group)
+    {
+        $departments = Department::all();
+        return view('groups.edit-ajax', compact('group', 'departments'));
+    }
+
     // Update the specified group in storage
     public function update(Request $request, Group $group)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
+            'department_id' => 'required|exists:departments,id',
             'year' => 'required|integer',
             'status' => 'required|in:active,inactive,completed',
         ]);
 
-        $group->update($request->all());
+        $group->update([
+            'name' => $request->name,
+            'department_id' => $request->department_id,
+            'year' => $request->year,
+            'status' => $request->status,
+        ]);
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Group updated successfully.']);
+        }
 
         return redirect()->route('groups.index')->with('success', 'Group updated successfully.');
     }

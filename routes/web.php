@@ -118,15 +118,27 @@ Route::middleware(['auth'])->group(function () {
     // Admin routes
     Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
     Route::resource('roles', RoleController::class);
+    
+    // Groups routes with AJAX form routes
+    Route::get('/groups/create-form', [GroupController::class, 'createForm'])->name('groups.create-form');
+    Route::get('/groups/{group}/edit-form', [GroupController::class, 'editForm'])->name('groups.edit-form');
     Route::resource('groups', GroupController::class);
+    
+    // Departments routes with AJAX form routes
+    Route::get('/departments/create-form', [DepartmentController::class, 'createForm'])->name('departments.create-form');
+    Route::get('/departments/{department}/edit-form', [DepartmentController::class, 'editForm'])->name('departments.edit-form');
     Route::resource('departments', DepartmentController::class);
 
-    // Teacher routes
+    // Teacher routes with AJAX form routes
     Route::prefix('teachers')->name('teachers.')->group(function () {
         Route::get('/', [TeacherController::class, 'index'])->name('index');
         Route::post('/', [TeacherController::class, 'store'])->name('store');
         Route::put('/{teacher}', [TeacherController::class, 'update'])->name('update');
         Route::delete('/{teacher}', [TeacherController::class, 'destroy'])->name('destroy');
+        
+        // AJAX form routes
+        Route::get('/create-form', [TeacherController::class, 'createForm'])->name('create-form');
+        Route::get('/{teacher}/edit-form', [TeacherController::class, 'editForm'])->name('edit-form');
         
         Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
         Route::get('/courses', [TeacherController::class, 'myCourses'])->name('courses.index');
@@ -136,17 +148,25 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/groups/{group}', [TeacherController::class, 'showGroup'])->name('groups.show');
     });
 
-    // Student routes
+    // Student routes with AJAX form routes
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
     Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+    
+    // AJAX form routes for students
+    Route::get('/students/create-form', [StudentController::class, 'createForm'])->name('students.create-form');
+    Route::get('/students/{student}/edit-form', [StudentController::class, 'editForm'])->name('students.edit-form');
 
-    // Course routes
+    // Course routes with AJAX form routes
     Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
     Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
     Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
     Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
+    
+    // AJAX form routes for courses
+    Route::get('/courses/create-form', [CourseController::class, 'createForm'])->name('courses.create-form');
+    Route::get('/courses/{course}/edit-form', [CourseController::class, 'editForm'])->name('courses.edit-form');
 
     // Course document routes
     Route::post('/courses/{courseId}/documents', [CourseDocumentController::class, 'store'])->name('course.documents.store');

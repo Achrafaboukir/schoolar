@@ -26,6 +26,30 @@ class CourseController extends Controller
         return view('courses.index', compact('courses', 'teachers', 'groups'));
     }
 
+    public function create()
+    {
+        $teacherRole = Role::where('is_teacher', true)->first();
+        $teachers = User::where('role_id', $teacherRole->id)
+            ->where('is_deleted', false)
+            ->get();
+        
+        $groups = Group::where('is_deleted', false)->get();
+        
+        return view('courses.create', compact('teachers', 'groups'));
+    }
+
+    public function createForm()
+    {
+        $teacherRole = Role::where('is_teacher', true)->first();
+        $teachers = User::where('role_id', $teacherRole->id)
+            ->where('is_deleted', false)
+            ->get();
+        
+        $groups = Group::where('is_deleted', false)->get();
+        
+        return view('courses.create-ajax', compact('teachers', 'groups'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -62,8 +86,40 @@ class CourseController extends Controller
             }
         }
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Course created successfully.']);
+        }
+
         return redirect()->route('courses.index')
             ->with('success', 'Course created successfully.');
+    }
+
+    public function edit($id)
+    {
+        $course = Course::findOrFail($id);
+        
+        $teacherRole = Role::where('is_teacher', true)->first();
+        $teachers = User::where('role_id', $teacherRole->id)
+            ->where('is_deleted', false)
+            ->get();
+        
+        $groups = Group::where('is_deleted', false)->get();
+        
+        return view('courses.edit', compact('course', 'teachers', 'groups'));
+    }
+
+    public function editForm($id)
+    {
+        $course = Course::findOrFail($id);
+        
+        $teacherRole = Role::where('is_teacher', true)->first();
+        $teachers = User::where('role_id', $teacherRole->id)
+            ->where('is_deleted', false)
+            ->get();
+        
+        $groups = Group::where('is_deleted', false)->get();
+        
+        return view('courses.edit-ajax', compact('course', 'teachers', 'groups'));
     }
 
     public function update(Request $request, $id)
@@ -102,6 +158,10 @@ class CourseController extends Controller
                     ]);
                 }
             }
+        }
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Course updated successfully.']);
         }
 
         return redirect()->route('courses.index')

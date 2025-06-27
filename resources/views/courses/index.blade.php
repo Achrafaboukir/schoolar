@@ -27,7 +27,7 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-secondary">Clear all</button>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+            <button class="btn btn-primary" id="add-course-btn">
                 <i class="fas fa-plus me-2"></i>Add new course
             </button>
         </div>
@@ -64,11 +64,9 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item edit-course" 
+                                <a class="dropdown-item edit-course-btn" 
                                    href="#" 
-                                   data-bs-toggle="modal" 
-                                   data-bs-target="#editCourseModal"
-                                   data-course="{{ json_encode($course) }}">
+                                   data-id="{{ $course->id }}">
                                     <i class="fas fa-edit me-2"></i>Edit
                                 </a>
                             </li>
@@ -115,167 +113,13 @@
     </div>
 </div>
 
-<!-- Add Course Modal -->
-<div class="modal fade" id="addCourseModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Add new course</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addCourseForm" action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label">Course Title</label>
-                            <input type="text" class="form-control" name="title" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Teacher</label>
-                            <select class="form-select" name="teacher_id" required>
-                                @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->firstname }} {{ $teacher->lastname }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Group</label>
-                            <select class="form-select" name="group_id" required>
-                                @foreach($groups as $group)
-                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Start Date</label>
-                            <input type="date" class="form-control" name="start_date" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">End Date</label>
-                            <input type="date" class="form-control" name="end_date" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" name="status">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-12">
-                            <hr class="my-4">
-                            <h6 class="mb-3">Course Materials</h6>
-                        </div>
-                        
-                        <div class="col-12" id="documentInputs">
-                            <div class="document-input mb-3">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label">Document Title</label>
-                                        <input type="text" class="form-control" name="documents[0][title]">
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label">Description</label>
-                                        <textarea class="form-control" name="documents[0][description]" rows="2"></textarea>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Document Type</label>
-                                        <select class="form-select" name="documents[0][file_type]">
-                                            <option value="video">Video</option>
-                                            <option value="image">Image</option>
-                                            <option value="pdf">PDF</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label">File</label>
-                                        <input type="file" class="form-control" name="documents[0][file]">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-12">
-                            <button type="button" class="btn btn-outline-secondary w-100" id="addMoreDocuments">
-                                <i class="fas fa-plus me-2"></i>Add Another Document
-                            </button>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<!-- Course CRUD Modal (AJAX content loaded here) -->
+<div class="modal fade" id="courseModal" tabindex="-1" role="dialog" aria-labelledby="courseModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="course-modal-content">
+      <!-- Modal content will be loaded here -->
     </div>
-</div>
-
-<!-- Edit Course Modal -->
-<div class="modal fade" id="editCourseModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Edit course</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editCourseForm" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label">Course Title</label>
-                            <input type="text" class="form-control" name="title" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Teacher</label>
-                            <select class="form-select" name="teacher_id" required>
-                                @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->firstname }} {{ $teacher->lastname }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Group</label>
-                            <select class="form-select" name="group_id" required>
-                                @foreach($groups as $group)
-                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Start Date</label>
-                            <input type="date" class="form-control" name="start_date" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">End Date</label>
-                            <input type="date" class="form-control" name="end_date" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" name="status">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Save changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
@@ -410,74 +254,32 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle dynamic document inputs
-    let documentCounter = 1;
-    
-    function createDocumentInput(index) {
-        return `
-            <div class="document-input mb-3">
-                <div class="row g-3">
-                    <div class="col-12 d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Document ${index + 1}</h6>
-                        <button type="button" class="btn btn-sm btn-outline-danger remove-document">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">Document Title</label>
-                        <input type="text" class="form-control" name="documents[${index}][title]">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" name="documents[${index}][description]" rows="2"></textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Document Type</label>
-                        <select class="form-select" name="documents[${index}][file_type]">
-                            <option value="video">Video</option>
-                            <option value="image">Image</option>
-                            <option value="pdf">PDF</option>
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">File</label>
-                        <input type="file" class="form-control" name="documents[${index}][file]">
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    document.getElementById('addMoreDocuments')?.addEventListener('click', function() {
-        const documentsContainer = document.getElementById('documentInputs');
-        documentsContainer.insertAdjacentHTML('beforeend', createDocumentInput(documentCounter++));
-    });
-
-    // Handle document removal
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.remove-document')) {
-            e.target.closest('.document-input').remove();
-        }
+    // Add Course
+    document.getElementById('add-course-btn').addEventListener('click', function() {
+        fetch("{{ route('courses.create-form') }}")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('course-modal-content').innerHTML = html;
+                new bootstrap.Modal(document.getElementById('courseModal')).show();
+                
+                // Add form submission handler
+                setupFormSubmission();
+            });
     });
 
     // Edit Course
-    const editButtons = document.querySelectorAll('.edit-course');
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const course = JSON.parse(this.dataset.course);
-            const form = document.getElementById('editCourseForm');
-            form.action = `/courses/${course.id}`;
-            form.querySelector('[name="title"]').value = course.title;
-            form.querySelector('[name="description"]').value = course.description;
-            form.querySelector('[name="teacher_id"]').value = course.teacher_id;
-            form.querySelector('[name="group_id"]').value = course.group_id;
-            form.querySelector('[name="status"]').value = course.status;
-            
-            // Format dates for input fields
-            const startDate = new Date(course.start_date);
-            const endDate = new Date(course.end_date);
-            form.querySelector('[name="start_date"]').value = startDate.toISOString().split('T')[0];
-            form.querySelector('[name="end_date"]').value = endDate.toISOString().split('T')[0];
+    document.querySelectorAll('.edit-course-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            fetch(`/courses/${id}/edit-form`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('course-modal-content').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('courseModal')).show();
+                    
+                    // Add form submission handler
+                    setupFormSubmission();
+                });
         });
     });
 
@@ -591,10 +393,82 @@ document.addEventListener('DOMContentLoaded', function() {
         return new Date(dateString).toLocaleDateString();
     }
 
-    @if ($errors->any())
-        var addCourseModal = new bootstrap.Modal(document.getElementById('addCourseModal'));
-        addCourseModal.show();
-    @endif
+    // Setup AJAX form submission
+    function setupFormSubmission() {
+        const form = document.getElementById('courseForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                // Disable submit button and show loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        // If there's a redirect, reload the page
+                        window.location.reload();
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        // Close modal and reload page
+                        bootstrap.Modal.getInstance(document.getElementById('courseModal')).hide();
+                        window.location.reload();
+                    } else if (data && data.errors) {
+                        // Show validation errors
+                        showValidationErrors(data.errors);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // On error, reload page to show any flash messages
+                    window.location.reload();
+                })
+                .finally(() => {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                });
+            });
+        }
+    }
+
+    // Show validation errors
+    function showValidationErrors(errors) {
+        // Clear previous errors
+        document.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+        document.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.remove();
+        });
+
+        // Show new errors
+        Object.keys(errors).forEach(field => {
+            const input = document.querySelector(`[name="${field}"]`);
+            if (input) {
+                input.classList.add('is-invalid');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'invalid-feedback';
+                errorDiv.textContent = errors[field][0];
+                input.parentNode.appendChild(errorDiv);
+            }
+        });
+    }
 });
 </script>
 @endpush

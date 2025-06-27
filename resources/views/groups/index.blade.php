@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+            <button class="btn btn-primary" id="add-group-btn">
                 <i class="fas fa-plus me-2"></i>Add new group
             </button>
         </div>
@@ -45,10 +45,7 @@
                         <button class="btn btn-sm btn-icon btn-outline-danger delete-group" data-id="{{ $group->id }}">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button class="btn btn-sm btn-icon btn-outline-primary edit-group" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editGroupModal"
-                                data-group="{{ json_encode($group) }}">
+                        <button class="btn btn-sm btn-icon btn-outline-primary edit-group-btn" data-id="{{ $group->id }}">
                             <i class="fas fa-edit"></i>
                         </button>
                     </div>
@@ -67,98 +64,13 @@
     </div>
 </div>
 
-<!-- Add Group Modal -->
-<div class="modal fade" id="addGroupModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Add new group</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addGroupForm" action="{{ route('groups.store') }}" method="POST">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Name</label>
-                            <input type="text" class="form-control" name="name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Department</label>
-                            <select class="form-select" name="department_id" required>
-                                @foreach($departments as $department)
-                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Year</label>
-                            <input type="number" class="form-control" name="year" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" name="status" required>
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<!-- Group CRUD Modal (AJAX content loaded here) -->
+<div class="modal fade" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="groupModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="group-modal-content">
+      <!-- Modal content will be loaded here -->
     </div>
-</div>
-
-<!-- Edit Group Modal -->
-<div class="modal fade" id="editGroupModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Edit group</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editGroupForm" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Name</label>
-                            <input type="text" class="form-control" name="name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Department</label>
-                            <select class="form-select" name="department_id" required>
-                                @foreach($departments as $department)
-                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Year</label>
-                            <input type="number" class="form-control" name="year" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" name="status" required>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                                <option value="completed">Completed</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Save changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
@@ -184,3 +96,127 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add Group
+    document.getElementById('add-group-btn').addEventListener('click', function() {
+        fetch("{{ route('groups.create-form') }}")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('group-modal-content').innerHTML = html;
+                new bootstrap.Modal(document.getElementById('groupModal')).show();
+                
+                // Add form submission handler
+                setupFormSubmission();
+            });
+    });
+
+    // Edit Group
+    document.querySelectorAll('.edit-group-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            fetch(`/groups/${id}/edit-form`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('group-modal-content').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('groupModal')).show();
+                    
+                    // Add form submission handler
+                    setupFormSubmission();
+                });
+        });
+    });
+
+    // Delete Group
+    const deleteButtons = document.querySelectorAll('.delete-group');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const groupId = this.dataset.id;
+            const modal = new bootstrap.Modal(document.getElementById('deleteGroupModal'));
+            const form = document.getElementById('deleteGroupForm');
+            form.action = `/groups/${groupId}`;
+            modal.show();
+        });
+    });
+
+    // Setup AJAX form submission
+    function setupFormSubmission() {
+        const form = document.getElementById('groupForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                // Disable submit button and show loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        // If there's a redirect, reload the page
+                        window.location.reload();
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        // Close modal and reload page
+                        bootstrap.Modal.getInstance(document.getElementById('groupModal')).hide();
+                        window.location.reload();
+                    } else if (data && data.errors) {
+                        // Show validation errors
+                        showValidationErrors(data.errors);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // On error, reload page to show any flash messages
+                    window.location.reload();
+                })
+                .finally(() => {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                });
+            });
+        }
+    }
+
+    // Show validation errors
+    function showValidationErrors(errors) {
+        // Clear previous errors
+        document.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+        document.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.remove();
+        });
+
+        // Show new errors
+        Object.keys(errors).forEach(field => {
+            const input = document.querySelector(`[name="${field}"]`);
+            if (input) {
+                input.classList.add('is-invalid');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'invalid-feedback';
+                errorDiv.textContent = errors[field][0];
+                input.parentNode.appendChild(errorDiv);
+            }
+        });
+    }
+});
+</script>
+@endpush

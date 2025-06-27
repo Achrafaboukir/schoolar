@@ -28,7 +28,15 @@ class TeacherController extends Controller
     // Show the form for creating a new teacher
     public function create()
     {
-        return view('teachers.create');
+        $groups = Group::where('is_deleted', false)->get();
+        return view('teachers.create', compact('groups'));
+    }
+
+    // AJAX method to return create form for modal
+    public function createForm()
+    {
+        $groups = Group::where('is_deleted', false)->get();
+        return view('teachers.create-ajax', compact('groups'));
     }
 
     // Store a newly created teacher in storage
@@ -62,6 +70,10 @@ class TeacherController extends Controller
 
         User::create($data);
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Teacher created successfully.']);
+        }
+
         return redirect()->route('teachers.index')->with('success', 'Teacher created successfully.');
     }
 
@@ -72,9 +84,19 @@ class TeacherController extends Controller
     }
 
     // Show the form for editing the specified teacher
-    public function edit(Teacher $teacher)
+    public function edit($id)
     {
-        return view('teachers.edit', compact('teacher'));
+        $teacher = User::findOrFail($id);
+        $groups = Group::where('is_deleted', false)->get();
+        return view('teachers.edit', compact('teacher', 'groups'));
+    }
+
+    // AJAX method to return edit form for modal
+    public function editForm($id)
+    {
+        $teacher = User::findOrFail($id);
+        $groups = Group::where('is_deleted', false)->get();
+        return view('teachers.edit-ajax', compact('teacher', 'groups'));
     }
 
     // Update the specified teacher in storage
@@ -111,6 +133,10 @@ class TeacherController extends Controller
         }
 
         $teacher->update($data);
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Teacher updated successfully.']);
+        }
 
         return redirect()->route('teachers.index')->with('success', 'Teacher updated successfully.');
     }

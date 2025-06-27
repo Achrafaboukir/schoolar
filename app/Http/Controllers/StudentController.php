@@ -22,6 +22,24 @@ class StudentController extends Controller
     }
 
     /**
+     * Show the form for creating a new student.
+     */
+    public function create()
+    {
+        $groups = Group::all();
+        return view('students.create', compact('groups'));
+    }
+
+    /**
+     * AJAX method to return create form for modal
+     */
+    public function createForm()
+    {
+        $groups = Group::all();
+        return view('students.create-ajax', compact('groups'));
+    }
+
+    /**
      * Store a new student.
      */
     public function store(Request $request)
@@ -68,8 +86,30 @@ class StudentController extends Controller
 
         Student::create($studentData);
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Student created successfully.']);
+        }
+
         return redirect()->route('students.index')
             ->with('success', 'Student created successfully.');
+    }
+
+    /**
+     * Show the form for editing the specified student.
+     */
+    public function edit(Student $student)
+    {
+        $groups = Group::all();
+        return view('students.edit', compact('student', 'groups'));
+    }
+
+    /**
+     * AJAX method to return edit form for modal
+     */
+    public function editForm(Student $student)
+    {
+        $groups = Group::all();
+        return view('students.edit-ajax', compact('student', 'groups'));
     }
 
     /**
@@ -121,6 +161,10 @@ class StudentController extends Controller
         }
 
         $student->update($studentData);
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Student updated successfully.']);
+        }
 
         return redirect()->route('students.index')
             ->with('success', 'Student updated successfully.');

@@ -20,6 +20,12 @@ class DepartmentController extends Controller
         return view('departments.create');
     }
 
+    // AJAX method to return create form for modal
+    public function createForm()
+    {
+        return view('departments.create-ajax');
+    }
+
     // Store a newly created department in storage
     public function store(Request $request)
     {
@@ -29,6 +35,10 @@ class DepartmentController extends Controller
         ]);
 
         Department::create($request->all());
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Department created successfully.']);
+        }
 
         return redirect()->route('departments.index')->with('success', 'Department created successfully.');
     }
@@ -45,6 +55,12 @@ class DepartmentController extends Controller
         return view('departments.edit', compact('department'));
     }
 
+    // AJAX method to return edit form for modal
+    public function editForm(Department $department)
+    {
+        return view('departments.edit-ajax', compact('department'));
+    }
+
     // Update the specified department in storage
     public function update(Request $request, Department $department)
     {
@@ -54,6 +70,10 @@ class DepartmentController extends Controller
         ]);
 
         $department->update($request->all());
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Department updated successfully.']);
+        }
 
         return redirect()->route('departments.index')->with('success', 'Department updated successfully.');
     }
