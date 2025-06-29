@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Role Management')
+@section('page-title', __('roles.management'))
 
 @section('content')
 <div class="content-wrapper">
@@ -12,24 +12,24 @@
                         <span class="input-group-text bg-white border-end-0">
                             <i class="fas fa-search text-muted"></i>
                         </span>
-                        <input type="text" class="form-control border-start-0" placeholder="Search roles by name">
+                        <input type="text" class="form-control border-start-0" placeholder="{{ __('roles.search_placeholder') }}">
                     </div>
                 </div>
             </div>
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary">Clear all</button>
+                <button class="btn btn-outline-secondary">{{ __('roles.clear_all') }}</button>
                 <button class="btn btn-primary" id="openAddRoleModal">
-                    <i class="fas fa-plus me-2"></i>Add new role
+                    <i class="fas fa-plus me-2"></i>{{ __('roles.add_new') }}
                 </button>
             </div>
         </div>
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>NAME</th>
-                    <th>PERMISSIONS</th>
-                    <th>ACTIONS</th>
+                    <th>{{ __('roles.id') }}</th>
+                    <th>{{ __('roles.name') }}</th>
+                    <th>{{ __('roles.permissions') }}</th>
+                    <th>{{ __('roles.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,7 +55,7 @@
                             <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-icon btn-outline-danger" onclick="return confirm('Are you sure you want to delete this role?')">
+                                <button type="submit" class="btn btn-sm btn-icon btn-outline-danger" onclick="return confirm('{{ __('roles.delete_confirm') }}')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -67,14 +67,14 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4" class="text-center">No roles found.</td>
+                    <td colspan="4" class="text-center">{{ __('roles.no_roles_found') }}</td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
         <div class="table-pagination">
             <div>
-                <span class="text-muted">Showing {{ $roles->firstItem() ?? 0 }} to {{ $roles->lastItem() ?? 0 }} of {{ $roles->total() ?? 0 }} results</span>
+                <span class="text-muted">{{ __('roles.showing') }} {{ $roles->firstItem() ?? 0 }} {{ __('roles.to') }} {{ $roles->lastItem() ?? 0 }} {{ __('roles.of') }} {{ $roles->total() ?? 0 }} {{ __('roles.results') }}</span>
             </div>
             <div class="page-numbers">
                 {{ $roles->links() }}
@@ -88,7 +88,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg"><!-- modal-lg for large modal -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Role</h5>
+                <h5 class="modal-title">{{ __('roles.add_new') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="addRoleModalBody">
@@ -103,7 +103,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg"><!-- modal-lg for large modal -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Role</h5>
+                <h5 class="modal-title">{{ __('roles.edit') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="editRoleModalBody">

@@ -11,6 +11,10 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseDocumentController;
+use App\Http\Controllers\LanguageController;
+
+// Language switching route
+Route::get('/language/{locale}', [LanguageController::class, 'switchLanguage'])->name('language.switch');
 
 // Public routes (no authentication required)
 Route::get('/', function () {

@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Course Management')
+@section('page-title', __('courses.management'))
 
 @section('content')
 <div class="table-section">
@@ -8,12 +8,12 @@
         <div class="d-flex gap-3 align-items-center">
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    Add filter
+                    {{ __('courses.add_filter') }}
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Status</a></li>
-                    <li><a class="dropdown-item" href="#">Teacher</a></li>
-                    <li><a class="dropdown-item" href="#">Group</a></li>
+                    <li><a class="dropdown-item" href="#">{{ __('courses.status') }}</a></li>
+                    <li><a class="dropdown-item" href="#">{{ __('courses.teacher') }}</a></li>
+                    <li><a class="dropdown-item" href="#">{{ __('courses.group') }}</a></li>
                 </ul>
             </div>
             <div class="search-box flex-grow-1">
@@ -21,28 +21,28 @@
                     <span class="input-group-text bg-white border-end-0">
                         <i class="fas fa-search text-muted"></i>
                     </span>
-                    <input type="text" class="form-control border-start-0" placeholder="Search for a course by title">
+                    <input type="text" class="form-control border-start-0" placeholder="{{ __('courses.search_placeholder') }}">
                 </div>
             </div>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary">Clear all</button>
+            <button class="btn btn-outline-secondary">{{ __('courses.clear_all') }}</button>
             <button class="btn btn-primary" id="add-course-btn">
-                <i class="fas fa-plus me-2"></i>Add new course
+                <i class="fas fa-plus me-2"></i>{{ __('courses.add_new') }}
             </button>
         </div>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>STATUS</th>
-                <th>TITLE</th>
-                <th>TEACHER</th>
-                <th>GROUP</th>
-                <th>START DATE</th>
-                <th>END DATE</th>
-                <th>ACTIONS</th>
+                <th>{{ __('courses.id') }}</th>
+                <th>{{ __('courses.status') }}</th>
+                <th>{{ __('courses.title') }}</th>
+                <th>{{ __('courses.teacher') }}</th>
+                <th>{{ __('courses.group') }}</th>
+                <th>{{ __('courses.start_date') }}</th>
+                <th>{{ __('courses.end_date') }}</th>
+                <th>{{ __('courses.actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -67,14 +67,14 @@
                                 <a class="dropdown-item edit-course-btn" 
                                    href="#" 
                                    data-id="{{ $course->id }}">
-                                    <i class="fas fa-edit me-2"></i>Edit
+                                    <i class="fas fa-edit me-2"></i>{{ __('courses.edit') }}
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item delete-course" 
                                    href="#" 
                                    data-id="{{ $course->id }}">
-                                    <i class="fas fa-trash me-2"></i>Delete
+                                    <i class="fas fa-trash me-2"></i>{{ __('courses.delete') }}
                                 </a>
                             </li>
                             <li>
@@ -83,7 +83,7 @@
                                    data-bs-toggle="modal" 
                                    data-bs-target="#uploadDocumentModal"
                                    data-course-id="{{ $course->id }}">
-                                    <i class="fas fa-upload me-2"></i>Upload Document
+                                    <i class="fas fa-upload me-2"></i>{{ __('courses.upload_document') }}
                                 </a>
                             </li>
                             <li>
@@ -93,7 +93,7 @@
                                    data-bs-target="#viewDocumentsModal"
                                    data-course-id="{{ $course->id }}"
                                    data-course-title="{{ $course->title }}">
-                                    <i class="fas fa-file me-2"></i>View Documents
+                                    <i class="fas fa-file me-2"></i>{{ __('courses.view_documents') }}
                                 </a>
                             </li>
                         </ul>
@@ -105,7 +105,7 @@
     </table>
     <div class="table-pagination">
         <div>
-            <span class="text-muted">Showing {{ $courses->firstItem() ?? 0 }} to {{ $courses->lastItem() ?? 0 }} of {{ $courses->total() ?? 0 }} results</span>
+            <span class="text-muted">{{ __('courses.showing') }} {{ $courses->firstItem() ?? 0 }} {{ __('courses.to') }} {{ $courses->lastItem() ?? 0 }} {{ __('courses.of') }} {{ $courses->total() ?? 0 }} {{ __('courses.results') }}</span>
         </div>
         <div class="page-numbers">
             {{ $courses->links() }}
@@ -127,17 +127,17 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Delete Course</h5>
+                <h5 class="modal-title">{{ __('courses.delete') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this course?</p>
+                <p>{{ __('courses.delete_confirm') }}</p>
                 <form id="deleteCourseForm" method="POST">
                     @csrf
                     @method('DELETE')
                     <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger px-4">Delete</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('courses.cancel') }}</button>
+                        <button type="submit" class="btn btn-danger px-4">{{ __('courses.delete') }}</button>
                     </div>
                 </form>
             </div>
@@ -150,7 +150,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Upload Course Document</h5>
+                <h5 class="modal-title">{{ __('courses.upload_document') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -158,30 +158,30 @@
                     @csrf
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label">Document Title</label>
+                            <label class="form-label">{{ __('courses.document_title') }}</label>
                             <input type="text" class="form-control" name="title" required>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Description</label>
+                            <label class="form-label">{{ __('courses.document_description') }}</label>
                             <textarea class="form-control" name="description" rows="2"></textarea>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Document Type</label>
+                            <label class="form-label">{{ __('courses.document_type') }}</label>
                             <select class="form-select" name="file_type" required>
-                                <option value="video">Video</option>
-                                <option value="image">Image</option>
-                                <option value="pdf">PDF</option>
+                                <option value="video">{{ __('courses.video') }}</option>
+                                <option value="image">{{ __('courses.image') }}</option>
+                                <option value="pdf">{{ __('courses.pdf') }}</option>
                             </select>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Document File</label>
+                            <label class="form-label">{{ __('courses.document_file') }}</label>
                             <input type="file" class="form-control" name="document" required>
-                            <small class="text-muted">Max file size: 100MB</small>
+                            <small class="text-muted">{{ __('courses.max_file_size') }}</small>
                         </div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-4">Upload</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('courses.cancel') }}</button>
+                        <button type="submit" class="btn btn-primary px-4">{{ __('courses.upload_document') }}</button>
                     </div>
                 </form>
             </div>
@@ -194,7 +194,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Course Documents</h5>
+                <h5 class="modal-title">{{ __('courses.course_documents') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">

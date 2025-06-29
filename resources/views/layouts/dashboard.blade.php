@@ -88,47 +88,94 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Top Navigation -->
-            <nav class="top-nav">
-                <div class="page-title">
-                    @yield('page-title', 'Dashboard')
-                </div>
-                <div class="nav-actions">
-                    <button class="icon-btn">
-                        <i class="fas fa-bell"></i>
-                    </button>
-                    <div class="dropdown">
-                        <button class="icon-btn dropdown-toggle" type="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('profile') }}">
-                                    <i class="fas fa-user me-2"></i>Modify Profile
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                    <a href="{{ route('profile') }}" class="user-profile text-decoration-none">
-                        <span class="user-name">{{ auth()->user()->firstname }} {{ auth()->user()->lastname }}</span>
-                        <div class="avatar">
-                            @if(auth()->user()->photo)
-                                <img src="{{ asset('storage/' . auth()->user()->photo) }}" alt="Profile">
-                            @else
-                                <img src="https://ui-avatars.com/api/?name={{ auth()->user()->firstname }}+{{ auth()->user()->lastname }}&background=7F56D9&color=fff" alt="Profile">
-                            @endif
-                        </div>
+            <!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="page-title">
+        @yield('page-title', 'Dashboard')
+    </div>
+    <div class="nav-actions">
+        <button class="icon-btn">
+            <i class="fas fa-bell"></i>
+        </button>
+        
+        <!-- Language Switcher: Moved outside settings dropdown -->
+        <div class="dropdown me-2">
+            <button class="icon-btn dropdown-toggle d-flex align-items-center" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-globe me-1"></i>
+                <span class="current-lang-flag">
+                    @if(app()->getLocale() == 'en')
+                        <span class="flag-icon flag-icon-us"></span>
+                    @elseif(app()->getLocale() == 'fr')
+                        <span class="flag-icon flag-icon-fr"></span>
+                    @elseif(app()->getLocale() == 'ar')
+                        <span class="flag-icon flag-icon-sa"></span>
+                    @endif
+                </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                <li><h6 class="dropdown-header">{{ __('app.language') }}</h6></li>
+                <li>
+                    <a class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}" href="{{ route('language.switch', 'en') }}">
+                        <span class="flag-icon flag-icon-us me-2"></span>English
+                        @if(app()->getLocale() == 'en')
+                            <i class="fas fa-check ms-auto"></i>
+                        @endif
                     </a>
-                </div>
-            </nav>
+                </li>
+                <li>
+                    <a class="dropdown-item {{ app()->getLocale() == 'fr' ? 'active' : '' }}" href="{{ route('language.switch', 'fr') }}">
+                        <span class="flag-icon flag-icon-fr me-2"></span>{{ __('app.french') }}
+                        @if(app()->getLocale() == 'fr')
+                            <i class="fas fa-check ms-auto"></i>
+                        @endif
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}" href="{{ route('language.switch', 'ar') }}">
+                        <span class="flag-icon flag-icon-sa me-2"></span>{{ __('app.arabic') }}
+                        @if(app()->getLocale() == 'ar')
+                            <i class="fas fa-check ms-auto"></i>
+                        @endif
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Settings Dropdown -->
+        <div class="dropdown">
+            <button class="icon-btn dropdown-toggle" type="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-cog"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
+                <li>
+                    <a class="dropdown-item" href="{{ route('profile') }}">
+                        <i class="fas fa-user me-2"></i>Modify Profile
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        
+        <a href="{{ route('profile') }}" class="user-profile text-decoration-none">
+            <span class="user-name">{{ auth()->user()->firstname }} {{ auth()->user()->lastname }}</span>
+            <div class="avatar">
+                @if(auth()->user()->photo)
+                    <img src="{{ asset('storage/' . auth()->user()->photo) }}" alt="Profile">
+                @else
+                    <img src="https://ui-avatars.com/api/?name={{ auth()->user()->firstname }}+{{ auth()->user()->lastname }}&background=7F56D9&color=fff" alt="Profile">
+                @endif
+            </div>
+        </a>
+    </div>
+</nav>
 
             <!-- Page Content -->
             <div class="content">

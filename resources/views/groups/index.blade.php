@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Group Management')
+@section('page-title', __('groups.management'))
 
 @section('content')
 <div class="table-section">
@@ -11,25 +11,25 @@
                     <span class="input-group-text bg-white border-end-0">
                         <i class="fas fa-search text-muted"></i>
                     </span>
-                    <input type="text" class="form-control border-start-0" placeholder="Search for a Group by name">
+                    <input type="text" class="form-control border-start-0" placeholder="{{ __('groups.search_placeholder') }}">
                 </div>
             </div>
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-primary" id="add-group-btn">
-                <i class="fas fa-plus me-2"></i>Add new group
+                <i class="fas fa-plus me-2"></i>{{ __('groups.add_new') }}
             </button>
         </div>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>DEPARTMENT</th>
-                <th>YEAR</th>
-                <th>STATUS</th>
-                <th>ACTIONS</th>
+                <th>{{ __('groups.id') }}</th>
+                <th>{{ __('groups.name') }}</th>
+                <th>{{ __('groups.department') }}</th>
+                <th>{{ __('groups.year') }}</th>
+                <th>{{ __('groups.status') }}</th>
+                <th>{{ __('groups.actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -56,7 +56,7 @@
     </table>
     <div class="table-pagination">
         <div>
-            <span class="text-muted">Showing {{ $groups->firstItem() ?? 0 }} to {{ $groups->lastItem() ?? 0 }} of {{ $groups->total() ?? 0 }} results</span>
+            <span class="text-muted">{{ __('groups.showing') }} {{ $groups->firstItem() ?? 0 }} {{ __('groups.to') }} {{ $groups->lastItem() ?? 0 }} {{ __('groups.of') }} {{ $groups->total() ?? 0 }} {{ __('groups.results') }}</span>
         </div>
         <div class="page-numbers">
             {{ $groups->links() }}
@@ -78,17 +78,17 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Delete Group</h5>
+                <h5 class="modal-title">{{ __('groups.delete') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this group?</p>
+                <p>{{ __('groups.delete_confirm') }}</p>
                 <form id="deleteGroupForm" method="POST">
                     @csrf
                     @method('DELETE')
                     <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger px-4">Delete</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('groups.cancel') }}</button>
+                        <button type="submit" class="btn btn-danger px-4">{{ __('groups.delete') }}</button>
                     </div>
                 </form>
             </div>

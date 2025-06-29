@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Dashboard')
+@section('page-title', __('app.dashboard'))
 
 @section('content')
 <div class="stats-grid">
@@ -10,7 +10,7 @@
         </div>
         <div class="stat-info">
             <div class="stat-value">{{ $stats['total_students'] }}</div>
-            <div class="stat-label">Students</div>
+            <div class="stat-label">{{ __('app.students') }}</div>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
         </div>
         <div class="stat-info">
             <div class="stat-value">{{ $stats['total_teachers'] }}</div>
-            <div class="stat-label">Teachers</div>
+            <div class="stat-label">{{ __('app.teachers') }}</div>
         </div>
     </div>
 
@@ -30,7 +30,7 @@
         </div>
         <div class="stat-info">
             <div class="stat-value">{{ $stats['total_courses'] }}</div>
-            <div class="stat-label">Courses</div>
+            <div class="stat-label">{{ __('app.courses') }}</div>
         </div>
     </div>
 
@@ -40,24 +40,24 @@
         </div>
         <div class="stat-info">
             <div class="stat-value">{{ $stats['total_groups'] }}</div>
-            <div class="stat-label">Groups</div>
+            <div class="stat-label">{{ __('app.groups') }}</div>
         </div>
     </div>
 </div>
 
 <div class="table-section">
     <div class="table-header">
-        <h2 class="table-title">Teachers Overview</h2>
-        <a href="{{ url('/teachers') }}" class="btn btn-link">See all</a>
+        <h2 class="table-title">{{ __('dashboard.teachers_overview') }}</h2>
+        <a href="{{ url('/teachers') }}" class="btn btn-link">{{ __('dashboard.see_all') }}</a>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>Teacher</th>
-                <th>Department</th>
-                <th>Status</th>
-                <th>Courses</th>
-                <th>Contact</th>
+                <th>{{ __('dashboard.teacher') }}</th>
+                <th>{{ __('dashboard.department') }}</th>
+                <th>{{ __('dashboard.status') }}</th>
+                <th>{{ __('dashboard.courses') }}</th>
+                <th>{{ __('dashboard.contact') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -80,12 +80,12 @@
                 <td>{{ $teacher->department }}</td>
                 <td>
                     <span class="status-badge {{ strtolower($teacher->status) }}">
-                        {{ $teacher->status }}
+                        {{ __($teacher->status) }}
                     </span>
                 </td>
                 <td>
                     <div class="d-flex flex-column">
-                        <div class="fw-medium">{{ $teacher->teachingCourses->count() }} Courses</div>
+                        <div class="fw-medium">{{ $teacher->teachingCourses->count() }} {{ __('dashboard.courses') }}</div>
                         <div class="text-muted small">
                             @foreach($teacher->teachingCourses->take(2) as $course)
                                 {{ $course->title }}{{ !$loop->last ? ', ' : '' }}
@@ -110,15 +110,15 @@
 
 <div class="table-section">
     <div class="table-header">
-        <h2 class="table-title">Recent Courses</h2>
-        <a href="{{ url('/courses') }}" class="btn btn-link">See all</a>
+        <h2 class="table-title">{{ __('dashboard.recent_courses') }}</h2>
+        <a href="{{ url('/courses') }}" class="btn btn-link">{{ __('dashboard.see_all') }}</a>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Teacher</th>
-                <th>Group</th>
+                <th>{{ __('dashboard.title') }}</th>
+                <th>{{ __('dashboard.teacher') }}</th>
+                <th>{{ __('dashboard.group') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -135,18 +135,18 @@
 
 <div class="table-section">
     <div class="table-header">
-        <h2 class="table-title">Recent Feedbacks</h2>
-        <a href="{{ url('/feedbacks') }}" class="btn btn-link">See all</a>
+        <h2 class="table-title">{{ __('dashboard.recent_feedbacks') }}</h2>
+        <a href="{{ url('/feedbacks') }}" class="btn btn-link">{{ __('dashboard.see_all') }}</a>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Teacher</th>
-                <th>Group</th>
-                <th>Course</th>
-                <th>Content</th>
+                <th>{{ __('dashboard.id') }}</th>
+                <th>{{ __('dashboard.name') }}</th>
+                <th>{{ __('dashboard.teacher') }}</th>
+                <th>{{ __('dashboard.group') }}</th>
+                <th>{{ __('dashboard.course') }}</th>
+                <th>{{ __('dashboard.content') }}</th>
             </tr>
         </thead>
         <tbody>

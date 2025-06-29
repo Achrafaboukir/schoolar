@@ -4,11 +4,11 @@
         @method('PUT')
     @endif
     <div class="mb-3">
-        <label class="form-label">Role Name</label>
+        <label class="form-label">{{ __('roles.role_name') }}</label>
         <input type="text" name="name" class="form-control" value="{{ $role->name ?? '' }}" required>
     </div>
     <div class="mb-3">
-        <label class="form-label">Permissions</label>
+        <label class="form-label">{{ __('roles.permissions') }}</label>
         <div class="accordion" id="permissionsAccordion">
             <div class="row g-3">
                 @php
@@ -27,7 +27,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="heading-{{ $model }}">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $model }}" aria-expanded="false" aria-controls="collapse-{{ $model }}">
-                                        {{ ucfirst($model) }}
+                                        {{ __('roles.' . $model) }}
                                     </button>
                                 </h2>
                                 <div id="collapse-{{ $model }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $model }}" data-bs-parent="#permissionsAccordion">
@@ -38,7 +38,7 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $perm }}" id="perm_{{ $perm }}" {{ in_array($perm, $selected) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="perm_{{ $perm }}">
-                                                        {{ ucwords(str_replace('_',' ', $perm)) }}
+                                                        {{ __('roles.' . $perm) }}
                                                     </label>
                                                 </div>
                                             </div>
@@ -54,7 +54,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="heading-{{ $model }}">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $model }}" aria-expanded="false" aria-controls="collapse-{{ $model }}">
-                                        {{ ucfirst($model) }}
+                                        {{ __('roles.' . $model) }}
                                     </button>
                                 </h2>
                                 <div id="collapse-{{ $model }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $model }}" data-bs-parent="#permissionsAccordion">
@@ -65,7 +65,7 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $perm }}" id="perm_{{ $perm }}" {{ in_array($perm, $selected) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="perm_{{ $perm }}">
-                                                        {{ ucwords(str_replace('_',' ', $perm)) }}
+                                                        {{ __('roles.' . $perm) }}
                                                     </label>
                                                 </div>
                                             </div>
@@ -82,7 +82,7 @@
         </div>
     </div>
     <button type="submit" class="btn btn-primary">{{ $submitLabel }}</button>
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('roles.cancel') }}</button>
 </form>
 
 <script>

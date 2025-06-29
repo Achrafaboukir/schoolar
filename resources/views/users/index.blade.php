@@ -1,17 +1,17 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'User management')
+@section('page-title', __('users.management'))
 @section('content')
 <div class="table-section">
     <div class="table-header">
         <div class="d-flex gap-3 align-items-center">
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    Add filter
+                    {{ __('users.add_filter') }}
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Status</a></li>
-                    <li><a class="dropdown-item" href="#">Group</a></li>
+                    <li><a class="dropdown-item" href="#">{{ __('users.status') }}</a></li>
+                    <li><a class="dropdown-item" href="#">{{ __('users.group') }}</a></li>
                     <li><a class="dropdown-item" href="#">Date</a></li>
                 </ul>
             </div>
@@ -20,25 +20,25 @@
                     <span class="input-group-text bg-white border-end-0">
                         <i class="fas fa-search text-muted"></i>
                     </span>
-                    <input type="text" class="form-control border-start-0" placeholder="Search for a user by name or email">
+                    <input type="text" class="form-control border-start-0" placeholder="{{ __('users.search_placeholder') }}">
                 </div>
             </div>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary">Clear all</button>
+            <button class="btn btn-outline-secondary">{{ __('users.clear_all') }}</button>
             <button class="btn btn-primary" id="add-user-btn">
-                <i class="fas fa-plus me-2"></i>Add new user
+                <i class="fas fa-plus me-2"></i>{{ __('users.add_new') }}
             </button>
         </div>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>{{ __('users.name') }}</th>
+                <th>{{ __('users.email') }}</th>
+                <th>{{ __('users.role') }}</th>
+                <th>{{ __('users.status') }}</th>
+                <th>{{ __('users.actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -49,9 +49,9 @@
                 <td>{{ $user->role->name ?? '' }}</td>
                 <td>{{ $user->status }}</td>
                 <td>
-                    <button class="btn btn-primary btn-sm edit-user-btn" data-id="{{ $user->id }}" title="Edit User"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-danger btn-sm delete-user-btn" data-id="{{ $user->id }}" title="Delete User"><i class="fas fa-trash"></i></button>
-                    <button class="btn btn-warning btn-sm reset-password-user-btn" data-id="{{ $user->id }}" title="Reset Password"><i class="fas fa-key"></i></button>
+                    <button class="btn btn-primary btn-sm edit-user-btn" data-id="{{ $user->id }}" title="{{ __('users.edit') }}"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm delete-user-btn" data-id="{{ $user->id }}" title="{{ __('users.delete') }}"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-warning btn-sm reset-password-user-btn" data-id="{{ $user->id }}" title="{{ __('users.reset_password') }}"><i class="fas fa-key"></i></button>
                 </td>
             </tr>
             @endforeach

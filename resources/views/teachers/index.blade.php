@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Teacher management')
+@section('page-title', __('teachers.management'))
 
 @section('content')
 <div class="table-section">
@@ -8,11 +8,11 @@
         <div class="d-flex gap-3 align-items-center">
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    Add filter
+                    {{ __('teachers.add_filter') }}
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Status</a></li>
-                    <li><a class="dropdown-item" href="#">Group</a></li>
+                    <li><a class="dropdown-item" href="#">{{ __('teachers.status') }}</a></li>
+                    <li><a class="dropdown-item" href="#">{{ __('teachers.group') }}</a></li>
                     <li><a class="dropdown-item" href="#">Date</a></li>
                 </ul>
             </div>
@@ -21,28 +21,28 @@
                     <span class="input-group-text bg-white border-end-0">
                         <i class="fas fa-search text-muted"></i>
                     </span>
-                    <input type="text" class="form-control border-start-0" placeholder="Search for a Teacher by name or email">
+                    <input type="text" class="form-control border-start-0" placeholder="{{ __('teachers.search_placeholder') }}">
                 </div>
             </div>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary">Clear all</button>
+            <button class="btn btn-outline-secondary">{{ __('teachers.clear_all') }}</button>
             <button class="btn btn-primary" id="add-teacher-btn">
-                <i class="fas fa-plus me-2"></i>Add new teacher
+                <i class="fas fa-plus me-2"></i>{{ __('teachers.add_new') }}
             </button>
         </div>
     </div>
     <table class="data-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>STATUS</th>
-                <th>FIRSTNAME</th>
-                <th>LASTNAME</th>
-                <th>EMAIL</th>
-                <th>NUMBER</th>
-                <th>GROUP</th>
-                <th>ACTIONS</th>
+                <th>{{ __('teachers.id') }}</th>
+                <th>{{ __('teachers.status') }}</th>
+                <th>{{ __('teachers.firstname') }}</th>
+                <th>{{ __('teachers.lastname') }}</th>
+                <th>{{ __('teachers.email') }}</th>
+                <th>{{ __('teachers.number') }}</th>
+                <th>{{ __('teachers.group') }}</th>
+                <th>{{ __('teachers.actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -71,7 +71,7 @@
     </table>
     <div class="table-pagination">
         <div>
-            <span class="text-muted">Showing {{ $teachers->firstItem() ?? 0 }} to {{ $teachers->lastItem() ?? 0 }} of {{ $teachers->total() ?? 0 }} results</span>
+            <span class="text-muted">{{ __('teachers.showing') }} {{ $teachers->firstItem() ?? 0 }} {{ __('teachers.to') }} {{ $teachers->lastItem() ?? 0 }} {{ __('teachers.of') }} {{ $teachers->total() ?? 0 }} {{ __('teachers.results') }}</span>
         </div>
         <div class="page-numbers">
             {{ $teachers->links() }}
@@ -93,17 +93,17 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">Delete Teacher</h5>
+                <h5 class="modal-title">{{ __('teachers.delete') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this teacher?</p>
+                <p>{{ __('teachers.delete_confirm') }}</p>
                 <form id="deleteTeacherForm" method="POST">
                     @csrf
                     @method('DELETE')
                     <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger px-4">Delete</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('teachers.cancel') }}</button>
+                        <button type="submit" class="btn btn-danger px-4">{{ __('teachers.delete') }}</button>
                     </div>
                 </form>
             </div>
