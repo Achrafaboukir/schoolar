@@ -18,9 +18,19 @@ class TeacherController extends Controller
     public function index()
     {
         $teacherRole = Role::where('is_teacher', true)->first();
-        $teachers = User::where('role_id', $teacherRole->id)
-                       ->where('is_deleted', false)
-                       ->paginate(10);
+        $query = User::where('role_id', $teacherRole->id)
+                     ->where('is_deleted', false);
+        if (request()->has('search') && request('search')) {
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('firstname', 'like', "%$search%")
+                  ->orWhere('lastname', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhere('number', 'like', "%$search%")
+                ;
+            });
+        }
+        $teachers = $query->paginate(10);
         $groups = Group::where('is_deleted', false)->get();
         return view('teachers.index', compact('teachers', 'groups'));
     }

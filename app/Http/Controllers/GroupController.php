@@ -11,7 +11,12 @@ class GroupController extends Controller
     // Display a listing of the groups
     public function index()
     {
-        $groups = Group::paginate(10);
+        $query = Group::query();
+        if (request()->has('search') && request('search')) {
+            $search = request('search');
+            $query->where('name', 'like', "%$search%") ;
+        }
+        $groups = $query->paginate(10);
         $departments = Department::all();
         return view('groups.index', compact('groups', 'departments'));
     }

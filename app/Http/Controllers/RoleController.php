@@ -9,7 +9,12 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::where('is_deleted', false)->paginate(10);
+        $query = Role::where('is_deleted', false);
+        if (request()->has('search') && request('search')) {
+            $search = request('search');
+            $query->where('name', 'like', "%$search%") ;
+        }
+        $roles = $query->paginate(10);
         return view('roles.index', compact('roles'));
     }
 

@@ -8,12 +8,14 @@
         <div class="table-header">
             <div class="d-flex gap-3 align-items-center">
                 <div class="search-box flex-grow-1">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0">
-                            <i class="fas fa-search text-muted"></i>
-                        </span>
-                        <input type="text" class="form-control border-start-0" placeholder="{{ __('roles.search_placeholder') }}">
-                    </div>
+                    <form method="GET" action="" class="w-100">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" name="search" class="form-control border-start-0" placeholder="{{ __('roles.search_placeholder') }}" value="{{ request('search') }}">
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="d-flex gap-2">

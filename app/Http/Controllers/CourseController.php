@@ -12,9 +12,12 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::with(['teacher', 'group'])
-            ->where('is_deleted', false)
-            ->paginate(10);
+        $query = Course::with(['teacher', 'group'])->where('is_deleted', false);
+        if (request()->has('search') && request('search')) {
+            $search = request('search');
+            $query->where('title', 'like', "%$search%") ;
+        }
+        $courses = $query->paginate(10);
         
         $teacherRole = Role::where('is_teacher', true)->first();
         $teachers = User::where('role_id', $teacherRole->id)

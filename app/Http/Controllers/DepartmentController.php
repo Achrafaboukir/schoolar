@@ -10,7 +10,12 @@ class DepartmentController extends Controller
     // Display a listing of the departments
     public function index()
     {
-        $departments = Department::paginate(10);
+        $query = Department::query();
+        if (request()->has('search') && request('search')) {
+            $search = request('search');
+            $query->where('name', 'like', "%$search%") ;
+        }
+        $departments = $query->paginate(10);
         return view('departments.index', compact('departments'));
     }
 
