@@ -33,8 +33,7 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-brand">
-                <div class="brand-icon">A</div>
-                <span class="brand-name">Akademi</span>
+                <span class="brand-name"><img src="{{ asset('storage/logo.png') }}" alt="Akademi" class="logo-img"></span>
             </div>
             <ul class="sidebar-nav">
                 <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">

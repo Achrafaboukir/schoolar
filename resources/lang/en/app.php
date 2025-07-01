@@ -19,6 +19,7 @@ return [
     'groups' => 'Groups',
     'departments' => 'Departments',
     'user' => 'User',
+    'users' => 'Users',
     'roles' => 'Roles',
     'profile' => 'Profile',
     'logout' => 'Logout',

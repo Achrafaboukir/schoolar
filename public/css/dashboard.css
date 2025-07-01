@@ -52,12 +52,27 @@ body {
     justify-content: center;
     color: white;
     font-weight: 600;
+    overflow: hidden;
+}
+
+.brand-icon .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
 }
 
 .brand-name {
     color: white;
     font-size: 24px;
     font-weight: 600;
+}
+
+.brand-name .logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    max-width: 200px;
 }
 
 .sidebar-nav {
@@ -611,6 +626,7 @@ body {
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
 }
 
@@ -631,6 +647,13 @@ body {
     font-weight: 700;
     font-size: 1.25rem;
     color: var(--text-primary);
+}
+
+.brand-name .logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    max-width: 200px;
 }
 
 .sidebar-nav {
