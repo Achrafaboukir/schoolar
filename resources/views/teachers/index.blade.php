@@ -27,7 +27,7 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-secondary">{{ __('teachers.clear_all') }}</button>
-            <button class="btn btn-primary" id="add-teacher-btn">
+            <button class="btn btn-primary" id="add-teacher-btn" data-bs-toggle="modal" data-bs-target="#teacherModal">
                 <i class="fas fa-plus me-2"></i>{{ __('teachers.add_new') }}
             </button>
         </div>
@@ -36,31 +36,33 @@
         <thead>
             <tr>
                 <th>{{ __('teachers.id') }}</th>
-                <th>{{ __('teachers.status') }}</th>
                 <th>{{ __('teachers.firstname') }}</th>
                 <th>{{ __('teachers.lastname') }}</th>
                 <th>{{ __('teachers.email') }}</th>
                 <th>{{ __('teachers.number') }}</th>
                 <th>{{ __('teachers.group') }}</th>
+                <th>{{ __('teachers.status') }}</th>
                 <th>{{ __('teachers.actions') }}</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($teachers ?? [] as $teacher)
+            @foreach($teachers as $teacher)
             <tr>
                 <td>{{ $teacher->id }}</td>
-                <td><span class="status-badge {{ $teacher->status }}">{{ strtoupper($teacher->status) }}</span></td>
                 <td>{{ $teacher->firstname }}</td>
                 <td>{{ $teacher->lastname }}</td>
                 <td>{{ $teacher->email }}</td>
                 <td>{{ $teacher->number }}</td>
-                <td>{{ $teacher->group->name }}</td>
+                <td>{{ $teacher->group->name ?? '' }}</td>
                 <td>
+                    <span class="status-badge {{ $teacher->status ? 'active' : 'inactive' }}">{{ $teacher->status ? 'ACTIVE' : 'INACTIVE' }}</span>
+                </td>
+                <td class="actions-cell">
                     <div class="d-flex gap-2">
-                        <button class="btn btn-sm btn-icon btn-outline-danger delete-teacher" data-id="{{ $teacher->id }}">
+                        <button class="btn btn-sm btn-icon btn-outline-danger delete-teacher" data-id="{{ $teacher->id }}" title="{{ __('teachers.delete') }}">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button class="btn btn-sm btn-icon btn-outline-primary edit-teacher-btn" data-id="{{ $teacher->id }}">
+                        <button class="btn btn-sm btn-icon btn-outline-primary edit-teacher-btn" data-id="{{ $teacher->id }}" title="{{ __('teachers.edit') }}" data-bs-toggle="modal" data-bs-target="#teacherModal">
                             <i class="fas fa-edit"></i>
                         </button>
                     </div>
@@ -94,7 +96,7 @@
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title">{{ __('teachers.delete') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>{{ __('teachers.delete_confirm') }}</p>
@@ -169,31 +171,84 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Add Teacher
-    document.getElementById('add-teacher-btn').addEventListener('click', function() {
+    console.log('Teacher page script loaded');
+    
+    // Get the teacher modal
+    const teacherModal = document.getElementById('teacherModal');
+    
+    // Add event listeners for modal cleanup
+    if (teacherModal) {
+        // When modal is hidden, clean up any issues
+        teacherModal.addEventListener('hidden.bs.modal', function() {
+            console.log('Teacher modal hidden, cleaning up...');
+            // Call the cleanup function from dashboard.js
+            if (window.cleanupModalBackdrop) {
+                window.cleanupModalBackdrop();
+            }
+        });
+        
+        // When modal is shown, ensure proper state
+        teacherModal.addEventListener('shown.bs.modal', function() {
+            console.log('Teacher modal shown');
+        });
+    }
+    
+    // Add Teacher - Simplified approach
+    document.getElementById('add-teacher-btn').addEventListener('click', function(e) {
+        console.log('Add teacher button clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // First, show the modal immediately
+        const modal = document.getElementById('teacherModal');
+        if (modal) {
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+        }
+        
+        // Then load the content
         fetch("{{ route('teachers.create-form') }}")
             .then(res => res.text())
             .then(html => {
                 document.getElementById('teacher-modal-content').innerHTML = html;
-                new bootstrap.Modal(document.getElementById('teacherModal')).show();
+                console.log('Modal content loaded');
                 
                 // Add form submission handler
                 setupFormSubmission();
+            })
+            .catch(error => {
+                console.error('Error loading form:', error);
             });
     });
 
-    // Edit Teacher
+    // Edit Teacher - Simplified approach
     document.querySelectorAll('.edit-teacher-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function(e) {
+            console.log('Edit teacher button clicked');
+            e.preventDefault();
+            e.stopPropagation();
+            
             const id = this.getAttribute('data-id');
+            
+            // First, show the modal immediately
+            const modal = document.getElementById('teacherModal');
+            if (modal) {
+                const modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+            }
+            
+            // Then load the content
             fetch(`/teachers/${id}/edit-form`)
                 .then(res => res.text())
                 .then(html => {
                     document.getElementById('teacher-modal-content').innerHTML = html;
-                    new bootstrap.Modal(document.getElementById('teacherModal')).show();
+                    console.log('Edit form loaded');
                     
                     // Add form submission handler
                     setupFormSubmission();
+                })
+                .catch(error => {
+                    console.error('Error loading edit form:', error);
                 });
         });
     });
@@ -243,7 +298,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (data && data.success) {
                         // Close modal and reload page
-                        bootstrap.Modal.getInstance(document.getElementById('teacherModal')).hide();
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('teacherModal'));
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                        // Clean up after closing
+                        setTimeout(() => {
+                            if (window.cleanupModalBackdrop) {
+                                window.cleanupModalBackdrop();
+                            }
+                        }, 100);
                         window.location.reload();
                     } else if (data && data.errors) {
                         // Show validation errors
@@ -284,6 +348,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 errorDiv.textContent = errors[field][0];
                 input.parentNode.appendChild(errorDiv);
             }
+        });
+    }
+    
+    // Add touch event handlers for mobile
+    if (window.innerWidth < 768) {
+        console.log('Mobile detected, adding touch handlers');
+        
+        // Add touch handlers for buttons
+        const addBtn = document.getElementById('add-teacher-btn');
+        if (addBtn) {
+            addBtn.addEventListener('touchstart', function(e) {
+                console.log('Add button touch start');
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            addBtn.addEventListener('touchend', function(e) {
+                console.log('Add button touch end');
+                this.style.transform = 'scale(1)';
+                // Trigger click
+                this.click();
+            });
+        }
+        
+        // Add touch handlers for edit buttons
+        document.querySelectorAll('.edit-teacher-btn').forEach(btn => {
+            btn.addEventListener('touchstart', function(e) {
+                console.log('Edit button touch start');
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            btn.addEventListener('touchend', function(e) {
+                console.log('Edit button touch end');
+                this.style.transform = 'scale(1)';
+                // Trigger click
+                this.click();
+            });
         });
     }
 });

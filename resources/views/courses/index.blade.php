@@ -27,7 +27,7 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-secondary">{{ __('courses.clear_all') }}</button>
-            <button class="btn btn-primary" id="add-course-btn">
+            <button class="btn btn-primary" id="add-course-btn" data-bs-toggle="modal" data-bs-target="#courseModal">
                 <i class="fas fa-plus me-2"></i>{{ __('courses.add_new') }}
             </button>
         </div>
@@ -36,67 +36,38 @@
         <thead>
             <tr>
                 <th>{{ __('courses.id') }}</th>
-                <th>{{ __('courses.status') }}</th>
                 <th>{{ __('courses.title') }}</th>
                 <th>{{ __('courses.teacher') }}</th>
                 <th>{{ __('courses.group') }}</th>
                 <th>{{ __('courses.start_date') }}</th>
                 <th>{{ __('courses.end_date') }}</th>
+                <th>{{ __('courses.status') }}</th>
                 <th>{{ __('courses.actions') }}</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($courses ?? [] as $course)
+            @foreach($courses as $course)
             <tr>
                 <td>{{ $course->id }}</td>
-                <td><span class="status-badge {{ $course->status ? 'active' : 'inactive' }}">
-                    {{ $course->status ? 'ACTIVE' : 'INACTIVE' }}
-                </span></td>
                 <td>{{ $course->title }}</td>
-                <td>{{ $course->teacher->firstname }} {{ $course->teacher->lastname }}</td>
-                <td>{{ $course->group->name }}</td>
-                <td>{{ $course->start_date->format('Y-m-d') }}</td>
-                <td>{{ $course->end_date->format('Y-m-d') }}</td>
+                <td>{{ $course->teacher->firstname ?? '' }} {{ $course->teacher->lastname ?? '' }}</td>
+                <td>{{ $course->group->name ?? '' }}</td>
+                <td>{{ $course->start_date ? $course->start_date->format('Y-m-d') : '' }}</td>
+                <td>{{ $course->end_date ? $course->end_date->format('Y-m-d') : '' }}</td>
                 <td>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-icon btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-gears"></i>
+                    <span class="status-badge {{ $course->status ? 'active' : 'inactive' }}">{{ $course->status ? 'ACTIVE' : 'INACTIVE' }}</span>
+                </td>
+                <td class="actions-cell">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-icon btn-outline-danger delete-course" data-id="{{ $course->id }}" title="{{ __('courses.delete') }}">
+                            <i class="fas fa-trash"></i>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item edit-course-btn" 
-                                   href="#" 
-                                   data-id="{{ $course->id }}">
-                                    <i class="fas fa-edit me-2"></i>{{ __('courses.edit') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item delete-course" 
-                                   href="#" 
-                                   data-id="{{ $course->id }}">
-                                    <i class="fas fa-trash me-2"></i>{{ __('courses.delete') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item upload-document" 
-                                   href="#" 
-                                   data-bs-toggle="modal" 
-                                   data-bs-target="#uploadDocumentModal"
-                                   data-course-id="{{ $course->id }}">
-                                    <i class="fas fa-upload me-2"></i>{{ __('courses.upload_document') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item view-documents" 
-                                   href="#" 
-                                   data-bs-toggle="modal" 
-                                   data-bs-target="#viewDocumentsModal"
-                                   data-course-id="{{ $course->id }}"
-                                   data-course-title="{{ $course->title }}">
-                                    <i class="fas fa-file me-2"></i>{{ __('courses.view_documents') }}
-                                </a>
-                            </li>
-                        </ul>
+                        <button class="btn btn-sm btn-icon btn-outline-primary edit-course-btn" data-id="{{ $course->id }}" title="{{ __('courses.edit') }}" data-bs-toggle="modal" data-bs-target="#courseModal">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-icon btn-outline-info view-documents-btn" data-id="{{ $course->id }}" title="{{ __('courses.view_documents') }}">
+                            <i class="fas fa-file-alt"></i>
+                        </button>
                     </div>
                 </td>
             </tr>
@@ -128,7 +99,7 @@
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title">{{ __('courses.delete') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>{{ __('courses.delete_confirm') }}</p>
@@ -151,7 +122,7 @@
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title">{{ __('courses.upload_document') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="uploadDocumentForm" method="POST" enctype="multipart/form-data">
@@ -195,7 +166,7 @@
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title">{{ __('courses.course_documents') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="documents-container">
@@ -254,31 +225,82 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Add Course
-    document.getElementById('add-course-btn').addEventListener('click', function() {
+    console.log('Course page script loaded');
+    
+    // Get the course modal
+    const courseModal = document.getElementById('courseModal');
+    
+    // Add event listeners for modal cleanup
+    if (courseModal) {
+        // When modal is hidden, clean up any issues
+        courseModal.addEventListener('hidden.bs.modal', function() {
+            console.log('Course modal hidden, cleaning up...');
+            // Call the cleanup function from dashboard.js
+            if (window.cleanupModalBackdrop) {
+                window.cleanupModalBackdrop();
+            }
+        });
+        
+        // When modal is shown, ensure proper state
+        courseModal.addEventListener('shown.bs.modal', function() {
+            console.log('Course modal shown');
+        });
+    }
+    
+    // Add Course - Simplified approach
+    document.getElementById('add-course-btn').addEventListener('click', function(e) {
+        console.log('Add course button clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Clear modal content before showing
+        document.getElementById('course-modal-content').innerHTML = '';
+        // First, show the modal immediately
+        const modal = document.getElementById('courseModal');
+        if (modal) {
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+        }
+        // Then load the content
         fetch("{{ route('courses.create-form') }}")
             .then(res => res.text())
             .then(html => {
                 document.getElementById('course-modal-content').innerHTML = html;
-                new bootstrap.Modal(document.getElementById('courseModal')).show();
-                
+                console.log('Modal content loaded');
                 // Add form submission handler
                 setupFormSubmission();
+            })
+            .catch(error => {
+                console.error('Error loading form:', error);
             });
     });
 
-    // Edit Course
+    // Edit Course - Simplified approach
     document.querySelectorAll('.edit-course-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function(e) {
+            console.log('Edit course button clicked');
+            e.preventDefault();
+            e.stopPropagation();
             const id = this.getAttribute('data-id');
+            // Clear modal content before showing
+            document.getElementById('course-modal-content').innerHTML = '';
+            // First, show the modal immediately
+            const modal = document.getElementById('courseModal');
+            if (modal) {
+                const modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+            }
+            // Then load the content
             fetch(`/courses/${id}/edit-form`)
                 .then(res => res.text())
                 .then(html => {
                     document.getElementById('course-modal-content').innerHTML = html;
-                    new bootstrap.Modal(document.getElementById('courseModal')).show();
-                    
+                    console.log('Edit form loaded');
                     // Add form submission handler
                     setupFormSubmission();
+                })
+                .catch(error => {
+                    console.error('Error loading edit form:', error);
                 });
         });
     });
@@ -306,11 +328,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // View Documents
-    const viewDocumentsButtons = document.querySelectorAll('.view-documents');
+    const viewDocumentsButtons = document.querySelectorAll('.view-documents-btn');
     viewDocumentsButtons.forEach(button => {
         button.addEventListener('click', async function() {
-            const courseId = this.dataset.courseId;
-            const courseTitle = this.dataset.courseTitle;
+            const courseId = this.dataset.id;
+            const courseTitle = this.dataset.courseTitle || '';
             const modal = document.getElementById('viewDocumentsModal');
             const documentsList = document.getElementById('documentsList');
             
@@ -373,6 +395,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 });
+                // Show the modal
+                const modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
             } catch (error) {
                 console.error('Error loading documents:', error);
                 documentsList.innerHTML = '<div class="col-12"><p class="text-danger">Failed to load documents</p></div>';
@@ -426,7 +451,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (data && data.success) {
                         // Close modal and reload page
-                        bootstrap.Modal.getInstance(document.getElementById('courseModal')).hide();
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('courseModal'));
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                        // Clean up after closing
+                        setTimeout(() => {
+                            if (window.cleanupModalBackdrop) {
+                                window.cleanupModalBackdrop();
+                            }
+                        }, 100);
                         window.location.reload();
                     } else if (data && data.errors) {
                         // Show validation errors
@@ -468,6 +502,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.parentNode.appendChild(errorDiv);
             }
         });
+    }
+    
+    // Add touch event handlers for mobile
+    if (window.innerWidth < 768) {
+        console.log('Mobile detected, adding touch handlers');
+        
+        // Add touch handlers for buttons
+        const addBtn = document.getElementById('add-course-btn');
+        if (addBtn) {
+            addBtn.addEventListener('touchstart', function(e) {
+                console.log('Add button touch start');
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            addBtn.addEventListener('touchend', function(e) {
+                console.log('Add button touch end');
+                this.style.transform = 'scale(1)';
+                // Trigger click
+                this.click();
+            });
+        }
+        
+        // Add touch handlers for edit buttons
+        document.querySelectorAll('.edit-course-btn').forEach(btn => {
+            btn.addEventListener('touchstart', function(e) {
+                console.log('Edit button touch start');
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            btn.addEventListener('touchend', function(e) {
+                console.log('Edit button touch end');
+                this.style.transform = 'scale(1)';
+                // Trigger click
+                this.click();
+            });
+        });
+    }
+
+    // Global function to clean up Bootstrap modal backdrops and re-enable scrolling
+    window.cleanupModalBackdrop = function() {
+        // Remove all modal backdrops
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        // Remove modal-open class from body
+        document.body.classList.remove('modal-open');
+        // Remove padding from body (Bootstrap adds it)
+        document.body.style.paddingRight = '';
     }
 });
 </script>
