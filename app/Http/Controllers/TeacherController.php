@@ -27,7 +27,9 @@ class TeacherController extends Controller
                   ->orWhere('lastname', 'like', "%$search%")
                   ->orWhere('email', 'like', "%$search%")
                   ->orWhere('number', 'like', "%$search%")
-                ;
+                  ->orWhereHas('group', function($g) use ($search) {
+                      $g->where('name', 'like', "%$search%") ;
+                  });
             });
         }
         $teachers = $query->paginate(10);

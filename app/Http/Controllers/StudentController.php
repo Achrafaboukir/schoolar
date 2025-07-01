@@ -24,8 +24,13 @@ class StudentController extends Controller
                   ->orWhere('lastname', 'like', "%$search%")
                   ->orWhere('email', 'like', "%$search%")
                   ->orWhere('student_number', 'like', "%$search%")
-                ;
+                  ->orWhereHas('group', function($g) use ($search) {
+                      $g->where('name', 'like', "%$search%") ;
+                  });
             });
+        }
+        if (request()->has('group_id') && request('group_id')) {
+            $query->where('group_id', request('group_id'));
         }
         $students = $query->paginate(10);
         $groups = Group::all();

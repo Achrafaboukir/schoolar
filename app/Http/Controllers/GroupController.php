@@ -14,7 +14,12 @@ class GroupController extends Controller
         $query = Group::query();
         if (request()->has('search') && request('search')) {
             $search = request('search');
-            $query->where('name', 'like', "%$search%") ;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                  ->orWhereHas('department', function($d) use ($search) {
+                      $d->where('name', 'like', "%$search%") ;
+                  });
+            });
         }
         $groups = $query->paginate(10);
         $departments = Department::all();
@@ -42,7 +47,7 @@ class GroupController extends Controller
             'name' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
             'year' => 'required|integer',
-            'status' => 'required|integer|in:0,1', // Assuming status is an integer (0 for inactive, 1 for active)
+            'status' => 'required|integer|in:0,1,3', // Assuming status is an integer (0 for inactive, 1 for active)
         ]);
 
         Group::create([
@@ -86,7 +91,7 @@ class GroupController extends Controller
             'name' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
             'year' => 'required|integer',
-            'status' => 'required|in:active,inactive,completed',
+            'status' => 'required|in:1,0,3',
         ]);
 
         $group->update([

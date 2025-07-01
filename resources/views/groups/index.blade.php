@@ -39,7 +39,7 @@
             <tr>
                 <td>{{ $group->id }}</td>
                 <td>{{ $group->name }}</td>
-                <td>{{ $group->department }}</td>
+                <td>{{ $group->department ? $group->department->name : '' }}</td>
                 <td>{{ $group->year }}</td>
                 <td>
                     <span class="status-badge {{ $group->status }}">{{ strtoupper($group->status) }}</span>

@@ -15,7 +15,16 @@ class CourseController extends Controller
         $query = Course::with(['teacher', 'group'])->where('is_deleted', false);
         if (request()->has('search') && request('search')) {
             $search = request('search');
-            $query->where('title', 'like', "%$search%") ;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                  ->orWhereHas('teacher', function($t) use ($search) {
+                      $t->where('firstname', 'like', "%$search%")
+                        ->orWhere('lastname', 'like', "%$search%");
+                  })
+                  ->orWhereHas('group', function($g) use ($search) {
+                      $g->where('name', 'like', "%$search%") ;
+                  });
+            });
         }
         $courses = $query->paginate(10);
         

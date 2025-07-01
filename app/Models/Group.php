@@ -54,4 +54,12 @@ class Group extends Model
     {
         return $this->hasMany(Course::class);
     }
-} 
+
+    /**
+     * Get the department that owns the group.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+}
