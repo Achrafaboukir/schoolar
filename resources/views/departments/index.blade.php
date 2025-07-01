@@ -123,7 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Add department button clicked');
         e.preventDefault();
         e.stopPropagation();
-        
+        // Clear modal content to prevent old values flashing
+        document.getElementById('department-modal-content').innerHTML = '';
         // First, show the modal immediately
         const modal = document.getElementById('departmentModal');
         if (modal) {
@@ -152,7 +153,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Edit department button clicked');
             e.preventDefault();
             e.stopPropagation();
-            
+            // Clear modal content to prevent old values flashing
+            document.getElementById('department-modal-content').innerHTML = '';
             const id = this.getAttribute('data-id');
             
             // First, show the modal immediately

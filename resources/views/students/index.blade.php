@@ -198,6 +198,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Add student button clicked');
         e.preventDefault();
         e.stopPropagation();
+        // Clear modal content to prevent old values flashing
+        document.getElementById('student-modal-content').innerHTML = '';
         
         // First, show the modal immediately
         const modal = document.getElementById('studentModal');
@@ -227,6 +229,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Edit student button clicked');
             e.preventDefault();
             e.stopPropagation();
+            // Clear modal content to prevent old values flashing
+            document.getElementById('student-modal-content').innerHTML = '';
             
             const id = this.getAttribute('data-id');
             

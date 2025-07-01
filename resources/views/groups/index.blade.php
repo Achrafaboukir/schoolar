@@ -129,7 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Add group button clicked');
         e.preventDefault();
         e.stopPropagation();
-        
+        // Clear modal content to prevent old values flashing
+        document.getElementById('group-modal-content').innerHTML = '';
         // First, show the modal immediately
         const modal = document.getElementById('groupModal');
         if (modal) {
@@ -158,7 +159,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Edit group button clicked');
             e.preventDefault();
             e.stopPropagation();
-            
+            // Clear modal content to prevent old values flashing
+            document.getElementById('group-modal-content').innerHTML = '';
             const id = this.getAttribute('data-id');
             
             // First, show the modal immediately

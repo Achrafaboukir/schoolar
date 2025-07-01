@@ -120,6 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // First, show the modal immediately
         const modal = document.getElementById('userModal');
         if (modal) {
+            // Clear modal content to prevent old values flashing
+            document.getElementById('user-modal-content').innerHTML = '';
             const modalInstance = new bootstrap.Modal(modal);
             modalInstance.show();
         }
@@ -148,6 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // First, show the modal immediately
             const modal = document.getElementById('userModal');
             if (modal) {
+                // Clear modal content to prevent old values flashing
+                document.getElementById('user-modal-content').innerHTML = '';
                 const modalInstance = new bootstrap.Modal(modal);
                 modalInstance.show();
             }

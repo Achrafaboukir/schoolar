@@ -252,8 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Add course button clicked');
         e.preventDefault();
         e.stopPropagation();
-        
-        // Clear modal content before showing
+        // Clear modal content to prevent old values flashing
         document.getElementById('course-modal-content').innerHTML = '';
         // First, show the modal immediately
         const modal = document.getElementById('courseModal');
@@ -281,9 +280,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Edit course button clicked');
             e.preventDefault();
             e.stopPropagation();
-            const id = this.getAttribute('data-id');
-            // Clear modal content before showing
+            // Clear modal content to prevent old values flashing
             document.getElementById('course-modal-content').innerHTML = '';
+            const id = this.getAttribute('data-id');
             // First, show the modal immediately
             const modal = document.getElementById('courseModal');
             if (modal) {

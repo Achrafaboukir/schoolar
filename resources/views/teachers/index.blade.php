@@ -198,14 +198,14 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Add teacher button clicked');
         e.preventDefault();
         e.stopPropagation();
-        
+        // Clear modal content to prevent old values flashing
+        document.getElementById('teacher-modal-content').innerHTML = '';
         // First, show the modal immediately
         const modal = document.getElementById('teacherModal');
         if (modal) {
             const modalInstance = new bootstrap.Modal(modal);
             modalInstance.show();
         }
-        
         // Then load the content
         fetch("{{ route('teachers.create-form') }}")
             .then(res => res.text())
@@ -227,16 +227,15 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Edit teacher button clicked');
             e.preventDefault();
             e.stopPropagation();
-            
+            // Clear modal content to prevent old values flashing
+            document.getElementById('teacher-modal-content').innerHTML = '';
             const id = this.getAttribute('data-id');
-            
             // First, show the modal immediately
             const modal = document.getElementById('teacherModal');
             if (modal) {
                 const modalInstance = new bootstrap.Modal(modal);
                 modalInstance.show();
             }
-            
             // Then load the content
             fetch(`/teachers/${id}/edit-form`)
                 .then(res => res.text())
