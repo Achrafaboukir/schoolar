@@ -21,7 +21,14 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">{{ __('students.number') }}</label>
-                    <input type="text" name="number" class="form-control" value="{{ $student->number ?? old('number') }}" placeholder="Ex: 066665555" required>
+                    <input type="text" name="number" class="form-control" value="{{ $student->student_number ?? old('number') }}" placeholder="Ex: 066665555" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ __('students.password') }}</label>
+                    <input type="password" name="password" class="form-control" placeholder="{{ isset($student) ? 'Leave blank to keep current password' : 'Enter password' }}" {{ isset($student) ? '' : 'required' }}>
+                    @if(isset($student))
+                        <small class="text-muted">{{ __('students.password_help') }}</small>
+                    @endif
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">{{ __('students.status') }}</label>

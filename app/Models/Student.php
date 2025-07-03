@@ -74,4 +74,12 @@ class Student extends Model
     {
         return "{$this->firstname} {$this->lastname}";
     }
+
+    /**
+     * Get the student's feedback.
+     */
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
+    }
 }

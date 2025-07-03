@@ -48,6 +48,8 @@ return [
     'status_active' => 'Active',
     'status_inactive' => 'Inactive',
     'date_of_birth' => 'Date of Birth',
+    'password' => 'Password',
+    'password_help' => 'Leave blank to keep current password',
     'documents' => 'Documents',
     'baccaloriat' => 'Baccaloriat',
     'picture' => 'Picture',

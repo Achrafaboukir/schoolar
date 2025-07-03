@@ -12,6 +12,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseDocumentController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\StudentAuthController;
 
 // Language switching route
 Route::get('/language/{locale}', [LanguageController::class, 'switchLanguage'])->name('language.switch');
@@ -104,6 +105,21 @@ Route::get('/test-current-user', function () {
 
 // Authentication routes
 Auth::routes();
+
+// Student authentication routes
+Route::prefix('student')->name('student.')->group(function () {
+    Route::get('/login', [StudentAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [StudentAuthController::class, 'login'])->name('login.post');
+    Route::post('/logout', [StudentAuthController::class, 'logout'])->name('logout');
+    
+    // Student routes (no middleware - simple session check)
+    Route::get('/dashboard', [StudentAuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('/courses', [StudentAuthController::class, 'courses'])->name('courses');
+    Route::get('/courses/{courseId}', [StudentAuthController::class, 'courseDetails'])->name('course.details');
+    Route::get('/courses/{courseId}/feedback', [StudentAuthController::class, 'showFeedbackForm'])->name('course.feedback');
+    Route::post('/courses/{courseId}/feedback', [StudentAuthController::class, 'submitFeedback'])->name('course.feedback.submit');
+    Route::get('/profile', [StudentAuthController::class, 'profile'])->name('profile');
+});
 
 // Protected routes (authentication required)
 Route::middleware(['auth'])->group(function () {

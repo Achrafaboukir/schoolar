@@ -68,6 +68,7 @@ class StudentController extends Controller
             'group' => 'required|string|max:50',
             'status' => 'required|integer|in:0,1', 
             'date_of_birth' => 'required|date',
+            'password' => 'nullable|string|min:6',
             'picture' => 'nullable|image|max:2048',
             'baccaloriat' => 'nullable|file|max:2048'
         ]);
@@ -96,7 +97,7 @@ class StudentController extends Controller
             'group_id' => $validated['group'],
             'status' => strtoupper($validated['status']),
             'date_of_birth' => $validated['date_of_birth'],
-            'password' => Hash::make(Str::random(10)), // Generate a random password
+            'password' => Hash::make($validated['password'] ?? Str::random(10)), // Use provided password or generate random
             'photo' => $validated['photo'] ?? null
         ];
 
@@ -139,8 +140,9 @@ class StudentController extends Controller
             'email' => 'required|email|unique:students,email,' . $student->id,
             'number' => 'required|string|max:20',
             'group' => 'required|string|max:50',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:0,1',
             'date_of_birth' => 'required|date',
+            'password' => 'nullable|string|min:6',
             'picture' => 'nullable|image|max:2048',
             'baccaloriat' => 'nullable|file|max:2048'
         ]);
@@ -170,6 +172,11 @@ class StudentController extends Controller
             'status' => strtoupper($validated['status']),
             'date_of_birth' => $validated['date_of_birth']
         ];
+
+        // Update password if provided
+        if (isset($validated['password'])) {
+            $studentData['password'] = Hash::make($validated['password']);
+        }
 
         // Only update photo if a new one was uploaded
         if (isset($validated['photo'])) {

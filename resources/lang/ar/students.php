@@ -48,6 +48,8 @@ return [
     'status_active' => 'نشط',
     'status_inactive' => 'غير نشط',
     'date_of_birth' => 'تاريخ الميلاد',
+    'password' => 'كلمة المرور',
+    'password_help' => 'اتركها فارغة للاحتفاظ بكلمة المرور الحالية',
     'documents' => 'المستندات',
     'baccaloriat' => 'البكالوريا',
     'picture' => 'الصورة',

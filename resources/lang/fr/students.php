@@ -48,6 +48,8 @@ return [
     'status_active' => 'Actif',
     'status_inactive' => 'Inactif',
     'date_of_birth' => 'Date de Naissance',
+    'password' => 'Mot de passe',
+    'password_help' => 'Laisser vide pour conserver le mot de passe actuel',
     'documents' => 'Documents',
     'baccaloriat' => 'Baccalauréat',
     'picture' => 'Photo',
