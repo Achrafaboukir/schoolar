@@ -54,4 +54,14 @@ class CourseDocumentController extends Controller
             'message' => 'Document deleted successfully'
         ]);
     }
+
+    public function download($id)
+    {
+        $document = CourseDocument::findOrFail($id);
+        $filePath = $document->file_path;
+        $fileName = $document->title . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
+        return \Storage::disk('public')->download($filePath, $fileName, [
+            'Content-Type' => $document->mime_type
+        ]);
+    }
 }

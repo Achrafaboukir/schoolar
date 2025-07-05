@@ -118,59 +118,51 @@
     </div>
 </div>
 
-<!-- Upload Document Modal -->
-<div class="modal fade" id="uploadDocumentModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">{{ __('courses.upload_document') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="uploadDocumentForm" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label">{{ __('courses.document_title') }}</label>
-                            <input type="text" class="form-control" name="title" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">{{ __('courses.document_description') }}</label>
-                            <textarea class="form-control" name="description" rows="2"></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">{{ __('courses.document_type') }}</label>
-                            <select class="form-select" name="file_type" required>
-                                <option value="video">{{ __('courses.video') }}</option>
-                                <option value="image">{{ __('courses.image') }}</option>
-                                <option value="pdf">{{ __('courses.pdf') }}</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">{{ __('courses.document_file') }}</label>
-                            <input type="file" class="form-control" name="document" required>
-                            <small class="text-muted">{{ __('courses.max_file_size') }}</small>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('courses.cancel') }}</button>
-                        <button type="submit" class="btn btn-primary px-4">{{ __('courses.upload_document') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- View Documents Modal -->
 <div class="modal fade" id="viewDocumentsModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title">{{ __('courses.course_documents') }}</h5>
+                <button type="button" class="btn btn-primary ms-3" id="addDocumentBtn">
+                    <i class="fas fa-plus me-1"></i> {{ __('courses.upload_document') }}
+                </button>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div id="inlineUploadForm" style="display:none;">
+                    <form id="uploadDocumentForm" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">{{ __('courses.document_title') }}</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">{{ __('courses.document_description') }}</label>
+                                <textarea class="form-control" name="description" rows="2"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">{{ __('courses.document_type') }}</label>
+                                <select class="form-select" name="file_type" required>
+                                    <option value="video">{{ __('courses.video') }}</option>
+                                    <option value="image">{{ __('courses.image') }}</option>
+                                    <option value="pdf">{{ __('courses.pdf') }}</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">{{ __('courses.document_file') }}</label>
+                                <input type="file" class="form-control" name="document" required>
+                                <small class="text-muted">{{ __('courses.max_file_size') }}</small>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" id="cancelUploadBtn">{{ __('courses.cancel') }}</button>
+                            <button type="submit" class="btn btn-primary px-4">{{ __('courses.upload_document') }}</button>
+                        </div>
+                    </form>
+                    <hr>
+                </div>
                 <div class="documents-container">
                     <div class="row g-3" id="documentsList">
                         <!-- Documents will be loaded here dynamically -->
@@ -328,11 +320,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    let currentCourseId = null;
     // View Documents
     const viewDocumentsButtons = document.querySelectorAll('.view-documents-btn');
     viewDocumentsButtons.forEach(button => {
         button.addEventListener('click', async function() {
             const courseId = this.dataset.id;
+            currentCourseId = courseId;
+            // Hide upload form on open
+            document.getElementById('inlineUploadForm').style.display = 'none';
             const courseTitle = this.dataset.courseTitle || '';
             const modal = document.getElementById('viewDocumentsModal');
             const documentsList = document.getElementById('documentsList');
@@ -404,6 +400,124 @@ document.addEventListener('DOMContentLoaded', function() {
                 documentsList.innerHTML = '<div class="col-12"><p class="text-danger">Failed to load documents</p></div>';
             }
         });
+    });
+
+    // Add Document from View Documents Modal (show inline form)
+    document.getElementById('addDocumentBtn').addEventListener('click', function() {
+        if (currentCourseId) {
+            const form = document.getElementById('uploadDocumentForm');
+            form.action = `/courses/${currentCourseId}/documents`;
+            document.getElementById('inlineUploadForm').style.display = 'block';
+            // Optionally, scroll to the form
+            document.getElementById('inlineUploadForm').scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    // Cancel upload (hide inline form)
+    document.getElementById('cancelUploadBtn').addEventListener('click', function() {
+        document.getElementById('inlineUploadForm').style.display = 'none';
+        document.getElementById('uploadDocumentForm').reset();
+    });
+
+    // AJAX upload for document (inline form)
+    document.getElementById('uploadDocumentForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = this;
+        const formData = new FormData(form);
+        // Add CSRF token as a field (do NOT set headers when using FormData)
+        formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                redirect: 'manual' // Prevent auto-following redirects
+            });
+            if (response.type === 'opaqueredirect' || response.status === 302) {
+                alert('You have been logged out or your session expired. Please log in again.');
+                window.location.reload();
+                return;
+            }
+            if (response.ok) {
+                // Hide upload form
+                document.getElementById('inlineUploadForm').style.display = 'none';
+                form.reset();
+                // Refresh documents list
+                if (currentCourseId) {
+                    // Re-fetch and update the documents list
+                    const documentsList = document.getElementById('documentsList');
+                    try {
+                        const response = await fetch(`/courses/${currentCourseId}/documents`);
+                        const data = await response.json();
+                        documentsList.innerHTML = data.documents.map(doc => `
+                            <div class="col-md-6">
+                                <div class="document-card">
+                                    <div class="d-flex gap-3 align-items-center">
+                                        <div class="document-icon ${doc.file_type}">
+                                            <i class="fas ${getDocumentIcon(doc.file_type)}"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">${doc.title}</h6>
+                                            <p class="text-muted small mb-1">${doc.description || ''}</p>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="badge bg-light text-dark">${doc.formatted_file_size}</span>
+                                                <span class="badge bg-light text-dark">${formatDate(doc.created_at)}</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <a href="/storage/${doc.file_path}" 
+                                               class="btn btn-sm btn-icon btn-outline-primary" 
+                                               target="_blank"
+                                               title="View/Download">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-icon btn-outline-danger delete-document"
+                                                    data-id="${doc.id}"
+                                                    title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                        // Re-attach delete handlers
+                        documentsList.querySelectorAll('.delete-document').forEach(btn => {
+                            btn.addEventListener('click', async function() {
+                                if (confirm('Are you sure you want to delete this document?')) {
+                                    const docId = this.dataset.id;
+                                    try {
+                                        await fetch(`/course-documents/${docId}`, {
+                                            method: 'DELETE',
+                                            headers: {
+                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                                            }
+                                        });
+                                        this.closest('.col-md-6').remove();
+                                    } catch (error) {
+                                        console.error('Error deleting document:', error);
+                                        alert('Failed to delete document');
+                                    }
+                                }
+                            });
+                        });
+                    } catch (error) {
+                        documentsList.innerHTML = '<div class="col-12"><p class="text-danger">Failed to load documents</p></div>';
+                    }
+                }
+            } else {
+                const data = await response.json();
+                if (data.errors) showValidationErrors(data.errors);
+            }
+        } catch (error) {
+            alert('Failed to upload document.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
     });
 
     function getDocumentIcon(type) {

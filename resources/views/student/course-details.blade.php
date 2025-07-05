@@ -7,27 +7,24 @@
     <title>{{ $course->title }} - {{ config('app.name', 'Akademi') }}</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-color: #4F46E5;
-            --primary-hover: #3730A3;
-            --secondary-color: #10B981;
-            --accent-color: #F59E0B;
-            --text-dark: #1F2937;
+            --primary-color: #1E3A8A;
+            --primary-hover: #1E40AF;
+            --secondary-color: #2DD4BF;
+            --accent-color: #F472B6;
+            --text-dark: #111827;
             --text-light: #6B7280;
-            --border-color: #E5E7EB;
+            --border-color: #E2E8F0;
             --bg-light: #F9FAFB;
             --white: #FFFFFF;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
+            --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
         }
 
         * {
@@ -37,470 +34,774 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-light);
             color: var(--text-dark);
+            line-height: 1.6;
         }
 
         .navbar {
-            background: var(--gradient-primary);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: var(--primary-color);
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .navbar-brand {
-            font-weight: 700;
-            color: var(--white) !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .nav-link {
-            color: var(--white) !important;
+            color: var(--white);
             font-weight: 500;
-            transition: opacity 0.3s ease;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
 
         .nav-link:hover {
-            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
-        .main-content {
-            padding: 30px 0;
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-hover);
+        }
+
+        .breadcrumb .separator {
+            color: var(--text-light);
+        }
+
+        .course-hero {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
         }
 
         .course-header {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
         }
 
         .course-title {
-            font-size: 32px;
+            font-size: 2.5rem;
             font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
         }
 
         .course-meta {
             display: flex;
-            gap: 30px;
-            margin-bottom: 20px;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
         }
 
         .meta-item {
             display: flex;
             align-items: center;
-            color: var(--text-light);
-            font-size: 14px;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            opacity: 0.9;
         }
 
         .meta-item i {
-            margin-right: 8px;
-            color: var(--primary-color);
-            width: 16px;
+            width: 1.2rem;
+            text-align: center;
         }
 
         .course-description {
-            color: var(--text-light);
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
         }
 
-        .course-actions {
+        .video-section {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .video-header {
+            padding: 1.5rem 2rem;
+            background: var(--gradient-secondary);
+            color: var(--white);
+        }
+
+        .video-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-subtitle {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .video-container {
+            position: relative;
+            padding: 2rem;
+            background: var(--white);
+        }
+
+        .video-player {
+            width: 100%;
+            height: 500px;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            background: #000;
+        }
+
+        .video-controls {
             display: flex;
-            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+
+        .video-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .video-duration {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .video-quality {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
             flex-wrap: wrap;
         }
 
-        .btn-course {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
             font-weight: 500;
             text-decoration: none;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
 
-        .btn-back {
-            background: var(--text-light);
+        .btn-primary {
+            background: var(--primary-color);
             color: var(--white);
         }
 
-        .btn-back:hover {
-            background: var(--text-dark);
-            color: var(--white);
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 58, 138, 0.3);
         }
 
-        .btn-feedback {
+        .btn-secondary {
             background: var(--secondary-color);
             color: var(--white);
         }
 
-        .btn-feedback:hover {
-            background: #059669;
-            color: var(--white);
+        .btn-secondary:hover {
+            background: #14B8A6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(45, 212, 191, 0.3);
         }
 
-        .btn-feedback-submitted {
+        .btn-outline {
+            background: transparent;
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--text-dark);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
             background: var(--accent-color);
             color: var(--white);
             cursor: default;
         }
 
-        .section-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 20px;
+        .documents-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
             display: flex;
             align-items: center;
+            margin-bottom: 2rem;
         }
 
-        .section-title i {
-            margin-right: 10px;
-            color: var(--primary-color);
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .documents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .document-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .document-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .document-icon {
-            width: 50px;
-            height: 50px;
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
             color: var(--white);
-            margin-bottom: 15px;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .document-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .document-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .document-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--white);
+            margin-bottom: 1rem;
         }
 
         .document-icon.pdf {
-            background: #EF4444;
+            background: linear-gradient(135deg, #DC2626, #EF4444);
         }
 
         .document-icon.doc {
-            background: #3B82F6;
+            background: linear-gradient(135deg, #1E3A8A, #3B82F6);
         }
 
         .document-icon.ppt {
-            background: #F59E0B;
+            background: linear-gradient(135deg, #F472B6, #EC4899);
         }
 
         .document-icon.xls {
-            background: #10B981;
-        }
-
-        .document-icon.other {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, #059669, #10B981);
         }
 
         .document-title {
-            font-size: 16px;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 8px;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
         }
 
         .document-meta {
             display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            font-size: 12px;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
             color: var(--text-light);
+        }
+
+        .document-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         .document-description {
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 0.9rem;
             line-height: 1.5;
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
         }
 
         .btn-download {
             background: var(--primary-color);
             color: var(--white);
-            padding: 8px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 12px;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 500;
+            text-decoration: none;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-download:hover {
             background: var(--primary-hover);
-            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
         }
 
-        .empty-documents {
+        .empty-state {
             text-align: center;
-            padding: 60px 20px;
+            padding: 4rem 2rem;
             color: var(--text-light);
         }
 
         .empty-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
             opacity: 0.5;
         }
 
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: var(--white);
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
         }
 
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            color: var(--white);
-        }
-
-        .breadcrumb-nav {
-            margin-bottom: 20px;
-        }
-
-        .breadcrumb-item a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .breadcrumb-item.active {
+        .no-video-placeholder {
+            background: var(--bg-light);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
             color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .no-video-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
         @media (max-width: 768px) {
-            .main-content {
-                padding: 20px 0;
-            }
-            
-            .course-header {
-                padding: 20px;
+            .main-container {
+                padding: 1rem;
             }
             
             .course-title {
-                font-size: 24px;
+                font-size: 2rem;
             }
             
             .course-meta {
-                gap: 15px;
+                gap: 1rem;
             }
             
-            .course-actions {
-                flex-direction: column;
+            .video-player {
+                height: 300px;
             }
             
-            .btn-course {
+            .action-buttons {
+                justify-content: center;
+            }
+            
+            .btn {
+                flex: 1;
                 justify-content: center;
             }
             
             .documents-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .course-header {
+                padding: 1.5rem;
+            }
+            
+            .course-title {
+                font-size: 1.75rem;
+            }
+            
+            .video-container {
+                padding: 1rem;
+            }
+            
+            .video-player {
+                height: 250px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                {{ config('app.name', 'Akademi') }}
-            </a>
-            
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link me-3" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>
-                    {{ __('app.dashboard') }}
+    <nav class="navbar">
+        <div class="main-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <a class="navbar-brand" href="{{ route('student.dashboard') }}">
+                    <i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>
+                    {{ config('app.name', 'Akademi') }}
                 </a>
-                <a class="nav-link me-3" href="{{ route('student.courses') }}">
-                    <i class="fas fa-book me-1"></i>
-                    {{ __('app.courses') }}
-                </a>
-                <a class="nav-link me-3" href="{{ route('student.profile') }}">
-                    <i class="fas fa-user me-1"></i>
-                    {{ __('app.profile') }}
-                </a>
-                <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="fas fa-sign-out-alt me-1"></i>
-                        {{ __('app.logout') }}
-                    </button>
-                </form>
+                
+                <div class="nav-links">
+                    <a class="nav-link" href="{{ route('student.dashboard') }}">
+                        <i class="fas fa-home" style="margin-right: 0.25rem;"></i>
+                        {{ __('app.dashboard') }}
+                    </a>
+                    <a class="nav-link" href="{{ route('student.courses') }}">
+                        <i class="fas fa-book" style="margin-right: 0.25rem;"></i>
+                        {{ __('app.courses') }}
+                    </a>
+                    <a class="nav-link" href="{{ route('student.profile') }}">
+                        <i class="fas fa-user" style="margin-right: 0.25rem;"></i>
+                        {{ __('app.profile') }}
+                    </a>
+                    <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt" style="margin-right: 0.25rem;"></i>
+                            {{ __('app.logout') }}
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <!-- Breadcrumb -->
-            <nav class="breadcrumb-nav">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('student.dashboard') }}">
-                            <i class="fas fa-home me-1"></i>
-                            {{ __('app.dashboard') }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('student.courses') }}">{{ __('app.my_courses') }}</a>
-                    </li>
-                    <li class="breadcrumb-item active">{{ $course->title }}</li>
-                </ol>
-            </nav>
+    <div class="main-container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="{{ route('student.dashboard') }}">
+                <i class="fas fa-home"></i>
+                {{ __('app.dashboard') }}
+            </a>
+            <span class="separator">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+            <a href="{{ route('student.courses') }}">{{ __('app.my_courses') }}</a>
+            <span class="separator">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+            <span>{{ $course->title }}</span>
+        </div>
 
-            <!-- Course Header -->
+        <!-- Course Hero -->
+        <div class="course-hero">
             <div class="course-header">
                 <h1 class="course-title">{{ $course->title }}</h1>
                 
                 <div class="course-meta">
                     <div class="meta-item">
                         <i class="fas fa-chalkboard-teacher"></i>
-                        {{ $course->teacher ? $course->teacher->firstname . ' ' . $course->teacher->lastname : __('app.no_teacher') }}
+                        <span>{{ $course->teacher ? $course->teacher->firstname . ' ' . $course->teacher->lastname : __('app.no_teacher') }}</span>
                     </div>
                     <div class="meta-item">
                         <i class="fas fa-calendar"></i>
-                        {{ $course->start_date ? $course->start_date->format('M Y') : __('app.no_date') }}
+                        <span>{{ $course->start_date ? $course->start_date->format('M Y') : __('app.no_date') }}</span>
                     </div>
                     <div class="meta-item">
                         <i class="fas fa-file-alt"></i>
-                        {{ $course->documents->count() }} {{ __('app.documents') }}
+                        <span>{{ $course->documents->count() }} {{ __('app.documents') }}</span>
                     </div>
                     <div class="meta-item">
                         <i class="fas fa-circle"></i>
-                        {{ $course->status ? __('app.active') : __('app.inactive') }}
+                        <span>{{ $course->status ? __('app.active') : __('app.inactive') }}</span>
                     </div>
                 </div>
                 
                 <p class="course-description">
                     {{ $course->description }}
                 </p>
-                
-                <div class="course-actions">
-                    <a href="{{ route('student.courses') }}" class="btn-course btn-back">
-                        <i class="fas fa-arrow-left me-1"></i>
-                        {{ __('app.back_to_courses') }}
-                    </a>
-                    
-                    @if($student->feedback->where('course_id', $course->id)->count())
-                        <span class="btn-course btn-feedback-submitted">
-                            <i class="fas fa-check me-1"></i>
-                            {{ __('app.feedback_submitted') }}
-                        </span>
-                    @else
-                        <a href="{{ route('student.course.feedback', $course->id) }}" class="btn-course btn-feedback">
-                            <i class="fas fa-comment me-1"></i>
-                            {{ __('app.give_feedback') }}
-                        </a>
-                    @endif
-                </div>
             </div>
+        </div>
 
-            <!-- Course Documents -->
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="section-title">
-                        <i class="fas fa-file-alt"></i>
-                        {{ __('app.course_documents') }}
-                    </h2>
+        <!-- Video Section -->
+        @php
+            $videos = $course->documents->filter(function($document) {
+                return $document->file_type === 'video';
+            });
+        @endphp
+        
+        @if($videos->count() > 0)
+            @foreach($videos as $document)
+                <div class="video-section">
+                    <div class="video-header">
+                        <h2 class="video-title">{{ $document->title }}</h2>
+                        <p class="video-subtitle">{{ $document->description ?? 'Course Video Content' }}</p>
+                    </div>
                     
-                    @if($course->documents->count() > 0)
-                        <div class="documents-grid">
-                            @foreach($course->documents as $document)
-                                <div class="document-card">
-                                    @php
-                                        $fileExtension = pathinfo($document->file_path, PATHINFO_EXTENSION);
-                                        $iconClass = 'other';
-                                        if (in_array(strtolower($fileExtension), ['pdf'])) {
-                                            $iconClass = 'pdf';
-                                        } elseif (in_array(strtolower($fileExtension), ['doc', 'docx'])) {
-                                            $iconClass = 'doc';
-                                        } elseif (in_array(strtolower($fileExtension), ['ppt', 'pptx'])) {
-                                            $iconClass = 'ppt';
-                                        } elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx'])) {
-                                            $iconClass = 'xls';
-                                        }
-                                    @endphp
-                                    
-                                    <div class="document-icon {{ $iconClass }}">
-                                        <i class="fas fa-file-{{ $iconClass === 'other' ? 'alt' : $iconClass }}"></i>
-                                    </div>
-                                    
-                                    <h3 class="document-title">{{ $document->title }}</h3>
-                                    
-                                    <div class="document-meta">
-                                        <span>
-                                            <i class="fas fa-calendar me-1"></i>
-                                            {{ $document->created_at->format('M d, Y') }}
-                                        </span>
-                                        <span>
-                                            <i class="fas fa-weight-hanging me-1"></i>
-                                            {{ $document->formatted_file_size }}
-                                        </span>
-                                    </div>
-                                    
-                                    @if($document->description)
-                                        <p class="document-description">
-                                            {{ Str::limit($document->description, 100) }}
-                                        </p>
-                                    @endif
-                                    
-                                    <a href="{{ asset('storage/' . $document->file_path) }}" 
-                                       class="btn-download" 
-                                       target="_blank"
-                                       download>
-                                        <i class="fas fa-download me-1"></i>
-                                        {{ __('app.download') }}
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="empty-documents">
-                            <div class="empty-icon">
-                                <i class="fas fa-file-alt"></i>
+                    <div class="video-container">
+                        <video class="video-player" controls poster="{{ asset('storage/' . $document->thumbnail_path ?? '') }}">
+                            <source src="{{ asset('storage/' . $document->file_path) }}" type="{{ $document->mime_type }}">
+                            Your browser does not support the video tag.
+                        </video>
+                        
+                        <div class="video-controls">
+                            <div class="video-info">
+                                <span class="video-duration">{{ $document->duration ?? 'N/A' }}</span>
+                                <span class="video-quality">{{ $document->quality ?? 'HD' }}</span>
                             </div>
-                            <h3>{{ __('app.no_documents_yet') }}</h3>
-                            <p>{{ __('app.no_documents_description') }}</p>
+                            
+                            <div class="action-buttons">
+                                <a href="{{ route('student.courses') }}" class="btn btn-outline">
+                                    <i class="fas fa-arrow-left"></i>
+                                    {{ __('app.back_to_courses') }}
+                                </a>
+                                @if($student->feedback->where('course_id', $course->id)->count())
+                                    <span class="btn btn-success">
+                                        <i class="fas fa-check"></i>
+                                        {{ __('app.feedback_submitted') }}
+                                    </span>
+                                @else
+                                    <a href="{{ route('student.course.feedback', $course->id) }}" class="btn btn-secondary">
+                                        <i class="fas fa-comment"></i>
+                                        {{ __('app.give_feedback') }}
+                                    </a>
+                                @endif
+                            </div>
                         </div>
-                    @endif
+                    </div>
                 </div>
+            @endforeach
+        @else
+            <div class="no-video-placeholder">
+                <div class="no-video-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h3 class="empty-title">{{ __('app.no_videos_yet') }}</h3>
+                <p>{{ __('app.no_videos_description') }}</p>
             </div>
+        @endif
+
+        <!-- Documents Section -->
+        <div class="documents-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h2 class="section-title">{{ __('app.course_documents') }}</h2>
+            </div>
+            
+            @php
+                $documents = $course->documents->filter(function($document) {
+                    return $document->file_type !== 'video';
+                });
+            @endphp
+            
+            @if($documents->count() > 0)
+                <div class="documents-grid">
+                    @foreach($documents as $document)
+                        <div class="document-card">
+                            @php
+                                $fileExtension = pathinfo($document->file_path, PATHINFO_EXTENSION);
+                                $iconClass = 'other';
+                                if (in_array(strtolower($fileExtension), ['pdf'])) {
+                                    $iconClass = 'pdf';
+                                } elseif (in_array(strtolower($fileExtension), ['doc', 'docx'])) {
+                                    $iconClass = 'doc';
+                                } elseif (in_array(strtolower($fileExtension), ['ppt', 'pptx'])) {
+                                    $iconClass = 'ppt';
+                                } elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx'])) {
+                                    $iconClass = 'xls';
+                                }
+                            @endphp
+                            
+                            <div class="document-icon {{ $iconClass }}">
+                                <i class="fas fa-file-{{ $iconClass === 'other' ? 'alt' : $iconClass }}"></i>
+                            </div>
+                            <h3 class="document-title">{{ $document->title }}</h3>
+                            <div class="document-meta">
+                                <span>
+                                    <i class="fas fa-calendar"></i>
+                                    {{ $document->created_at->format('M d, Y') }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-weight-hanging"></i>
+                                    {{ $document->formatted_file_size }}
+                                </span>
+                            </div>
+                            @if($document->description)
+                                <p class="document-description">
+                                    {{ Str::limit($document->description, 100) }}
+                                </p>
+                            @endif
+                            <a href="{{ route('course.documents.download', $document->id) }}" class="btn-download">
+                                <i class="fas fa-download"></i>
+                                {{ __('app.download') }}
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="empty-title">{{ __('app.no_documents_yet') }}</h3>
+                    <p>{{ __('app.no_documents_description') }}</p>
+                </div>
+            @endif
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Add loading state to download buttons
+            document.querySelectorAll('.btn-download').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+                    this.style.opacity = '0.7';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.style.opacity = '1';
+                        window.location.href = this.href;
+                    }, 2000);
+                });
+            });
+
+            // Video player enhancements
+            document.querySelectorAll('.video-player').forEach(video => {
+                video.addEventListener('play', function() {
+                    console.log('Video started playing');
+                });
+                
+                video.addEventListener('pause', function() {
+                    console.log('Video paused');
+                });
+            });
+        });
+    </script>
 </body>
-</html> 
+</html>

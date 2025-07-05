@@ -83,26 +83,6 @@ Route::get('/hash-password/{email}/{password}', function ($email, $password) {
     return response()->json(['error' => 'User not found'], 404);
 });
 
-// Temporary route to test current user - remove this in production
-Route::get('/test-current-user', function () {
-    if (auth()->check()) {
-        $user = auth()->user();
-        return response()->json([
-            'user_id' => $user->id,
-            'name' => $user->firstname . ' ' . $user->lastname,
-            'email' => $user->email,
-            'role' => $user->role ? [
-                'id' => $user->role->id,
-                'name' => $user->role->name,
-                'is_teacher' => $user->role->is_teacher,
-                'is_admin' => $user->role->is_admin
-            ] : null,
-            'is_authenticated' => true
-        ]);
-    }
-    return response()->json(['is_authenticated' => false]);
-});
-
 // Authentication routes
 Auth::routes();
 
@@ -189,8 +169,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/courses/{course}/edit-form', [CourseController::class, 'editForm'])->name('courses.edit-form');
 
     // Course document routes
-    Route::post('/courses/{courseId}/documents', [CourseDocumentController::class, 'store'])->name('course.documents.store');
     Route::delete('/course-documents/{id}', [CourseDocumentController::class, 'destroy'])->name('course.documents.destroy');
+    Route::get('/course-documents/{id}/download', [CourseDocumentController::class, 'download'])->name('course.documents.download');
 
     Route::get('/courses/{courseId}/documents', function ($courseId) {
         $course = \App\Models\Course::findOrFail($courseId);
@@ -214,5 +194,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('users/{user}/reset-password-modal', [App\Http\Controllers\UserController::class, 'resetPasswordModal'])->name('users.reset-password-modal');
     Route::resource('users', UserController::class);
 });
+
+// Course document upload route (public, no auth)
+Route::post('/courses/{courseId}/documents', [CourseDocumentController::class, 'store'])->name('course.documents.store');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

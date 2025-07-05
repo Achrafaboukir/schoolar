@@ -7,7 +7,7 @@
     <title>{{ __('app.my_courses') }} - {{ config('app.name', 'Akademi') }}</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,17 +17,17 @@
     
     <style>
         :root {
-            --primary-color: #4F46E5;
-            --primary-hover: #3730A3;
-            --secondary-color: #10B981;
-            --accent-color: #F59E0B;
-            --text-dark: #1F2937;
-            --text-light: #6B7280;
-            --border-color: #E5E7EB;
-            --bg-light: #F9FAFB;
+            --primary-color: #1E3A8A; /* Deep Navy */
+            --primary-hover: #1E40AF; /* Slightly lighter navy for hover */
+            --secondary-color: #2DD4BF; /* Soft Teal */
+            --accent-color: #F472B6; /* Warm Coral */
+            --text-dark: #111827; /* Charcoal */
+            --text-light: #6B7280; /* Slate Gray */
+            --border-color: #E2E8F0; /* Light Slate */
+            --bg-light: #F9FAFB; /* Off-White */
             --white: #FFFFFF;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
+            --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
         }
 
         * {
@@ -37,100 +37,108 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-light);
             color: var(--text-dark);
+            line-height: 1.5;
         }
 
         .navbar {
-            background: var(--gradient-primary);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: var(--primary-color);
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .navbar-brand {
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 1.5rem;
             color: var(--white) !important;
+            display: flex;
+            align-items: center;
         }
 
         .nav-link {
             color: var(--white) !important;
             font-weight: 500;
-            transition: opacity 0.3s ease;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .nav-link:hover {
-            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            transform: translateY(-2px);
         }
 
         .main-content {
-            padding: 30px 0;
+            padding: 2rem 0;
         }
 
         .page-header {
             background: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .page-title {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
         }
 
         .page-subtitle {
             color: var(--text-light);
-            font-size: 16px;
+            font-size: 1rem;
         }
 
         .course-card {
             background: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border: none;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 25px;
+            margin-bottom: 1.5rem;
             height: 100%;
         }
 
         .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         .course-header {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
         }
 
         .course-title {
-            font-size: 20px;
+            font-size: 1.125rem;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
         }
 
         .course-teacher {
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 0.875rem;
             display: flex;
             align-items: center;
         }
 
         .course-teacher i {
-            margin-right: 5px;
+            margin-right: 0.5rem;
         }
 
         .course-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: 500;
         }
 
@@ -146,15 +154,15 @@
 
         .course-description {
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 0.875rem;
             line-height: 1.6;
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
         }
 
         .course-meta {
             display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 1rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
         }
 
@@ -162,27 +170,27 @@
             display: flex;
             align-items: center;
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .meta-item i {
-            margin-right: 5px;
+            margin-right: 0.5rem;
             color: var(--primary-color);
         }
 
         .course-actions {
             display: flex;
-            gap: 10px;
+            gap: 0.75rem;
             flex-wrap: wrap;
         }
 
         .btn-course {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
             font-weight: 500;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             display: inline-flex;
             align-items: center;
         }
@@ -194,7 +202,7 @@
 
         .btn-view:hover {
             background: var(--primary-hover);
-            color: var(--white);
+            transform: translateY(-2px);
         }
 
         .btn-feedback {
@@ -203,8 +211,8 @@
         }
 
         .btn-feedback:hover {
-            background: #059669;
-            color: var(--white);
+            background: #14B8A6;
+            transform: translateY(-2px);
         }
 
         .btn-feedback-submitted {
@@ -215,43 +223,44 @@
 
         .btn-feedback-submitted:hover {
             background: var(--accent-color);
-            color: var(--white);
+            transform: none;
         }
 
         .empty-state {
             text-align: center;
-            padding: 80px 20px;
+            padding: 4rem 1rem;
             color: var(--text-light);
         }
 
         .empty-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            opacity: 0.5;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+ volumes: 0.5;
         }
 
         .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--white);
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            color: var(--white);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
 
         .breadcrumb-nav {
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
         }
 
         .breadcrumb-item a {
             color: var(--primary-color);
             text-decoration: none;
+            font-size: 0.875rem;
         }
 
         .breadcrumb-item.active {
@@ -260,19 +269,19 @@
 
         @media (max-width: 768px) {
             .main-content {
-                padding: 20px 0;
+                padding: 1.5rem 0;
             }
             
             .page-header {
-                padding: 20px;
+                padding: 1rem;
             }
             
             .page-title {
-                font-size: 24px;
+                font-size: 1.5rem;
             }
             
             .course-card {
-                padding: 20px;
+                padding: 1rem;
             }
             
             .course-header {
@@ -281,7 +290,7 @@
             }
             
             .course-status {
-                margin-top: 10px;
+                margin-top: 0.5rem;
             }
             
             .course-actions {
@@ -415,4 +424,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

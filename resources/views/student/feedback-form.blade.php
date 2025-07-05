@@ -7,7 +7,7 @@
     <title>{{ __('app.give_feedback') }} - {{ $course->title }}</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,17 +17,17 @@
     
     <style>
         :root {
-            --primary-color: #4F46E5;
-            --primary-hover: #3730A3;
-            --secondary-color: #10B981;
-            --accent-color: #F59E0B;
-            --text-dark: #1F2937;
-            --text-light: #6B7280;
-            --border-color: #E5E7EB;
-            --bg-light: #F9FAFB;
+            --primary-color: #1E3A8A; /* Deep Navy */
+            --primary-hover: #1E40AF; /* Slightly lighter navy for hover */
+            --secondary-color: #2DD4BF; /* Soft Teal */
+            --accent-color: #F472B6; /* Warm Coral */
+            --text-dark: #111827; /* Charcoal */
+            --text-light: #6B7280; /* Slate Gray */
+            --border-color: #E2E8F0; /* Light Slate */
+            --bg-light: #F9FAFB; /* Off-White */
             --white: #FFFFFF;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
+            --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
         }
 
         * {
@@ -37,33 +37,42 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-light);
             color: var(--text-dark);
+            line-height: 1.5;
         }
 
         .navbar {
-            background: var(--gradient-primary);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: var(--primary-color);
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .navbar-brand {
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 1.5rem;
             color: var(--white) !important;
+            display: flex;
+            align-items: center;
         }
 
         .nav-link {
             color: var(--white) !important;
             font-weight: 500;
-            transition: opacity 0.3s ease;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .nav-link:hover {
-            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            transform: translateY(-2px);
         }
 
         .main-content {
-            padding: 30px 0;
+            padding: 2rem 0;
         }
 
         .feedback-container {
@@ -73,75 +82,71 @@
 
         .page-header {
             background: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .page-title {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
         }
 
         .course-info {
             color: var(--text-light);
-            font-size: 16px;
-            margin-bottom: 20px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
         }
 
         .feedback-form {
             background: var(--white);
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 1.5rem;
         }
 
         .form-label {
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 0.875rem;
             color: var(--text-dark);
-            margin-bottom: 8px;
-            font-size: 14px;
-            display: block;
+            margin-bottom: 0.5rem;
         }
 
         .form-control {
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: var(--bg-light);
-            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .form-control:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
             outline: none;
         }
 
         .form-control.is-invalid {
-            border-color: #EF4444;
+            border-color: #DC2626;
         }
 
         textarea.form-control {
             resize: vertical;
-            min-height: 120px;
+            min-height: 100px;
         }
 
         .rating-group {
             display: flex;
-            gap: 10px;
+            gap: 0.5rem;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 0.5rem;
         }
 
         .rating-option {
@@ -157,29 +162,30 @@
         }
 
         .rating-star {
-            font-size: 24px;
-            color: #E5E7EB;
-            transition: all 0.3s ease;
+            font-size: 1.25rem;
+            color: var(--border-color);
+            transition: color 0.3s ease, transform 0.2s ease;
         }
 
         .rating-option:hover .rating-star,
         .rating-option input[type="radio"]:checked ~ .rating-star {
-            color: #F59E0B;
+            color: var(--accent-color);
+            transform: scale(1.1);
         }
 
         .rating-label {
-            font-size: 12px;
+            font-size: 0.75rem;
             color: var(--text-light);
-            margin-top: 5px;
+            margin-top: 0.25rem;
         }
 
         .form-check {
-            margin: 20px 0;
+            margin: 1rem 0;
         }
 
         .form-check-input {
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
         }
 
         .form-check-input:checked {
@@ -189,23 +195,23 @@
 
         .form-check-label {
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .form-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
             font-weight: 500;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             display: inline-flex;
             align-items: center;
             border: none;
@@ -219,7 +225,7 @@
 
         .btn-back:hover {
             background: var(--text-dark);
-            color: var(--white);
+            transform: translateY(-2px);
         }
 
         .btn-submit {
@@ -228,38 +234,39 @@
         }
 
         .btn-submit:hover {
-            background: #059669;
-            color: var(--white);
+            background: #14B8A6;
+            transform: translateY(-2px);
         }
 
         .invalid-feedback {
-            font-size: 12px;
-            color: #EF4444;
-            margin-top: 5px;
+            font-size: 0.75rem;
+            color: #DC2626;
+            margin-top: 0.25rem;
         }
 
         .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--white);
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            color: var(--white);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
 
         .breadcrumb-nav {
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
         }
 
         .breadcrumb-item a {
             color: var(--primary-color);
             text-decoration: none;
+            font-size: 0.875rem;
         }
 
         .breadcrumb-item.active {
@@ -267,34 +274,34 @@
         }
 
         .alert {
-            border-radius: 12px;
+            border-radius: 8px;
             border: none;
-            padding: 16px;
-            margin-bottom: 25px;
-            font-size: 14px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
         }
 
         .alert-danger {
             background: #FEF2F2;
             color: #DC2626;
-            border-left: 4px solid #EF4444;
+            border-left: 3px solid #DC2626;
         }
 
         @media (max-width: 768px) {
             .main-content {
-                padding: 20px 0;
+                padding: 1.5rem 0;
             }
             
             .page-header {
-                padding: 20px;
+                padding: 1rem;
             }
             
             .feedback-form {
-                padding: 25px;
+                padding: 1.25rem;
             }
             
             .page-title {
-                font-size: 24px;
+                font-size: 1.5rem;
             }
             
             .form-actions {
@@ -463,4 +470,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

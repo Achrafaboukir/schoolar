@@ -7,7 +7,7 @@
     <title>{{ __('app.profile') }} - {{ config('app.name', 'Akademi') }}</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,17 +17,17 @@
     
     <style>
         :root {
-            --primary-color: #4F46E5;
-            --primary-hover: #3730A3;
-            --secondary-color: #10B981;
-            --accent-color: #F59E0B;
-            --text-dark: #1F2937;
-            --text-light: #6B7280;
-            --border-color: #E5E7EB;
-            --bg-light: #F9FAFB;
+            --primary-color: #1E3A8A; /* Deep Navy */
+            --primary-hover: #1E40AF; /* Slightly lighter navy for hover */
+            --secondary-color: #2DD4BF; /* Soft Teal */
+            --accent-color: #F472B6; /* Warm Coral */
+            --text-dark: #111827; /* Charcoal */
+            --text-light: #6B7280; /* Slate Gray */
+            --border-color: #E2E8F0; /* Light Slate */
+            --bg-light: #F9FAFB; /* Off-White */
             --white: #FFFFFF;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
+            --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
         }
 
         * {
@@ -37,71 +37,80 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-light);
             color: var(--text-dark);
+            line-height: 1.5;
         }
 
         .navbar {
-            background: var(--gradient-primary);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: var(--primary-color);
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .navbar-brand {
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 1.5rem;
             color: var(--white) !important;
+            display: flex;
+            align-items: center;
         }
 
         .nav-link {
             color: var(--white) !important;
             font-weight: 500;
-            transition: opacity 0.3s ease;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .nav-link:hover {
-            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            transform: translateY(-2px);
         }
 
         .main-content {
-            padding: 30px 0;
+            padding: 2rem 0;
         }
 
         .profile-header {
             background: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
         .profile-avatar {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto 20px;
-            border: 4px solid var(--primary-color);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 0 auto 1rem;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .profile-name {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
         }
 
         .profile-email {
             color: var(--text-light);
-            font-size: 16px;
-            margin-bottom: 20px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
         }
 
         .profile-stats {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 1.5rem;
             flex-wrap: wrap;
         }
 
@@ -110,72 +119,72 @@
         }
 
         .stat-number {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 600;
             color: var(--primary-color);
         }
 
         .stat-label {
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .profile-info {
             background: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: 1.5rem;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
             display: flex;
             align-items: center;
         }
 
         .section-title i {
-            margin-right: 10px;
+            margin-right: 0.5rem;
             color: var(--primary-color);
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
         }
 
         .info-item {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 1rem;
             background: var(--bg-light);
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .info-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             background: var(--primary-color);
             color: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px;
+            margin-right: 1rem;
         }
 
         .info-content h4 {
-            font-size: 14px;
+            font-size: 0.875rem;
             color: var(--text-light);
-            margin-bottom: 5px;
+            margin-bottom: 0.25rem;
         }
 
         .info-content p {
-            font-size: 16px;
+            font-size: 1rem;
             color: var(--text-dark);
             font-weight: 500;
             margin: 0;
@@ -183,93 +192,94 @@
 
         .feedback-section {
             background: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .feedback-card {
             background: var(--bg-light);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--primary-color);
         }
 
         .feedback-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 15px;
+            margin-bottom: 0.75rem;
         }
 
         .feedback-title {
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 5px;
+            margin-bottom: 0.25rem;
         }
 
         .feedback-course {
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .feedback-rating {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 0.25rem;
         }
 
         .rating-stars {
-            color: #F59E0B;
+            color: var(--accent-color);
         }
 
         .feedback-date {
             color: var(--text-light);
-            font-size: 12px;
+            font-size: 0.75rem;
         }
 
         .feedback-content {
             color: var(--text-dark);
-            font-size: 14px;
+            font-size: 0.875rem;
             line-height: 1.6;
         }
 
         .empty-feedback {
             text-align: center;
-            padding: 60px 20px;
+            padding: 3rem 1rem;
             color: var(--text-light);
         }
 
         .empty-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
             opacity: 0.5;
         }
 
         .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--white);
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            color: var(--white);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
 
         .breadcrumb-nav {
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
         }
 
         .breadcrumb-item a {
             color: var(--primary-color);
             text-decoration: none;
+            font-size: 0.875rem;
         }
 
         .breadcrumb-item.active {
@@ -278,27 +288,27 @@
 
         @media (max-width: 768px) {
             .main-content {
-                padding: 20px 0;
+                padding: 1.5rem 0;
             }
             
             .profile-header {
-                padding: 20px;
+                padding: 1rem;
             }
             
             .profile-info {
-                padding: 20px;
+                padding: 1rem;
             }
             
             .feedback-section {
-                padding: 20px;
+                padding: 1rem;
             }
             
             .profile-name {
-                font-size: 24px;
+                font-size: 1.5rem;
             }
             
             .profile-stats {
-                gap: 20px;
+                gap: 1rem;
             }
             
             .info-grid {
@@ -357,7 +367,7 @@
                 @if($student->photo)
                     <img src="{{ asset($student->photo) }}" alt="{{ $student->full_name }}" class="profile-avatar">
                 @else
-                    <div class="profile-avatar" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                    <div class="profile-avatar" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
                         <i class="fas fa-user"></i>
                     </div>
                 @endif
@@ -476,4 +486,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>
