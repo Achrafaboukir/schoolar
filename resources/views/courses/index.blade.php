@@ -67,9 +67,9 @@
                         <button class="btn btn-sm btn-icon btn-outline-primary edit-course-btn" data-id="{{ $course->id }}" title="{{ __('courses.edit') }}" data-bs-toggle="modal" data-bs-target="#courseModal">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-icon btn-outline-info view-documents-btn" data-id="{{ $course->id }}" title="{{ __('courses.view_documents') }}">
+                        <a href="{{ route('courses.documents.index', $course->id) }}" class="btn btn-sm btn-icon btn-outline-info" title="{{ __('courses.manage_documents') }}">
                             <i class="fas fa-file-alt"></i>
-                        </button>
+                        </a>
                     </div>
                 </td>
             </tr>
@@ -86,13 +86,13 @@
     </div>
 </div>
 
-<!-- Course CRUD Modal (AJAX content loaded here) -->
+<!-- Course CRUD Modal -->
 <div class="modal fade" id="courseModal" tabindex="-1" role="dialog" aria-labelledby="courseModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content" id="course-modal-content">
-      <!-- Modal content will be loaded here -->
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="course-modal-content">
+            <!-- Modal content will be loaded here -->
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Delete Confirmation Modal -->
@@ -117,190 +117,77 @@
         </div>
     </div>
 </div>
-
-<!-- View Documents Modal -->
-<div class="modal fade" id="viewDocumentsModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">{{ __('courses.course_documents') }}</h5>
-                <button type="button" class="btn btn-primary ms-3" id="addDocumentBtn">
-                    <i class="fas fa-plus me-1"></i> {{ __('courses.upload_document') }}
-                </button>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="inlineUploadForm" style="display:none;">
-                    <form id="uploadDocumentForm" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label">{{ __('courses.document_title') }}</label>
-                                <input type="text" class="form-control" name="title" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">{{ __('courses.document_description') }}</label>
-                                <textarea class="form-control" name="description" rows="2"></textarea>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">{{ __('courses.document_type') }}</label>
-                                <select class="form-select" name="file_type" required>
-                                    <option value="video">{{ __('courses.video') }}</option>
-                                    <option value="image">{{ __('courses.image') }}</option>
-                                    <option value="pdf">{{ __('courses.pdf') }}</option>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">{{ __('courses.document_file') }}</label>
-                                <input type="file" class="form-control" name="document" required>
-                                <small class="text-muted">{{ __('courses.max_file_size') }}</small>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-4">
-                            <button type="button" class="btn btn-outline-secondary" id="cancelUploadBtn">{{ __('courses.cancel') }}</button>
-                            <button type="submit" class="btn btn-primary px-4">{{ __('courses.upload_document') }}</button>
-                        </div>
-                    </form>
-                    <hr>
-                </div>
-                <div class="documents-container">
-                    <div class="row g-3" id="documentsList">
-                        <!-- Documents will be loaded here dynamically -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
-@push('styles')
-<style>
-.documents-container {
-    max-height: 60vh;
-    overflow-y: auto;
-}
 
-.document-card {
-    background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-}
-
-.document-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-}
-
-.document-icon.video {
-    background: rgba(127, 86, 217, 0.1);
-    color: var(--primary-color);
-}
-
-.document-icon.image {
-    background: rgba(54, 179, 126, 0.1);
-    color: #36B37E;
-}
-
-.document-icon.pdf {
-    background: rgba(240, 68, 56, 0.1);
-    color: #F04438;
-}
-</style>
-@endpush
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Course page script loaded');
-    
+
     // Get the course modal
     const courseModal = document.getElementById('courseModal');
-    
+
     // Add event listeners for modal cleanup
     if (courseModal) {
-        // When modal is hidden, clean up any issues
         courseModal.addEventListener('hidden.bs.modal', function() {
             console.log('Course modal hidden, cleaning up...');
-            // Call the cleanup function from dashboard.js
             if (window.cleanupModalBackdrop) {
                 window.cleanupModalBackdrop();
             }
         });
-        
-        // When modal is shown, ensure proper state
+
         courseModal.addEventListener('shown.bs.modal', function() {
             console.log('Course modal shown');
         });
     }
-    
-    // Add Course - Simplified approach
+
+    // Add Course
     document.getElementById('add-course-btn').addEventListener('click', function(e) {
-        console.log('Add course button clicked');
         e.preventDefault();
         e.stopPropagation();
-        // Clear modal content to prevent old values flashing
         document.getElementById('course-modal-content').innerHTML = '';
-        // First, show the modal immediately
         const modal = document.getElementById('courseModal');
         if (modal) {
             const modalInstance = new bootstrap.Modal(modal);
             modalInstance.show();
         }
-        // Then load the content
         fetch("{{ route('courses.create-form') }}")
             .then(res => res.text())
             .then(html => {
                 document.getElementById('course-modal-content').innerHTML = html;
                 console.log('Modal content loaded');
-                // Add form submission handler
                 setupFormSubmission();
             })
-            .catch(error => {
-                console.error('Error loading form:', error);
-            });
+            .catch(error => console.error('Error loading form:', error));
     });
 
-    // Edit Course - Simplified approach
+    // Edit Course
     document.querySelectorAll('.edit-course-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
-            console.log('Edit course button clicked');
             e.preventDefault();
             e.stopPropagation();
-            // Clear modal content to prevent old values flashing
             document.getElementById('course-modal-content').innerHTML = '';
             const id = this.getAttribute('data-id');
-            // First, show the modal immediately
             const modal = document.getElementById('courseModal');
             if (modal) {
                 const modalInstance = new bootstrap.Modal(modal);
                 modalInstance.show();
             }
-            // Then load the content
             fetch(`/courses/${id}/edit-form`)
                 .then(res => res.text())
                 .then(html => {
                     document.getElementById('course-modal-content').innerHTML = html;
                     console.log('Edit form loaded');
-                    // Add form submission handler
                     setupFormSubmission();
                 })
-                .catch(error => {
-                    console.error('Error loading edit form:', error);
-                });
+                .catch(error => console.error('Error loading edit form:', error));
         });
     });
 
     // Delete Course
-    const deleteButtons = document.querySelectorAll('.delete-course');
-    deleteButtons.forEach(button => {
+    document.querySelectorAll('.delete-course').forEach(button => {
         button.addEventListener('click', function() {
             const courseId = this.dataset.id;
             const modal = new bootstrap.Modal(document.getElementById('deleteCourseModal'));
@@ -310,360 +197,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Document Upload
-    const uploadButtons = document.querySelectorAll('.upload-document');
-    uploadButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const courseId = this.dataset.courseId;
-            const form = document.getElementById('uploadDocumentForm');
-            form.action = `/courses/${courseId}/documents`;
-        });
-    });
-
-    let currentCourseId = null;
-    // View Documents
-    const viewDocumentsButtons = document.querySelectorAll('.view-documents-btn');
-    viewDocumentsButtons.forEach(button => {
-        button.addEventListener('click', async function() {
-            const courseId = this.dataset.id;
-            currentCourseId = courseId;
-            // Hide upload form on open
-            document.getElementById('inlineUploadForm').style.display = 'none';
-            const courseTitle = this.dataset.courseTitle || '';
-            const modal = document.getElementById('viewDocumentsModal');
-            const documentsList = document.getElementById('documentsList');
-            
-            try {
-                const response = await fetch(`/courses/${courseId}/documents`);
-                const data = await response.json();
-                
-                modal.querySelector('.modal-title').textContent = `Documents - ${courseTitle}`;
-                
-                documentsList.innerHTML = data.documents.map(doc => `
-                    <div class="col-md-6">
-                        <div class="document-card">
-                            <div class="d-flex gap-3 align-items-center">
-                                <div class="document-icon ${doc.file_type}">
-                                    <i class="fas ${getDocumentIcon(doc.file_type)}"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">${doc.title}</h6>
-                                    <p class="text-muted small mb-1">${doc.description || ''}</p>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-light text-dark">${doc.formatted_file_size}</span>
-                                        <span class="badge bg-light text-dark">${formatDate(doc.created_at)}</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <a href="/storage/${doc.file_path}" 
-                                       class="btn btn-sm btn-icon btn-outline-primary" 
-                                       target="_blank"
-                                       title="View/Download">
-                                        <i class="fas fa-download"></i>
-                                    </a>
-                                    <button class="btn btn-sm btn-icon btn-outline-danger delete-document"
-                                            data-id="${doc.id}"
-                                            title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                // Add delete document handlers
-                documentsList.querySelectorAll('.delete-document').forEach(btn => {
-                    btn.addEventListener('click', async function() {
-                        if (confirm('Are you sure you want to delete this document?')) {
-                            const docId = this.dataset.id;
-                            try {
-                                await fetch(`/course-documents/${docId}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                                    }
-                                });
-                                this.closest('.col-md-6').remove();
-                            } catch (error) {
-                                console.error('Error deleting document:', error);
-                                alert('Failed to delete document');
-                            }
-                        }
-                    });
-                });
-                // Show the modal
-                const modalInstance = new bootstrap.Modal(modal);
-                modalInstance.show();
-            } catch (error) {
-                console.error('Error loading documents:', error);
-                documentsList.innerHTML = '<div class="col-12"><p class="text-danger">Failed to load documents</p></div>';
-            }
-        });
-    });
-
-    // Add Document from View Documents Modal (show inline form)
-    document.getElementById('addDocumentBtn').addEventListener('click', function() {
-        if (currentCourseId) {
-            const form = document.getElementById('uploadDocumentForm');
-            form.action = `/courses/${currentCourseId}/documents`;
-            document.getElementById('inlineUploadForm').style.display = 'block';
-            // Optionally, scroll to the form
-            document.getElementById('inlineUploadForm').scrollIntoView({ behavior: 'smooth' });
-        }
-    });
-
-    // Cancel upload (hide inline form)
-    document.getElementById('cancelUploadBtn').addEventListener('click', function() {
-        document.getElementById('inlineUploadForm').style.display = 'none';
-        document.getElementById('uploadDocumentForm').reset();
-    });
-
-    // AJAX upload for document (inline form)
-    document.getElementById('uploadDocumentForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const form = this;
-        const formData = new FormData(form);
-        // Add CSRF token as a field (do NOT set headers when using FormData)
-        formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                redirect: 'manual' // Prevent auto-following redirects
-            });
-            if (response.type === 'opaqueredirect' || response.status === 302) {
-                alert('You have been logged out or your session expired. Please log in again.');
-                window.location.reload();
-                return;
-            }
-            if (response.ok) {
-                // Hide upload form
-                document.getElementById('inlineUploadForm').style.display = 'none';
-                form.reset();
-                // Refresh documents list
-                if (currentCourseId) {
-                    // Re-fetch and update the documents list
-                    const documentsList = document.getElementById('documentsList');
-                    try {
-                        const response = await fetch(`/courses/${currentCourseId}/documents`);
-                        const data = await response.json();
-                        documentsList.innerHTML = data.documents.map(doc => `
-                            <div class="col-md-6">
-                                <div class="document-card">
-                                    <div class="d-flex gap-3 align-items-center">
-                                        <div class="document-icon ${doc.file_type}">
-                                            <i class="fas ${getDocumentIcon(doc.file_type)}"></i>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">${doc.title}</h6>
-                                            <p class="text-muted small mb-1">${doc.description || ''}</p>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span class="badge bg-light text-dark">${doc.formatted_file_size}</span>
-                                                <span class="badge bg-light text-dark">${formatDate(doc.created_at)}</span>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <a href="/storage/${doc.file_path}" 
-                                               class="btn btn-sm btn-icon btn-outline-primary" 
-                                               target="_blank"
-                                               title="View/Download">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                            <button class="btn btn-sm btn-icon btn-outline-danger delete-document"
-                                                    data-id="${doc.id}"
-                                                    title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('');
-                        // Re-attach delete handlers
-                        documentsList.querySelectorAll('.delete-document').forEach(btn => {
-                            btn.addEventListener('click', async function() {
-                                if (confirm('Are you sure you want to delete this document?')) {
-                                    const docId = this.dataset.id;
-                                    try {
-                                        await fetch(`/course-documents/${docId}`, {
-                                            method: 'DELETE',
-                                            headers: {
-                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                                            }
-                                        });
-                                        this.closest('.col-md-6').remove();
-                                    } catch (error) {
-                                        console.error('Error deleting document:', error);
-                                        alert('Failed to delete document');
-                                    }
-                                }
-                            });
-                        });
-                    } catch (error) {
-                        documentsList.innerHTML = '<div class="col-12"><p class="text-danger">Failed to load documents</p></div>';
-                    }
-                }
-            } else {
-                const data = await response.json();
-                if (data.errors) showValidationErrors(data.errors);
-            }
-        } catch (error) {
-            alert('Failed to upload document.');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
-        }
-    });
-
-    function getDocumentIcon(type) {
-        switch (type) {
-            case 'video': return 'fa-video';
-            case 'image': return 'fa-image';
-            case 'pdf': return 'fa-file-pdf';
-            default: return 'fa-file';
-        }
-    }
-
-    function formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString();
-    }
-
-    // Setup AJAX form submission
-    function setupFormSubmission() {
-        const form = document.getElementById('courseForm');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(form);
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                
-                // Disable submit button and show loading
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
-                
-                fetch(form.action, {
-                    method: form.method,
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    if (response.redirected) {
-                        // If there's a redirect, reload the page
-                        window.location.reload();
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(data => {
-                    if (data && data.success) {
-                        // Close modal and reload page
-                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('courseModal'));
-                        if (modalInstance) {
-                            modalInstance.hide();
-                        }
-                        // Clean up after closing
-                        setTimeout(() => {
-                            if (window.cleanupModalBackdrop) {
-                                window.cleanupModalBackdrop();
-                            }
-                        }, 100);
-                        window.location.reload();
-                    } else if (data && data.errors) {
-                        // Show validation errors
-                        showValidationErrors(data.errors);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // On error, reload page to show any flash messages
-                    window.location.reload();
-                })
-                .finally(() => {
-                    // Re-enable submit button
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                });
-            });
-        }
-    }
-
-    // Show validation errors
-    function showValidationErrors(errors) {
-        // Clear previous errors
-        document.querySelectorAll('.is-invalid').forEach(el => {
-            el.classList.remove('is-invalid');
-        });
-        document.querySelectorAll('.invalid-feedback').forEach(el => {
-            el.remove();
-        });
-
-        // Show new errors
-        Object.keys(errors).forEach(field => {
-            const input = document.querySelector(`[name="${field}"]`);
-            if (input) {
-                input.classList.add('is-invalid');
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'invalid-feedback';
-                errorDiv.textContent = errors[field][0];
-                input.parentNode.appendChild(errorDiv);
-            }
-        });
-    }
-    
-    // Add touch event handlers for mobile
-    if (window.innerWidth < 768) {
-        console.log('Mobile detected, adding touch handlers');
-        
-        // Add touch handlers for buttons
-        const addBtn = document.getElementById('add-course-btn');
-        if (addBtn) {
-            addBtn.addEventListener('touchstart', function(e) {
-                console.log('Add button touch start');
-                this.style.transform = 'scale(0.95)';
-            });
-            
-            addBtn.addEventListener('touchend', function(e) {
-                console.log('Add button touch end');
-                this.style.transform = 'scale(1)';
-                // Trigger click
-                this.click();
-            });
-        }
-        
-        // Add touch handlers for edit buttons
-        document.querySelectorAll('.edit-course-btn').forEach(btn => {
-            btn.addEventListener('touchstart', function(e) {
-                console.log('Edit button touch start');
-                this.style.transform = 'scale(0.95)';
-            });
-            
-            btn.addEventListener('touchend', function(e) {
-                console.log('Edit button touch end');
-                this.style.transform = 'scale(1)';
-                // Trigger click
-                this.click();
-            });
-        });
-    }
-
-    // Global function to clean up Bootstrap modal backdrops and re-enable scrolling
+    // Global Cleanup for Modal Backdrops
     window.cleanupModalBackdrop = function() {
-        // Remove all modal backdrops
         document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        // Remove modal-open class from body
         document.body.classList.remove('modal-open');
-        // Remove padding from body (Bootstrap adds it)
         document.body.style.paddingRight = '';
-    }
+    };
 });
 </script>
 @endpush

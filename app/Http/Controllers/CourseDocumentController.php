@@ -6,62 +6,380 @@ use App\Models\Course;
 use App\Models\CourseDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class CourseDocumentController extends Controller
 {
-    public function store(Request $request, $courseId)
+    /**
+     * Display a listing of documents for a course.
+     */
+    public function index(Course $course)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'document' => 'required|file|max:102400', // 100MB max
-            'file_type' => 'required|in:video,image,pdf'
-        ]);
-
-        $course = Course::findOrFail($courseId);
-        $file = $request->file('document');
+        $query = $course->documents()->where('is_deleted', false);
         
-        $document = new CourseDocument([
-            'course_id' => $course->id,
-            'title' => $request->title,
-            'description' => $request->description,
-            'file_type' => $request->file_type,
-            'mime_type' => $file->getMimeType(),
-            'file_size' => $file->getSize()
-        ]);
-
-        // Store file in appropriate directory based on type
-        $path = $file->store("courses/{$course->id}/documents", 'public');
-        $document->file_path = $path;
-        $document->save();
-
-        return response()->json([
-            'message' => 'Document uploaded successfully',
-            'document' => $document
-        ]);
+        if (request()->has('search') && request('search')) {
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                  ->orWhere('description', 'like', "%$search%");
+            });
+        }
+        
+        $documents = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        return view('courses.documents.index', compact('course', 'documents'));
     }
 
-    public function destroy($id)
+    /**
+     * Show the form for creating a new document.
+     */
+    public function createForm(Course $course)
     {
-        $document = CourseDocument::findOrFail($id);
-        
-        // Delete the file from storage
-        Storage::disk('public')->delete($document->file_path);
-        
-        $document->update(['is_deleted' => true]);
-        
-        return response()->json([
-            'message' => 'Document deleted successfully'
-        ]);
+        return view('courses.documents.create-ajax', compact('course'));
     }
 
-    public function download($id)
+    /**
+     * Store a newly created document.
+     */
+    public function store(Request $request, Course $course)
     {
-        $document = CourseDocument::findOrFail($id);
-        $filePath = $document->file_path;
-        $fileName = $document->title . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
-        return \Storage::disk('public')->download($filePath, $fileName, [
-            'Content-Type' => $document->mime_type
-        ]);
+        try {
+
+            // Debug: Log the request data
+            Log::info('Document upload request received', [
+                'has_file' => $request->hasFile('document'),
+                'all_files' => $request->allFiles(),
+                'post_data' => $request->except('document'),
+                'content_type' => $request->header('Content-Type'),
+            ]);
+            
+            // First, check if file was uploaded
+            if (!$request->hasFile('document')) {
+                Log::warning('No document file found in request');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => ['document' => ['No file was uploaded.']],
+                ], 422);
+            }
+
+            $file = $request->file('document');
+            
+            // Debug: Log file information
+            Log::info('File upload details', [
+                'original_name' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
+                'mime_type' => $file->getMimeType(),
+                'extension' => $file->getClientOriginalExtension(),
+                'is_valid' => $file->isValid(),
+                'error_code' => $file->getError(),
+                'error_message' => $file->getErrorMessage(),
+            ]);
+            
+            // Check if file is valid
+            if (!$file->isValid()) {
+                $errorCode = $file->getError();
+                $errorMessages = [
+                    UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive.',
+                    UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive.',
+                    UPLOAD_ERR_PARTIAL => 'The uploaded file was only partially uploaded.',
+                    UPLOAD_ERR_NO_FILE => 'No file was uploaded.',
+                    UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder.',
+                    UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+                    UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload.',
+                ];
+                $message = $errorMessages[$errorCode] ?? 'Unknown upload error.';
+                
+                Log::warning('File upload validation failed', [
+                    'error_code' => $errorCode,
+                    'error_message' => $message,
+                ]);
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => ['document' => ["The uploaded file is invalid. Error: $message (Code: $errorCode)"]],
+                ], 422);
+            }
+
+            // Validate other fields
+            try {
+                $validated = $request->validate([
+                    'title' => 'required|string|max:255',
+                    'description' => 'nullable|string|max:1000',
+                    'file_type' => 'required|in:video,image,pdf',
+                    'document' => [
+                        'required',
+                        'file',
+                        'mimes:pdf,jpeg,jpg,png,mp4,avi,mov,webm',
+                        'max:10240', // 10MB max
+                    ],
+                ]);
+                Log::info('Validation passed', ['validated_data' => $validated]);
+            } catch (ValidationException $e) {
+                Log::warning('Validation failed', ['errors' => $e->errors()]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+
+            // Validate file type matches extension
+            $fileType = $request->input('file_type');
+            $extension = strtolower($file->getClientOriginalExtension());
+            
+            Log::info('File type validation', [
+                'selected_file_type' => $fileType,
+                'file_extension' => $extension,
+            ]);
+            
+            $validExtensions = [
+                'video' => ['mp4', 'avi', 'mov', 'webm'],
+                'image' => ['jpeg', 'jpg', 'png'],
+                'pdf' => ['pdf']
+            ];
+            
+            if (!in_array($extension, $validExtensions[$fileType])) {
+                Log::warning('File type mismatch', [
+                    'selected_type' => $fileType,
+                    'file_extension' => $extension,
+                    'valid_extensions' => $validExtensions[$fileType],
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => ['document' => ["The document extension ($extension) does not match the selected file type ($fileType)."]],
+                ], 422);
+            }
+
+            // Verify storage directory
+            $storagePath = storage_path('app/public/documents');
+            if (!is_dir($storagePath)) {
+                if (!Storage::disk('public')->makeDirectory('documents')) {
+                    throw new \Exception('Failed to create storage directory: ' . $storagePath);
+                }
+            }
+            if (!is_writable($storagePath)) {
+                throw new \Exception('Storage directory is not writable: ' . $storagePath);
+            }
+
+            // Store the file
+            $file = $request->file('document');
+            $path = $file->store('documents', 'public');
+            if (!$path) {
+                throw new \Exception('Failed to store the file in the documents directory.');
+            }
+
+            // Verify file exists
+            if (!Storage::disk('public')->exists($path)) {
+                throw new \Exception('File was not stored correctly at: ' . $path);
+            }
+
+            $document = $course->documents()->create([
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'file_type' => $validated['file_type'],
+                'file_path' => $path,
+                'file_size' => $file->getSize(),
+                'mime_type' => $file->getMimeType(),
+                'is_deleted' => false,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Document uploaded successfully',
+                'document' => $document,
+            ], 200);
+        } catch (ValidationException $e) {
+            Log::warning('Validation error during document upload', [
+                'errors' => $e->errors(),
+                'request' => $request->except('document'),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Document upload error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->except('document'),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error occurred while uploading the document.',
+                'errors' => ['document' => ['Server error: ' . $e->getMessage()]],
+            ], 500);
+        }
+    }
+
+    /**
+     * Show the form for editing a document.
+     */
+    public function editForm(Course $course, CourseDocument $document)
+    {
+        return view('courses.documents.edit-ajax', compact('course', 'document'));
+    }
+
+    /**
+     * Update the specified document.
+     */
+    public function update(Request $request, Course $course, CourseDocument $document)
+    {
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string|max:1000',
+                'file_type' => 'required|in:video,image,pdf',
+                'document' => [
+                    'nullable',
+                    'file',
+                    'mimes:pdf,jpeg,jpg,png,mp4,avi,mov,webm',
+                    'max:10240', // 10MB max
+                ],
+            ]);
+
+            $document->update([
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'file_type' => $validated['file_type'],
+            ]);
+
+            // Handle file update if new file is uploaded
+            if ($request->hasFile('document') && $request->file('document')->isValid()) {
+                // Delete old file
+                if (Storage::disk('public')->exists($document->file_path)) {
+                    Storage::disk('public')->delete($document->file_path);
+                }
+
+                // Store new file
+                $file = $request->file('document');
+                $path = $file->store('documents', 'public');
+                
+                $document->update([
+                    'file_path' => $path,
+                    'file_size' => $file->getSize(),
+                    'mime_type' => $file->getMimeType(),
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Document updated successfully',
+                'document' => $document,
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Document update error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'document_id' => $document->id,
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error occurred while updating the document.',
+                'errors' => ['document' => ['Server error: ' . $e->getMessage()]],
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove the specified document.
+     */
+    public function destroy(Course $course, CourseDocument $document)
+    {
+        try {
+            Log::info('Attempting to delete document', [
+                'document_id' => $document->id,
+                'file_path' => $document->file_path
+            ]);
+            
+            // Delete the file from storage
+            if (Storage::disk('public')->exists($document->file_path)) {
+                Storage::disk('public')->delete($document->file_path);
+                Log::info('File deleted from storage', ['path' => $document->file_path]);
+            } else {
+                Log::warning('File not found in storage', ['path' => $document->file_path]);
+            }
+            
+            // Mark as deleted instead of hard delete
+            $document->update(['is_deleted' => true]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Document deleted successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error deleting document', [
+                'document_id' => $document->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to delete document: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Download the specified document.
+     */
+    public function download(Course $course, CourseDocument $document)
+    {
+        try {
+            if ($document->is_deleted) {
+                return response()->json(['error' => 'Document not found'], 404);
+            }
+            
+            // Check if this is a student request and verify access
+            if (session('student_id')) {
+                $student = \App\Models\Student::find(session('student_id'));
+                if (!$student || $student->group_id !== $course->group_id) {
+                    return response()->json(['error' => 'Access denied'], 403);
+                }
+            }
+            
+            $filePath = $document->file_path;
+            
+            if (!Storage::disk('public')->exists($filePath)) {
+                Log::error('File not found for download', [
+                    'document_id' => $document->id,
+                    'file_path' => $filePath
+                ]);
+                return response()->json(['error' => 'File not found'], 404);
+            }
+            
+            $fileName = $document->title . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
+            
+            Log::info('Document downloaded', [
+                'document_id' => $document->id,
+                'file_path' => $filePath
+            ]);
+            
+            return Storage::disk('public')->download($filePath, $fileName, [
+                'Content-Type' => $document->mime_type ?? 'application/octet-stream'
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error downloading document', [
+                'document_id' => $document->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to download document: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

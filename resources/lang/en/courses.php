@@ -56,6 +56,7 @@ return [
     // Document management
     'upload_document' => 'Upload Document',
     'view_documents' => 'View Documents',
+    'manage_documents' => 'Manage Documents',
     'document_title' => 'Document Title',
     'document_description' => 'Description',
     'document_type' => 'Document Type',

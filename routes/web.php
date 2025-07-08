@@ -99,6 +99,9 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::get('/courses/{courseId}/feedback', [StudentAuthController::class, 'showFeedbackForm'])->name('course.feedback');
     Route::post('/courses/{courseId}/feedback', [StudentAuthController::class, 'submitFeedback'])->name('course.feedback.submit');
     Route::get('/profile', [StudentAuthController::class, 'profile'])->name('profile');
+    
+    // Course document download route for students
+    Route::get('/courses/{course}/documents/{document}/download', [CourseDocumentController::class, 'download'])->name('course.documents.download');
 });
 
 // Protected routes (authentication required)
@@ -169,22 +172,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/courses/{course}/edit-form', [CourseController::class, 'editForm'])->name('courses.edit-form');
 
     // Course document routes
-    Route::delete('/course-documents/{id}', [CourseDocumentController::class, 'destroy'])->name('course.documents.destroy');
-    Route::get('/course-documents/{id}/download', [CourseDocumentController::class, 'download'])->name('course.documents.download');
-
-    Route::get('/courses/{courseId}/documents', function ($courseId) {
-        $course = \App\Models\Course::findOrFail($courseId);
-        $documents = $course->documents()
-            ->where('is_deleted', false)
-            ->get()
-            ->map(function ($doc) {
-                $doc->formatted_file_size = $doc->formatted_file_size;
-                return $doc;
-            });
-        
-        return response()->json([
-            'documents' => $documents
-        ]);
+    Route::prefix('courses/{course}')->name('courses.documents.')->group(function () {
+        Route::get('/documents', [CourseDocumentController::class, 'index'])->name('index');
+        Route::get('/documents/create-form', [CourseDocumentController::class, 'createForm'])->name('create-form');
+        Route::post('/documents', [CourseDocumentController::class, 'store'])->name('store');
+        Route::get('/documents/{document}/edit-form', [CourseDocumentController::class, 'editForm'])->name('edit-form');
+        Route::put('/documents/{document}', [CourseDocumentController::class, 'update'])->name('update');
+        Route::delete('/documents/{document}', [CourseDocumentController::class, 'destroy'])->name('destroy');
+        Route::get('/documents/{document}/download', [CourseDocumentController::class, 'download'])->name('download');
     });
 
     // AJAX modal routes for user CRUD
@@ -195,7 +190,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UserController::class);
 });
 
-// Course document upload route (public, no auth)
-Route::post('/courses/{courseId}/documents', [CourseDocumentController::class, 'store'])->name('course.documents.store');
+Route::get('/phpinfo', function () {
+    phpinfo();
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

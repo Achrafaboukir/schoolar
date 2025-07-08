@@ -741,7 +741,7 @@
                                     {{ Str::limit($document->description, 100) }}
                                 </p>
                             @endif
-                            <a href="{{ route('course.documents.download', $document->id) }}" class="btn-download">
+                            <a href="{{ route('student.course.documents.download', ['course' => $course->id, 'document' => $document->id]) }}" class="btn-download">
                                 <i class="fas fa-download"></i>
                                 {{ __('app.download') }}
                             </a>

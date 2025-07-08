@@ -71,32 +71,10 @@ class CourseController extends Controller
             'group_id' => 'required|exists:groups,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'boolean',
-            'documents.*.title' => 'nullable|string|max:255',
-            'documents.*.description' => 'nullable|string',
-            'documents.*.file_type' => 'nullable|in:video,image,pdf',
-            'documents.*.file' => 'nullable|file|max:102400'
+            'status' => 'boolean'
         ]);
 
-        $course = Course::create($request->except('documents'));
-
-        // Handle document uploads
-        if ($request->has('documents')) {
-            foreach ($request->documents as $document) {
-                if (isset($document['file']) && $document['file']->isValid()) {
-                    $path = $document['file']->store("courses/{$course->id}/documents", 'public');
-                    
-                    $course->documents()->create([
-                        'title' => $document['title'],
-                        'description' => $document['description'],
-                        'file_type' => $document['file_type'],
-                        'file_path' => $path,
-                        'mime_type' => $document['file']->getMimeType(),
-                        'file_size' => $document['file']->getSize()
-                    ]);
-                }
-            }
-        }
+        $course = Course::create($request->all());
 
         if ($request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Course created successfully.']);
@@ -145,32 +123,10 @@ class CourseController extends Controller
             'group_id' => 'required|exists:groups,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'boolean',
-            'documents.*.title' => 'nullable|string|max:255',
-            'documents.*.description' => 'nullable|string',
-            'documents.*.file_type' => 'nullable|in:video,image,pdf',
-            'documents.*.file' => 'nullable|file|max:102400'
+            'status' => 'boolean'
         ]);
 
-        $course->update($request->except('documents'));
-
-        // Handle document uploads
-        if ($request->has('documents')) {
-            foreach ($request->documents as $document) {
-                if (isset($document['file']) && $document['file']->isValid()) {
-                    $path = $document['file']->store("courses/{$course->id}/documents", 'public');
-                    
-                    $course->documents()->create([
-                        'title' => $document['title'],
-                        'description' => $document['description'],
-                        'file_type' => $document['file_type'],
-                        'file_path' => $path,
-                        'mime_type' => $document['file']->getMimeType(),
-                        'file_size' => $document['file']->getSize()
-                    ]);
-                }
-            }
-        }
+        $course->update($request->all());
 
         if ($request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Course updated successfully.']);
