@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ __('app.give_feedback') }} - {{ $course->title }}</title>
+    <title>{{ config('app.name', 'Laravel') }} - {{ __('app.feedback') }}</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-color: #1E3A8A; /* Deep Navy */
-            --primary-hover: #1E40AF; /* Slightly lighter navy for hover */
-            --secondary-color: #2DD4BF; /* Soft Teal */
-            --accent-color: #F472B6; /* Warm Coral */
-            --text-dark: #111827; /* Charcoal */
-            --text-light: #6B7280; /* Slate Gray */
-            --border-color: #E2E8F0; /* Light Slate */
-            --bg-light: #F9FAFB; /* Off-White */
-            --white: #FFFFFF;
-            --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
-            --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary-color: #64748b;
+            --accent-color: #f1f5f9;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --bg-white: #ffffff;
+            --bg-light: #f8fafc;
+            --bg-dark: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-secondary: linear-gradient(135deg, #64748b 0%, #475569 100%);
         }
 
         * {
@@ -39,73 +47,70 @@
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.5;
+            color: var(--text-primary);
+            line-height: 1.6;
         }
 
-        .navbar {
-            background: var(--primary-color);
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: var(--white) !important;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: var(--white) !important;
-            font-weight: 500;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            transform: translateY(-2px);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
         .main-content {
             padding: 2rem 0;
         }
 
-        .feedback-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
         .page-header {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
         }
 
         .page-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: var(--text-dark);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
         }
 
-        .course-info {
-            color: var(--text-light);
+        .page-subtitle {
+            color: var(--text-secondary);
             font-size: 1rem;
-            margin-bottom: 1rem;
+        }
+
+        .course-info {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .course-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .course-teacher {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .feedback-form {
-            background: var(--white);
-            border-radius: 12px;
+            background: var(--bg-white);
+            border-radius: 16px;
             padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
         }
 
         .form-group {
@@ -113,361 +118,274 @@
         }
 
         .form-label {
-            font-weight: 500;
-            font-size: 0.875rem;
-            color: var(--text-dark);
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
+            font-size: 0.875rem;
         }
 
-        .form-control {
-            border: 1px solid var(--border-color);
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
-            padding: 0.75rem;
             font-size: 1rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.2s ease;
+            background: var(--bg-white);
+            color: var(--text-primary);
+            font-family: inherit;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        .form-input:focus {
             outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
-        .form-control.is-invalid {
-            border-color: #DC2626;
+        .form-input.error {
+            border-color: var(--danger-color);
         }
 
-        textarea.form-control {
+        .form-textarea {
+            min-height: 120px;
             resize: vertical;
-            min-height: 100px;
         }
 
         .rating-group {
             display: flex;
             gap: 0.5rem;
-            align-items: center;
             margin-top: 0.5rem;
         }
 
-        .rating-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .rating-option input[type="radio"] {
-            display: none;
-        }
-
         .rating-star {
-            font-size: 1.25rem;
-            color: var(--border-color);
-            transition: color 0.3s ease, transform 0.2s ease;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s ease;
         }
 
-        .rating-option:hover .rating-star,
-        .rating-option input[type="radio"]:checked ~ .rating-star {
-            color: var(--accent-color);
-            transform: scale(1.1);
-        }
-
-        .rating-label {
-            font-size: 0.75rem;
-            color: var(--text-light);
-            margin-top: 0.25rem;
-        }
-
-        .form-check {
-            margin: 1rem 0;
-        }
-
-        .form-check-input {
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-        }
-
-        .form-check-input:checked {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .form-check-label {
-            color: var(--text-light);
-            font-size: 0.875rem;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
+        .rating-star:hover,
+        .rating-star.active {
+            color: #fbbf24;
         }
 
         .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
             display: inline-flex;
             align-items: center;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-back {
-            background: var(--text-light);
-            color: var(--white);
-        }
-
-        .btn-back:hover {
-            background: var(--text-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-submit {
-            background: var(--secondary-color);
-            color: var(--white);
-        }
-
-        .btn-submit:hover {
-            background: #14B8A6;
-            transform: translateY(-2px);
-        }
-
-        .invalid-feedback {
-            font-size: 0.75rem;
-            color: #DC2626;
-            margin-top: 0.25rem;
-        }
-
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .breadcrumb-nav {
-            margin-bottom: 1.25rem;
-        }
-
-        .breadcrumb-item a {
-            color: var(--primary-color);
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
             text-decoration: none;
-            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
         }
 
-        .breadcrumb-item.active {
-            color: var(--text-light);
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+            border-color: var(--text-muted);
         }
 
         .alert {
-            border-radius: 8px;
-            border: none;
             padding: 1rem;
+            border-radius: 8px;
             margin-bottom: 1.5rem;
             font-size: 0.875rem;
         }
 
+        .alert-success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
         .alert-danger {
-            background: #FEF2F2;
-            color: #DC2626;
-            border-left: 3px solid #DC2626;
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
         }
 
         @media (max-width: 768px) {
-            .main-content {
-                padding: 1.5rem 0;
-            }
-            
-            .page-header {
-                padding: 1rem;
-            }
-            
-            .feedback-form {
-                padding: 1.25rem;
-            }
-            
-            .page-title {
-                font-size: 1.5rem;
-            }
-            
             .form-actions {
                 flex-direction: column;
             }
             
-            .btn {
-                justify-content: center;
+            .main-content {
+                padding: 1rem 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                {{ config('app.name', 'Akademi') }}
-            </a>
-            
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link me-3" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>
-                    {{ __('app.dashboard') }}
-                </a>
-                <a class="nav-link me-3" href="{{ route('student.courses') }}">
-                    <i class="fas fa-book me-1"></i>
-                    {{ __('app.courses') }}
-                </a>
-                <a class="nav-link me-3" href="{{ route('student.profile') }}">
-                    <i class="fas fa-user me-1"></i>
-                    {{ __('app.profile') }}
-                </a>
-                <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="fas fa-sign-out-alt me-1"></i>
-                        {{ __('app.logout') }}
-                    </button>
-                </form>
+    @include('components.student-nav')
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">{{ __('app.give_feedback') }}</h1>
+                <p class="page-subtitle">{{ __('app.feedback_subtitle') }}</p>
             </div>
-        </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <!-- Breadcrumb -->
-            <nav class="breadcrumb-nav">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('student.dashboard') }}">
-                            <i class="fas fa-home me-1"></i>
-                            {{ __('app.dashboard') }}
+            <div class="course-info">
+                <h2 class="course-title">{{ $course->title }}</h2>
+                <p class="course-teacher">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    {{ $course->teacher ? $course->teacher->firstname . ' ' . $course->teacher->lastname : __('app.no_teacher') }}
+                </p>
+            </div>
+
+            <div class="feedback-form">
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul style="margin: 0; padding-left: 1rem;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('student.course.feedback.store', $course->id) }}">
+                    @csrf
+                    
+                    <div class="form-group">
+                        <label for="title" class="form-label">{{ __('app.feedback_title') }}</label>
+                        <input type="text" id="title" name="title" class="form-input @error('title') error @enderror" 
+                               value="{{ old('title') }}" required placeholder="{{ __('app.enter_feedback_title') }}">
+                        @error('title')
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rating" class="form-label">{{ __('app.rating') }}</label>
+                        <div class="rating-group" id="ratingGroup">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="fas fa-star rating-star" data-rating="{{ $i }}"></i>
+                            @endfor
+                        </div>
+                        <input type="hidden" name="rating" id="ratingInput" value="{{ old('rating', 0) }}">
+                        @error('rating')
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content" class="form-label">{{ __('app.feedback_content') }}</label>
+                        <textarea id="content" name="content" class="form-input form-textarea @error('content') error @enderror" 
+                                  required placeholder="{{ __('app.enter_feedback_content') }}">{{ old('content') }}</textarea>
+                        @error('content')
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            {{ __('app.submit_feedback') }}
+                        </button>
+                        <a href="{{ route('student.course.details', $course->id) }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i>
+                            {{ __('app.back_to_course') }}
                         </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('student.courses') }}">{{ __('app.my_courses') }}</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('student.course.details', $course->id) }}">{{ $course->title }}</a>
-                    </li>
-                    <li class="breadcrumb-item active">{{ __('app.give_feedback') }}</li>
-                </ol>
-            </nav>
-
-            <div class="feedback-container">
-                <!-- Page Header -->
-                <div class="page-header">
-                    <h1 class="page-title">{{ __('app.give_feedback') }}</h1>
-                    <p class="course-info">
-                        <i class="fas fa-book me-1"></i>
-                        {{ $course->title }}
-                    </p>
-                </div>
-
-                <!-- Feedback Form -->
-                <div class="feedback-form">
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <ul class="mb-0 ps-3">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('student.course.feedback.submit', $course->id) }}">
-                        @csrf
-                        
-                        <div class="form-group">
-                            <label for="title" class="form-label">{{ __('app.feedback_title') }} *</label>
-                            <input type="text"
-                                   class="form-control @error('title') is-invalid @enderror"
-                                   id="title"
-                                   name="title"
-                                   value="{{ old('title') }}"
-                                   required
-                                   placeholder="{{ __('app.enter_feedback_title') }}">
-                            @error('title')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="content" class="form-label">{{ __('app.feedback_content') }} *</label>
-                            <textarea class="form-control @error('content') is-invalid @enderror"
-                                      id="content"
-                                      name="content"
-                                      required
-                                      placeholder="{{ __('app.enter_feedback_content') }}">{{ old('content') }}</textarea>
-                            @error('content')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">{{ __('app.course_rating') }} *</label>
-                            <div class="rating-group">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <label class="rating-option">
-                                        <input type="radio" name="rating" value="{{ $i }}" {{ old('rating') == $i ? 'checked' : '' }} required>
-                                        <div class="rating-star">
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <span class="rating-label">{{ $i }}</span>
-                                    </label>
-                                @endfor
-                            </div>
-                            @error('rating')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="is_anonymous" name="is_anonymous" {{ old('is_anonymous') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="is_anonymous">
-                                {{ __('app.submit_anonymously') }}
-                            </label>
-                        </div>
-
-                        <div class="form-actions">
-                            <a href="{{ route('student.course.details', $course->id) }}" class="btn btn-back">
-                                <i class="fas fa-arrow-left me-1"></i>
-                                {{ __('app.back_to_course') }}
-                            </a>
-                            <button type="submit" class="btn btn-submit">
-                                <i class="fas fa-paper-plane me-1"></i>
-                                {{ __('app.submit_feedback') }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Rating functionality
+        const ratingStars = document.querySelectorAll('.rating-star');
+        const ratingInput = document.getElementById('ratingInput');
+        let currentRating = 0;
+
+        ratingStars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.dataset.rating);
+                currentRating = rating;
+                ratingInput.value = rating;
+                
+                // Update star display
+                ratingStars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+
+            star.addEventListener('mouseenter', function() {
+                const rating = parseInt(this.dataset.rating);
+                ratingStars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.style.color = '#fbbf24';
+                    } else {
+                        s.style.color = '';
+                    }
+                });
+            });
+
+            star.addEventListener('mouseleave', function() {
+                ratingStars.forEach((s, index) => {
+                    if (index < currentRating) {
+                        s.style.color = '#fbbf24';
+                    } else {
+                        s.style.color = '';
+                    }
+                });
+            });
+        });
+
+        // Initialize rating if there's an old value
+        const oldRating = {{ old('rating', 0) }};
+        if (oldRating > 0) {
+            currentRating = oldRating;
+            ratingStars.forEach((star, index) => {
+                if (index < oldRating) {
+                    star.classList.add('active');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

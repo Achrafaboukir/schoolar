@@ -75,7 +75,7 @@ class StudentAuthController extends Controller
             return redirect()->route('student.login');
         }
 
-        $courses = $student->group->courses ?? collect();
+        $courses = $student->group->courses->where('status', true) ?? collect();
         
         return view('student.dashboard', compact('student', 'courses'));
     }
@@ -97,7 +97,7 @@ class StudentAuthController extends Controller
             return redirect()->route('student.login');
         }
 
-        $courses = $student->group->courses ?? collect();
+        $courses = $student->group->courses->where('status', true) ?? collect();
         
         return view('student.courses', compact('student', 'courses'));
     }

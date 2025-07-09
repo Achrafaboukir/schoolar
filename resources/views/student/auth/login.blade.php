@@ -1,83 +1,335 @@
-@php($showNavbar = false)
-@extends('layouts.student')
-@section('title', __('app.student_login'))
-@section('content')
-<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="login-container" style="max-width: 900px; width: 100%; background: #fff; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); overflow: hidden; display: flex; min-height: 600px;">
-        <div class="login-sidebar" style="background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%); padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #fff; flex: 1;">
-            <div class="sidebar-content">
-                <div class="student-icon" style="font-size: 80px; margin-bottom: 20px; opacity: 0.9;">
-                    <i class="fas fa-user-graduate"></i>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'Laravel') }} - {{ __('auth.login') }}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary-color: #64748b;
+            --accent-color: #f1f5f9;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --bg-white: #ffffff;
+            --bg-light: #f8fafc;
+            --bg-dark: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-secondary: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .login-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--border-color);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .login-logo img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .login-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: var(--bg-white);
+            color: var(--text-primary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--danger-color);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .input-with-icon {
+            padding-left: 3rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+            border-color: var(--text-muted);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .alert-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .login-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 640px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+            
+            .login-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <img src="{{ asset('storage/logo.png') }}" alt="{{ config('app.name', 'Akademi') }}" />
                 </div>
-                <h1 class="sidebar-title" style="font-size: 32px; font-weight: 700; margin-bottom: 15px;">{{ __('app.student_portal') }}</h1>
-                <p class="sidebar-subtitle" style="font-size: 16px; opacity: 0.9; line-height: 1.6;">{{ __('app.student_portal_description') }}</p>
+                <h1 class="login-title">{{ __('auth.welcome_back') }}</h1>
+                <p class="login-subtitle">{{ __('auth.login_to_your_account') }}</p>
             </div>
-        </div>
-        <div class="login-form-section" style="padding: 50px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
-            <div class="form-header" style="text-align: center; margin-bottom: 40px;">
-                <h2 class="form-title" style="font-size: 28px; font-weight: 600; color: #1e293b; margin-bottom: 10px;">{{ __('app.welcome_back') }}</h2>
-                <p class="form-subtitle" style="color: #64748b; font-size: 16px;">{{ __('app.student_login_subtitle') }}</p>
-            </div>
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    {{ session('error') }}
-                </div>
-            @endif
-            @if (session('status'))
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    {{ session('status') }}
-                </div>
-            @endif
+
             @if ($errors->any())
                 <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <ul class="mb-0 ps-3">
+                    <ul style="margin: 0; padding-left: 1rem;">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
-            <form method="POST" action="{{ route('student.login.post') }}">
+
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('student.login') }}">
                 @csrf
-                <div class="form-group mb-3">
-                    <label for="email" class="form-label">{{ __('app.email') }}</label>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">{{ __('auth.email') }}</label>
                     <div class="input-group">
-                        <i class="fas fa-envelope input-icon" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #64748b; z-index: 2;"></i>
-                        <input type="email" class="form-control input-with-icon @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="{{ __('app.enter_email') }}" style="padding-left: 50px;">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="email" name="email" class="form-input input-with-icon @error('email') error @enderror" 
+                               value="{{ old('email') }}" required autocomplete="email" autofocus>
                     </div>
                     @error('email')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="error-message">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-group mb-3">
-                    <label for="password" class="form-label">{{ __('app.password') }}</label>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">{{ __('auth.password') }}</label>
                     <div class="input-group">
-                        <i class="fas fa-lock input-icon" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #64748b; z-index: 2;"></i>
-                        <input type="password" class="form-control input-with-icon @error('password') is-invalid @enderror" id="password" name="password" required autocomplete="current-password" placeholder="{{ __('app.enter_password') }}" style="padding-left: 50px;">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="password" name="password" class="form-input input-with-icon @error('password') error @enderror" 
+                               required autocomplete="current-password">
                     </div>
                     @error('password')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="error-message">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="remember">{{ __('app.remember_me') }}</label>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                        <span class="checkmark"></span>
+                        {{ __('auth.remember_me') }}
+                    </label>
                 </div>
-                <button type="submit" class="btn btn-login w-100" style="background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%); border: none; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 600; color: #fff; margin-top: 10px;">
-                    <i class="fas fa-sign-in-alt me-2"></i>
-                    {{ __('app.student_login') }}
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    {{ __('auth.login') }}
                 </button>
             </form>
-            <div class="admin-link" style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                <a href="{{ route('login') }}" style="color: #64748b; text-decoration: none; font-size: 14px; transition: color 0.3s ease;">
-                    <i class="fas fa-user-tie me-1"></i>
-                    {{ __('app.admin_login') }}
-                </a>
+
+            <div class="login-footer">
+                @if (Route::has('student.password.request'))
+                    <a href="{{ route('student.password.request') }}">
+                        {{ __('auth.forgot_password') }}
+                    </a>
+                @endif
             </div>
         </div>
     </div>
-</div>
-@endsection 
+</body>
+</html> 

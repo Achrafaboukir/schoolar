@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ __('app.profile') }} - {{ config('app.name', 'Akademi') }}</title>
+    <title>{{ config('app.name', 'Laravel') }} - {{ __('app.profile') }}</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-color: #1E3A8A; /* Deep Navy */
-            --primary-hover: #1E40AF; /* Slightly lighter navy for hover */
-            --secondary-color: #2DD4BF; /* Soft Teal */
-            --accent-color: #F472B6; /* Warm Coral */
-            --text-dark: #111827; /* Charcoal */
-            --text-light: #6B7280; /* Slate Gray */
-            --border-color: #E2E8F0; /* Light Slate */
-            --bg-light: #F9FAFB; /* Off-White */
-            --white: #FFFFFF;
-            --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
-            --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary-color: #64748b;
+            --accent-color: #f1f5f9;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --bg-white: #ffffff;
+            --bg-light: #f8fafc;
+            --bg-dark: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-secondary: linear-gradient(135deg, #64748b 0%, #475569 100%);
         }
 
         * {
@@ -39,36 +47,14 @@
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.5;
+            color: var(--text-primary);
+            line-height: 1.6;
         }
 
-        .navbar {
-            background: var(--primary-color);
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: var(--white) !important;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: var(--white) !important;
-            font-weight: 500;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            transform: translateY(-2px);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
         .main-content {
@@ -76,42 +62,59 @@
         }
 
         .profile-header {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
         }
 
         .profile-avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 1rem;
-            border: 3px solid var(--primary-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            border: 4px solid white;
+            box-shadow: var(--shadow-md);
         }
 
-        .profile-name {
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: var(--text-dark);
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-details h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
         }
 
-        .profile-email {
-            color: var(--text-light);
-            font-size: 1rem;
+        .profile-details p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
             margin-bottom: 1rem;
         }
 
         .profile-stats {
             display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 1rem;
         }
 
         .stat-item {
@@ -120,370 +123,324 @@
 
         .stat-number {
             font-size: 1.5rem;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary-color);
+            display: block;
         }
 
         .stat-label {
-            color: var(--text-light);
+            color: var(--text-muted);
             font-size: 0.875rem;
+            font-weight: 500;
         }
 
-        .profile-info {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .profile-section {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
         }
 
         .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 1.25rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
+            gap: 0.75rem;
         }
 
-        .section-title i {
-            margin-right: 0.5rem;
-            color: var(--primary-color);
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: var(--bg-white);
+            color: var(--text-primary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input:disabled {
+            background: var(--bg-light);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+            border-color: var(--text-muted);
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1rem;
         }
 
         .info-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
             padding: 1rem;
             background: var(--bg-light);
             border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
 
-        .info-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: var(--primary-color);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-        }
-
-        .info-content h4 {
-            font-size: 0.875rem;
-            color: var(--text-light);
-            margin-bottom: 0.25rem;
-        }
-
-        .info-content p {
-            font-size: 1rem;
-            color: var(--text-dark);
-            font-weight: 500;
-            margin: 0;
-        }
-
-        .feedback-section {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .feedback-card {
-            background: var(--bg-light);
-            border-radius: 8px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .feedback-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
-        }
-
-        .feedback-title {
-            font-size: 1rem;
+        .info-label {
             font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.25rem;
+            color: var(--text-primary);
         }
 
-        .feedback-course {
-            color: var(--text-light);
+        .info-value {
+            color: var(--text-secondary);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
             font-size: 0.875rem;
         }
 
-        .feedback-rating {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
+        .alert-success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
         }
 
-        .rating-stars {
-            color: var(--accent-color);
+        .alert-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
         }
 
-        .feedback-date {
-            color: var(--text-light);
-            font-size: 0.75rem;
-        }
-
-        .feedback-content {
-            color: var(--text-dark);
+        .error-message {
+            color: var(--danger-color);
             font-size: 0.875rem;
-            line-height: 1.6;
-        }
-
-        .empty-feedback {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-light);
-        }
-
-        .empty-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .breadcrumb-nav {
-            margin-bottom: 1.25rem;
-        }
-
-        .breadcrumb-item a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-
-        .breadcrumb-item.active {
-            color: var(--text-light);
+            margin-top: 0.25rem;
         }
 
         @media (max-width: 768px) {
-            .main-content {
-                padding: 1.5rem 0;
-            }
-            
-            .profile-header {
-                padding: 1rem;
-            }
-            
             .profile-info {
-                padding: 1rem;
-            }
-            
-            .feedback-section {
-                padding: 1rem;
-            }
-            
-            .profile-name {
-                font-size: 1.5rem;
+                flex-direction: column;
+                text-align: center;
             }
             
             .profile-stats {
-                gap: 1rem;
+                justify-content: center;
             }
             
-            .info-grid {
+            .profile-content {
                 grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 1rem 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                {{ config('app.name', 'Akademi') }}
-            </a>
-            
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link me-3" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>
-                    {{ __('app.dashboard') }}
-                </a>
-                <a class="nav-link me-3" href="{{ route('student.courses') }}">
-                    <i class="fas fa-book me-1"></i>
-                    {{ __('app.courses') }}
-                </a>
-                <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="fas fa-sign-out-alt me-1"></i>
-                        {{ __('app.logout') }}
-                    </button>
-                </form>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <!-- Breadcrumb -->
-            <nav class="breadcrumb-nav">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('student.dashboard') }}">
-                            <i class="fas fa-home me-1"></i>
-                            {{ __('app.dashboard') }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active">{{ __('app.profile') }}</li>
-                </ol>
-            </nav>
-
-            <!-- Profile Header -->
+    @include('components.student-nav')
+    
+    <div class="container">
+        <div class="main-content">
             <div class="profile-header">
-                @if($student->photo)
-                    <img src="{{ asset($student->photo) }}" alt="{{ $student->full_name }}" class="profile-avatar">
-                @else
-                    <div class="profile-avatar" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
-                        <i class="fas fa-user"></i>
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        @if($student->photo)
+                            <img src="{{ asset($student->photo) }}" alt="{{ $student->firstname }}">
+                        @else
+                            {{ strtoupper(substr($student->firstname, 0, 1)) }}
+                        @endif
                     </div>
-                @endif
-                
-                <h1 class="profile-name">{{ $student->full_name }}</h1>
-                <p class="profile-email">{{ $student->email }}</p>
-                
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">{{ $student->group ? $student->group->courses->count() : 0 }}</div>
-                        <div class="stat-label">{{ __('app.enrolled_courses') }}</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">{{ $student->feedback->count() }}</div>
-                        <div class="stat-label">{{ __('app.submitted_feedback') }}</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">{{ $student->group ? $student->group->name : __('app.no_group') }}</div>
-                        <div class="stat-label">{{ __('app.group') }}</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Information -->
-            <div class="profile-info">
-                <h2 class="section-title">
-                    <i class="fas fa-user-circle"></i>
-                    {{ __('app.personal_information') }}
-                </h2>
-                
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-id-card"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>{{ __('app.student_number') }}</h4>
-                            <p>{{ $student->student_number }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-calendar"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>{{ __('app.date_of_birth') }}</h4>
-                            <p>{{ $student->date_of_birth ? $student->date_of_birth->format('M d, Y') : __('app.not_specified') }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>{{ __('app.group') }}</h4>
-                            <p>{{ $student->group ? $student->group->name : __('app.no_group') }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-circle"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>{{ __('app.status') }}</h4>
-                            <p>{{ $student->status ? __('app.active') : __('app.inactive') }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Feedback History -->
-            <div class="feedback-section">
-                <h2 class="section-title">
-                    <i class="fas fa-comments"></i>
-                    {{ __('app.feedback_history') }}
-                </h2>
-                
-                @if($student->feedback->count() > 0)
-                    @foreach($student->feedback as $feedback)
-                        <div class="feedback-card">
-                            <div class="feedback-header">
-                                <div>
-                                    <h3 class="feedback-title">{{ $feedback->title }}</h3>
-                                    <p class="feedback-course">
-                                        <i class="fas fa-book me-1"></i>
-                                        {{ $feedback->course->title }}
-                                    </p>
-                                </div>
-                                <div class="feedback-rating">
-                                    <div class="rating-stars">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <i class="fas fa-star {{ $i <= $feedback->rating ? '' : 'text-muted' }}"></i>
-                                        @endfor
-                                    </div>
-                                    <span class="feedback-date">{{ $feedback->created_at->format('M d, Y') }}</span>
-                                </div>
+                    <div class="profile-details">
+                        <h1>{{ $student->firstname }} {{ $student->lastname }}</h1>
+                        <p>{{ $student->email }}</p>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">{{ $student->group ? $student->group->courses->count() : 0 }}</span>
+                                <span class="stat-label">{{ __('app.courses') }}</span>
                             </div>
-                            <p class="feedback-content">{{ $feedback->content }}</p>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ $student->feedback->count() }}</span>
+                                <span class="stat-label">{{ __('app.feedback') }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ $student->group ? $student->group->name : __('app.no_group') }}</span>
+                                <span class="stat-label">{{ __('app.group') }}</span>
+                            </div>
                         </div>
-                    @endforeach
-                @else
-                    <div class="empty-feedback">
-                        <div class="empty-icon">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <h3>{{ __('app.no_feedback_yet') }}</h3>
-                        <p>{{ __('app.no_feedback_description') }}</p>
                     </div>
-                @endif
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        {{ __('app.personal_information') }}
+                    </h2>
+
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul style="margin: 0; padding-left: 1rem;">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('student.profile.update') }}">
+                        @csrf
+                        @method('PUT')
+                        
+                        <div class="form-group">
+                            <label for="firstname" class="form-label">{{ __('app.firstname') }}</label>
+                            <input type="text" id="firstname" name="firstname" class="form-input" 
+                                   value="{{ old('firstname', $student->firstname) }}" required>
+                            @error('firstname')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastname" class="form-label">{{ __('app.lastname') }}</label>
+                            <input type="text" id="lastname" name="lastname" class="form-input" 
+                                   value="{{ old('lastname', $student->lastname) }}" required>
+                            @error('lastname')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">{{ __('app.email') }}</label>
+                            <input type="email" id="email" name="email" class="form-input" 
+                                   value="{{ old('email', $student->email) }}" required>
+                            @error('email')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            {{ __('app.update_profile') }}
+                        </button>
+                    </form>
+                </div>
+
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        {{ __('app.account_information') }}
+                    </h2>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">{{ __('app.student_number') }}</span>
+                            <span class="info-value">{{ $student->student_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">{{ __('app.group') }}</span>
+                            <span class="info-value">{{ $student->group ? $student->group->name : __('app.no_group') }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">{{ __('app.date_of_birth') }}</span>
+                            <span class="info-value">{{ $student->date_of_birth ? $student->date_of_birth->format('M d, Y') : __('app.not_specified') }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">{{ __('app.status') }}</span>
+                            <span class="info-value">{{ $student->status ? __('app.active') : __('app.inactive') }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">{{ __('app.member_since') }}</span>
+                            <span class="info-value">{{ $student->created_at->format('M d, Y') }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

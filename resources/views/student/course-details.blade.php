@@ -7,24 +7,35 @@
     <title>{{ $course->title }} - {{ config('app.name', 'Akademi') }}</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-color: #1E3A8A;
-            --primary-hover: #1E40AF;
-            --secondary-color: #2DD4BF;
-            --accent-color: #F472B6;
-            --text-dark: #111827;
-            --text-light: #6B7280;
-            --border-color: #E2E8F0;
-            --bg-light: #F9FAFB;
-            --white: #FFFFFF;
-            --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
-            --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
+            --primary-color: #1e40af;
+            --primary-dark: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary-color: #0ea5e9;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
 
         * {
@@ -34,107 +45,192 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-light);
             color: var(--text-dark);
             line-height: 1.6;
+            font-size: 16px;
         }
 
+        /* Navigation */
         .navbar {
-            background: var(--primary-color);
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
         }
 
         .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: var(--white);
             display: flex;
             align-items: center;
             text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 800;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.5rem;
         }
 
         .nav-link {
-            color: var(--white);
+            color: var(--text-muted);
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             padding: 0.5rem 1rem;
             text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
+            color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
         }
 
         .logout-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--white);
+            background: var(--danger-color);
+            color: white;
             padding: 0.5rem 1rem;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.875rem;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            transition: all 0.2s ease;
             cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
+            background: #dc2626;
+            transform: translateY(-1px);
         }
 
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-white);
+                border-top: 1px solid var(--border-color);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+            
+            .nav-links.show {
+                display: flex;
+            }
+            
+            .nav-link {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        /* Main Container */
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 1rem;
         }
 
+        /* Breadcrumb */
         .breadcrumb {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 2rem;
             font-size: 0.875rem;
+            color: var(--text-muted);
         }
 
         .breadcrumb a {
             color: var(--primary-color);
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: color 0.2s ease;
+            font-weight: 500;
         }
 
         .breadcrumb a:hover {
-            color: var(--primary-hover);
+            color: var(--primary-dark);
         }
 
         .breadcrumb .separator {
             color: var(--text-light);
         }
 
+        /* Course Hero */
         .course-hero {
-            background: var(--white);
+            background: var(--bg-white);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
             margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
         }
 
         .course-header {
-            padding: 2rem;
+            padding: 3rem 2rem;
             background: var(--gradient-primary);
-            color: var(--white);
+            color: white;
             position: relative;
             overflow: hidden;
         }
@@ -142,21 +238,32 @@
         .course-header::before {
             content: '';
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 200px;
-            height: 200px;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            transform: translate(50%, -50%);
+        }
+
+        .course-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
         }
 
         .course-title {
             font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
             position: relative;
             z-index: 2;
+            line-height: 1.2;
         }
 
         .course-meta {
@@ -174,6 +281,10 @@
             gap: 0.5rem;
             font-size: 0.95rem;
             opacity: 0.9;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
         }
 
         .meta-item i {
@@ -187,25 +298,28 @@
             opacity: 0.95;
             position: relative;
             z-index: 2;
+            max-width: 800px;
         }
 
+        /* Video Section */
         .video-section {
-            background: var(--white);
+            background: var(--bg-white);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
             margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
         }
 
         .video-header {
-            padding: 1.5rem 2rem;
+            padding: 2rem;
             background: var(--gradient-secondary);
-            color: var(--white);
+            color: white;
         }
 
         .video-title {
             font-size: 1.5rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
 
@@ -217,15 +331,16 @@
         .video-container {
             position: relative;
             padding: 2rem;
-            background: var(--white);
+            background: var(--bg-white);
         }
 
         .video-player {
             width: 100%;
             height: 500px;
             border-radius: 12px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-xl);
             background: #000;
+            border: none;
         }
 
         .video-controls {
@@ -233,9 +348,10 @@
             justify-content: space-between;
             align-items: center;
             margin-top: 1.5rem;
-            padding: 1rem;
+            padding: 1.5rem;
             background: var(--bg-light);
             border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
 
         .video-info {
@@ -244,9 +360,9 @@
             gap: 1rem;
         }
 
-        .video-duration {
+        .video-duration, .video-quality {
             background: var(--primary-color);
-            color: var(--white);
+            color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.8rem;
@@ -254,12 +370,7 @@
         }
 
         .video-quality {
-            background: var(--secondary-color);
-            color: var(--white);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            background: var(--success-color);
         }
 
         .action-buttons {
@@ -271,37 +382,38 @@
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 10px;
-            font-weight: 500;
+            font-weight: 600;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             border: none;
             cursor: pointer;
             font-size: 0.9rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-primary {
             background: var(--primary-color);
-            color: var(--white);
+            color: white;
         }
 
         .btn-primary:hover {
-            background: var(--primary-hover);
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(30, 58, 138, 0.3);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-secondary {
             background: var(--secondary-color);
-            color: var(--white);
+            color: white;
         }
 
         .btn-secondary:hover {
-            background: #14B8A6;
+            background: #0284c7;
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(45, 212, 191, 0.3);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-outline {
@@ -312,32 +424,35 @@
 
         .btn-outline:hover {
             background: var(--text-dark);
-            color: var(--white);
+            color: white;
             transform: translateY(-2px);
         }
 
         .btn-success {
-            background: var(--accent-color);
-            color: var(--white);
+            background: var(--success-color);
+            color: white;
             cursor: default;
         }
 
+        /* Documents Section */
         .documents-section {
-            background: var(--white);
+            background: var(--bg-white);
             border-radius: 16px;
             padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
         }
 
         .section-header {
             display: flex;
             align-items: center;
             margin-bottom: 2rem;
+            gap: 1rem;
         }
 
         .section-title {
             font-size: 1.75rem;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-dark);
             display: flex;
             align-items: center;
@@ -345,64 +460,70 @@
         }
 
         .section-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: var(--gradient-primary);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--white);
+            color: white;
+            font-size: 1.2rem;
         }
 
         .documents-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 1.5rem;
         }
 
         .document-card {
-            background: var(--white);
+            background: var(--bg-white);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1.5rem;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
         .document-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-lg);
             border-color: var(--primary-color);
         }
 
         .document-icon {
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            color: var(--white);
+            font-size: 1.4rem;
+            color: white;
             margin-bottom: 1rem;
         }
 
         .document-icon.pdf {
-            background: linear-gradient(135deg, #DC2626, #EF4444);
+            background: linear-gradient(135deg, #dc2626, #ef4444);
         }
 
         .document-icon.doc {
-            background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
         }
 
         .document-icon.ppt {
-            background: linear-gradient(135deg, #F472B6, #EC4899);
+            background: linear-gradient(135deg, #ea580c, #f97316);
         }
 
         .document-icon.xls {
-            background: linear-gradient(135deg, #059669, #10B981);
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+
+        .document-icon.other {
+            background: linear-gradient(135deg, #6b7280, #9ca3af);
         }
 
         .document-title {
@@ -418,7 +539,7 @@
             gap: 1rem;
             margin-bottom: 1rem;
             font-size: 0.8rem;
-            color: var(--text-light);
+            color: var(--text-muted);
         }
 
         .document-meta span {
@@ -428,7 +549,7 @@
         }
 
         .document-description {
-            color: var(--text-light);
+            color: var(--text-muted);
             font-size: 0.9rem;
             line-height: 1.5;
             margin-bottom: 1rem;
@@ -436,34 +557,40 @@
 
         .btn-download {
             background: var(--primary-color);
-            color: var(--white);
-            padding: 0.5rem 1rem;
+            color: white;
+            padding: 0.75rem 1.25rem;
             border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.875rem;
+            font-weight: 600;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-download:hover {
-            background: var(--primary-hover);
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+            box-shadow: var(--shadow-md);
         }
 
-        .empty-state {
+        /* Empty States */
+        .empty-state, .no-video-placeholder {
             text-align: center;
             padding: 4rem 2rem;
-            color: var(--text-light);
+            color: var(--text-muted);
+            background: var(--bg-light);
+            border-radius: 12px;
+            border: 2px dashed var(--border-color);
         }
 
-        .empty-icon {
+        .empty-icon, .no-video-icon {
             font-size: 4rem;
             margin-bottom: 1.5rem;
             opacity: 0.5;
+            color: var(--text-light);
         }
 
         .empty-title {
@@ -473,20 +600,11 @@
             color: var(--text-dark);
         }
 
-        .no-video-placeholder {
-            background: var(--bg-light);
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 3rem;
-            text-align: center;
-            color: var(--text-light);
-            margin-bottom: 2rem;
-        }
-
-        .no-video-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .documents-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
         }
 
         @media (max-width: 768px) {
@@ -500,6 +618,11 @@
             
             .course-meta {
                 gap: 1rem;
+                flex-direction: column;
+            }
+            
+            .meta-item {
+                width: fit-content;
             }
             
             .video-player {
@@ -508,10 +631,11 @@
             
             .action-buttons {
                 justify-content: center;
+                flex-direction: column;
             }
             
             .btn {
-                flex: 1;
+                width: 100%;
                 justify-content: center;
             }
             
@@ -519,15 +643,20 @@
                 grid-template-columns: 1fr;
             }
             
-            .nav-links {
-                flex-wrap: wrap;
-                gap: 0.5rem;
+            .video-controls {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .video-info {
+                justify-content: center;
             }
         }
 
         @media (max-width: 480px) {
             .course-header {
-                padding: 1.5rem;
+                padding: 2rem 1.5rem;
             }
             
             .course-title {
@@ -542,43 +671,66 @@
                 height: 250px;
             }
             
-            .action-buttons {
-                flex-direction: column;
+            .documents-section {
+                padding: 1.5rem;
             }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="main-container">
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>
-                    {{ config('app.name', 'Akademi') }}
-                </a>
-                
-                <div class="nav-links">
-                    <a class="nav-link" href="{{ route('student.dashboard') }}">
-                        <i class="fas fa-home" style="margin-right: 0.25rem;"></i>
-                        {{ __('app.dashboard') }}
-                    </a>
-                    <a class="nav-link" href="{{ route('student.courses') }}">
-                        <i class="fas fa-book" style="margin-right: 0.25rem;"></i>
-                        {{ __('app.courses') }}
-                    </a>
-                    <a class="nav-link" href="{{ route('student.profile') }}">
-                        <i class="fas fa-user" style="margin-right: 0.25rem;"></i>
-                        {{ __('app.profile') }}
-                    </a>
-                    <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
-                        @csrf
-                        <button type="submit" class="logout-btn">
-                            <i class="fas fa-sign-out-alt" style="margin-right: 0.25rem;"></i>
-                            {{ __('app.logout') }}
-                        </button>
-                    </form>
+        <div class="nav-container">
+            <a class="navbar-brand" href="{{ route('student.dashboard') }}">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
                 </div>
+                <span>{{ config('app.name', 'Akademi') }}</span>
+            </a>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links" id="navLinks">
+                <a class="nav-link" href="{{ route('student.dashboard') }}">
+                    <i class="fas fa-home"></i>
+                    <span>{{ __('app.dashboard') }}</span>
+                </a>
+                <a class="nav-link active" href="{{ route('student.courses') }}">
+                    <i class="fas fa-book"></i>
+                    <span>{{ __('app.courses') }}</span>
+                </a>
+                <a class="nav-link" href="{{ route('student.profile') }}">
+                    <i class="fas fa-user"></i>
+                    <span>{{ __('app.profile') }}</span>
+                </a>
+                <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
+                    @csrf
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>{{ __('app.logout') }}</span>
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
@@ -761,6 +913,22 @@
     </div>
 
     <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('show');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!navLinks.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                navLinks.classList.remove('show');
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // Smooth scrolling for internal links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -781,13 +949,13 @@
                     e.preventDefault();
                     const originalText = this.innerHTML;
                     this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
-                    this.style.opacity = '0.7';
+                    this.classList.add('loading');
                     
                     setTimeout(() => {
                         this.innerHTML = originalText;
-                        this.style.opacity = '1';
+                        this.classList.remove('loading');
                         window.location.href = this.href;
-                    }, 2000);
+                    }, 1000);
                 });
             });
 
@@ -799,6 +967,17 @@
                 
                 video.addEventListener('pause', function() {
                     console.log('Video paused');
+                });
+            });
+
+            // Add hover effects to document cards
+            document.querySelectorAll('.document-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
                 });
             });
         });

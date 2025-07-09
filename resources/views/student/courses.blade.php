@@ -7,27 +7,35 @@
     <title>{{ __('app.my_courses') }} - {{ config('app.name', 'Akademi') }}</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-color: #1E3A8A; /* Deep Navy */
-            --primary-hover: #1E40AF; /* Slightly lighter navy for hover */
-            --secondary-color: #2DD4BF; /* Soft Teal */
-            --accent-color: #F472B6; /* Warm Coral */
-            --text-dark: #111827; /* Charcoal */
-            --text-light: #6B7280; /* Slate Gray */
-            --border-color: #E2E8F0; /* Light Slate */
-            --bg-light: #F9FAFB; /* Off-White */
-            --white: #FFFFFF;
-            --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
-            --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
+            --primary-color: #1e40af;
+            --primary-dark: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary-color: #0ea5e9;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
 
         * {
@@ -37,77 +45,227 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-light);
             color: var(--text-dark);
-            line-height: 1.5;
+            line-height: 1.6;
+            font-size: 16px;
         }
 
+        /* Navigation */
         .navbar {
-            background: var(--primary-color);
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
         }
 
         .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: var(--white) !important;
             display: flex;
             align-items: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .logo img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .nav-link {
-            color: var(--white) !important;
+            color: var(--text-muted);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.875rem;
             padding: 0.5rem 1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            transform: translateY(-2px);
+            color: var(--primary-color);
+            background: var(--bg-light);
         }
 
-        .main-content {
-            padding: 2rem 0;
+        .nav-link.active {
+            color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
         }
 
-        .page-header {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
+        .logout-btn {
+            background: var(--danger-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-white);
+                border-top: 1px solid var(--border-color);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+            
+            .nav-links.show {
+                display: flex;
+            }
+            
+            .nav-link {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+        }
+
+        .breadcrumb .separator {
+            color: var(--text-light);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
         }
 
         .page-title {
-            font-size: 1.75rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 0.5rem;
+            line-height: 1.2;
         }
 
         .page-subtitle {
-            color: var(--text-light);
-            font-size: 1rem;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Course Grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
         }
 
         .course-card {
-            background: var(--white);
+            background: var(--bg-white);
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 1.5rem;
-            height: 100%;
+            box-shadow: var(--shadow-md);
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
         }
 
         .course-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
         }
 
         .course-header {
@@ -119,41 +277,39 @@
 
         .course-title {
             font-size: 1.125rem;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-dark);
             margin-bottom: 0.5rem;
+            line-height: 1.3;
         }
 
         .course-teacher {
-            color: var(--text-light);
+            color: var(--text-muted);
             font-size: 0.875rem;
             display: flex;
             align-items: center;
-        }
-
-        .course-teacher i {
-            margin-right: 0.5rem;
+            gap: 0.5rem;
         }
 
         .course-status {
             padding: 0.25rem 0.75rem;
             border-radius: 12px;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .status-active {
-            background: #D1FAE5;
-            color: #065F46;
+            background: #dcfce7;
+            color: #166534;
         }
 
         .status-inactive {
-            background: #FEE2E2;
-            color: #991B1B;
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         .course-description {
-            color: var(--text-light);
+            color: var(--text-muted);
             font-size: 0.875rem;
             line-height: 1.6;
             margin-bottom: 1rem;
@@ -169,12 +325,12 @@
         .meta-item {
             display: flex;
             align-items: center;
-            color: var(--text-light);
+            color: var(--text-muted);
             font-size: 0.875rem;
+            gap: 0.5rem;
         }
 
         .meta-item i {
-            margin-right: 0.5rem;
             color: var(--primary-color);
         }
 
@@ -185,103 +341,97 @@
         }
 
         .btn-course {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
             text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-view {
             background: var(--primary-color);
-            color: var(--white);
+            color: white;
         }
 
         .btn-view:hover {
-            background: var(--primary-hover);
+            background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-feedback {
             background: var(--secondary-color);
-            color: var(--white);
+            color: white;
         }
 
         .btn-feedback:hover {
-            background: #14B8A6;
+            background: #0284c7;
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-feedback-submitted {
-            background: var(--accent-color);
-            color: var(--white);
+            background: var(--success-color);
+            color: white;
             cursor: default;
         }
 
         .btn-feedback-submitted:hover {
-            background: var(--accent-color);
+            background: var(--success-color);
             transform: none;
         }
 
+        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 4rem 1rem;
-            color: var(--text-light);
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            background: var(--bg-white);
+            border-radius: 12px;
+            border: 2px dashed var(--border-color);
         }
 
         .empty-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
- volumes: 0.5;
-        }
-
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .breadcrumb-nav {
-            margin-bottom: 1.25rem;
-        }
-
-        .breadcrumb-item a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-
-        .breadcrumb-item.active {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
             color: var(--text-light);
         }
 
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .course-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
-            .main-content {
-                padding: 1.5rem 0;
+            .main-container {
+                padding: 1rem;
             }
             
             .page-header {
-                padding: 1rem;
+                padding: 1.5rem;
             }
             
             .page-title {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
             }
             
-            .course-card {
-                padding: 1rem;
+            .course-grid {
+                grid-template-columns: 1fr;
             }
             
             .course-header {
@@ -301,31 +451,55 @@
                 justify-content: center;
             }
         }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 1.25rem;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .course-card {
+                padding: 1.25rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
+    <nav class="navbar">
+        <div class="nav-container">
             <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                {{ config('app.name', 'Akademi') }}
+                <div class="logo">
+                    <img src="{{ asset('storage/logo.png') }}" alt="{{ config('app.name', 'Akademi') }}" />
+                </div>
+                <span>{{ config('app.name', 'Akademi') }}</span>
             </a>
             
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link me-3" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>
-                    {{ __('app.dashboard') }}
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links" id="navLinks">
+                <a class="nav-link" href="{{ route('student.dashboard') }}">
+                    <i class="fas fa-home"></i>
+                    <span>{{ __('app.dashboard') }}</span>
                 </a>
-                <a class="nav-link me-3" href="{{ route('student.profile') }}">
-                    <i class="fas fa-user me-1"></i>
-                    {{ __('app.profile') }}
+                <a class="nav-link active" href="{{ route('student.courses') }}">
+                    <i class="fas fa-book"></i>
+                    <span>{{ __('app.courses') }}</span>
+                </a>
+                <a class="nav-link" href="{{ route('student.profile') }}">
+                    <i class="fas fa-user"></i>
+                    <span>{{ __('app.profile') }}</span>
                 </a>
                 <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
                     @csrf
                     <button type="submit" class="logout-btn">
-                        <i class="fas fa-sign-out-alt me-1"></i>
-                        {{ __('app.logout') }}
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>{{ __('app.logout') }}</span>
                     </button>
                 </form>
             </div>
@@ -333,95 +507,119 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <!-- Breadcrumb -->
-            <nav class="breadcrumb-nav">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('student.dashboard') }}">
-                            <i class="fas fa-home me-1"></i>
-                            {{ __('app.dashboard') }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active">{{ __('app.my_courses') }}</li>
-                </ol>
-            </nav>
+    <div class="main-container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="{{ route('student.dashboard') }}">
+                <i class="fas fa-home"></i>
+                {{ __('app.dashboard') }}
+            </a>
+            <span class="separator">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+            <span>{{ __('app.my_courses') }}</span>
+        </div>
 
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1 class="page-title">{{ __('app.my_courses') }}</h1>
-                <p class="page-subtitle">{{ __('app.courses_subtitle') }}</p>
-            </div>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">{{ __('app.my_courses') }}</h1>
+            <p class="page-subtitle">{{ __('app.courses_subtitle') }}</p>
+        </div>
 
-            <!-- Courses Grid -->
-            @if($courses->count() > 0)
-                <div class="row">
-                    @foreach($courses as $course)
-                        <div class="col-lg-6 col-xl-4">
-                            <div class="course-card">
-                                <div class="course-header">
-                                    <div>
-                                        <h3 class="course-title">{{ $course->title }}</h3>
-                                        <p class="course-teacher">
-                                            <i class="fas fa-chalkboard-teacher"></i>
-                                            {{ $course->teacher ? $course->teacher->firstname . ' ' . $course->teacher->lastname : __('app.no_teacher') }}
-                                        </p>
-                                    </div>
-                                    <span class="course-status {{ $course->status ? 'status-active' : 'status-inactive' }}">
-                                        {{ $course->status ? __('app.active') : __('app.inactive') }}
-                                    </span>
-                                </div>
-                                
-                                <p class="course-description">
-                                    {{ Str::limit($course->description, 120) }}
+        <!-- Courses Grid -->
+        @if($courses->count() > 0)
+            <div class="course-grid">
+                @foreach($courses as $course)
+                    <div class="course-card">
+                        <div class="course-header">
+                            <div>
+                                <h3 class="course-title">{{ $course->title }}</h3>
+                                <p class="course-teacher">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    {{ $course->teacher ? $course->teacher->firstname . ' ' . $course->teacher->lastname : __('app.no_teacher') }}
                                 </p>
-                                
-                                <div class="course-meta">
-                                    <div class="meta-item">
-                                        <i class="fas fa-calendar"></i>
-                                        {{ $course->start_date ? $course->start_date->format('M Y') : __('app.no_date') }}
-                                    </div>
-                                    <div class="meta-item">
-                                        <i class="fas fa-file-alt"></i>
-                                        {{ $course->documents->count() }} {{ __('app.documents') }}
-                                    </div>
-                                </div>
-                                
-                                <div class="course-actions">
-                                    <a href="{{ route('student.course.details', $course->id) }}" class="btn-course btn-view">
-                                        <i class="fas fa-eye me-1"></i>
-                                        {{ __('app.view_course') }}
-                                    </a>
-                                    
-                                    @if($student->feedback->where('course_id', $course->id)->count())
-                                        <span class="btn-course btn-feedback-submitted">
-                                            <i class="fas fa-check me-1"></i>
-                                            {{ __('app.feedback_submitted') }}
-                                        </span>
-                                    @else
-                                        <a href="{{ route('student.course.feedback', $course->id) }}" class="btn-course btn-feedback">
-                                            <i class="fas fa-comment me-1"></i>
-                                            {{ __('app.give_feedback') }}
-                                        </a>
-                                    @endif
-                                </div>
+                            </div>
+                            <span class="course-status {{ $course->status ? 'status-active' : 'status-inactive' }}">
+                                {{ $course->status ? __('app.active') : __('app.inactive') }}
+                            </span>
+                        </div>
+                        
+                        <p class="course-description">
+                            {{ Str::limit($course->description, 120) }}
+                        </p>
+                        
+                        <div class="course-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                {{ $course->start_date ? $course->start_date->format('M Y') : __('app.no_date') }}
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-file-alt"></i>
+                                {{ $course->documents->count() }} {{ __('app.documents') }}
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-book-open"></i>
+                        
+                        <div class="course-actions">
+                            <a href="{{ route('student.course.details', $course->id) }}" class="btn-course btn-view">
+                                <i class="fas fa-eye"></i>
+                                {{ __('app.view_course') }}
+                            </a>
+                            
+                            @if($student->feedback->where('course_id', $course->id)->count())
+                                <span class="btn-course btn-feedback-submitted">
+                                    <i class="fas fa-check"></i>
+                                    {{ __('app.feedback_submitted') }}
+                                </span>
+                            @else
+                                <a href="{{ route('student.course.feedback', $course->id) }}" class="btn-course btn-feedback">
+                                    <i class="fas fa-comment"></i>
+                                    {{ __('app.give_feedback') }}
+                                </a>
+                            @endif
+                        </div>
                     </div>
-                    <h3>{{ __('app.no_courses_yet') }}</h3>
-                    <p>{{ __('app.no_courses_description') }}</p>
+                @endforeach
+            </div>
+        @else
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-book-open"></i>
                 </div>
-            @endif
-        </div>
+                <h3 class="empty-title">{{ __('app.no_courses_yet') }}</h3>
+                <p>{{ __('app.no_courses_description') }}</p>
+            </div>
+        @endif
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('show');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!navLinks.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                navLinks.classList.remove('show');
+            }
+        });
+
+        // Add hover effects to cards
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.course-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
