@@ -41,6 +41,10 @@ return [
     'students' => 'Students',
     'users' => 'Users',
     'courses' => 'Courses',
+    'teachers' => 'Teachers',
+    'roles' => 'Roles',
+    'feedbacks' => 'Feedbacks',
+    'departments' => 'Departments',
 
     // Permissions
     'add_student' => 'Add Student',
@@ -55,6 +59,20 @@ return [
     'access_courses' => 'Access Courses',
     'edit_course' => 'Edit Course',
     'delete_course' => 'Delete Course',
+    'add_teacher' => 'Add Teacher',
+    'access_teachers' => 'Access Teachers',
+    'edit_teacher' => 'Edit Teacher',
+    'delete_teacher' => 'Delete Teacher',
+    'add_role' => 'Add Role',
+    'access_roles' => 'Access Roles',
+    'edit_role' => 'Edit Role',
+    'delete_role' => 'Delete Role',
+    'access_feedbacks' => 'Access Feedbacks',
+    'delete_feedback' => 'Delete Feedback',
+    'add_department' => 'Add Department',
+    'access_departments' => 'Access Departments',
+    'edit_department' => 'Edit Department',
+    'delete_department' => 'Delete Department',
 
     // Messages
     'created_successfully' => 'Role created successfully.',

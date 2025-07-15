@@ -102,5 +102,10 @@ return [
     'active' => 'Actif',
     'inactive' => 'Inactif',
     'no_teacher' => 'Aucun enseignant assigné',
+    'no_feedbacks_found' => 'Aucun avis trouvé.',
+    'welcome' => 'Bienvenue',
+    'documents' => 'Documents',
+    'no_videos_yet' => 'Aucune Vidéo Encore',
+    'no_videos_description' => 'Les vidéos du cours apparaîtront ici une fois téléchargées par votre enseignant',
 
 ]; 

@@ -102,5 +102,16 @@ return [
     'active' => 'Active',
     'inactive' => 'Inactive',
     'no_teacher' => 'No teacher assigned',
+    'anonymous' => 'Anonymous',
+    'shown' => 'Shown',
+    'anonymity' => 'Anonymity',
+    'filter' => 'Filter',
+    'all' => 'All',
+    'delete_feedback_confirm' => 'Are you sure you want to delete this feedback?',
+    'no_feedbacks_found' => 'No feedbacks found.',
+    'welcome' => 'Welcome',
+    'documents' => 'Documents',
+    'no_videos_yet' => 'No Videos Yet',
+    'no_videos_description' => 'Course videos will appear here once uploaded by your teacher',
 
 ]; 

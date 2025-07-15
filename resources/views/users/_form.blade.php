@@ -31,9 +31,9 @@
                     <label class="form-label">{{ __('users.role') }}</label>
                     <select name="role_id" class="form-select" required>
                         @foreach($roles as $role)
-                            @if(empty($role->is_teacher) || !$role->is_teacher)
-                                <option value="{{ $role->id }}" @if(isset($user) && $user->role_id == $role->id) selected @endif>{{ $role->name }}</option>
-                            @endif
+                            
+                            <option value="{{ $role->id }}" @if(isset($user) && $user->role_id == $role->id) selected @endif>{{ $role->name }}</option>
+
                         @endforeach
                     </select>
                 </div>

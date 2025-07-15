@@ -155,4 +155,13 @@ class User extends Authenticatable
     {
         return $this->status == 1;
     }
+
+    public function hasPermission($permission)
+    {
+        if (!$this->role || !$this->role->permissions) {
+            return false;
+        }
+        $permissions = json_decode($this->role->permissions, true);
+        return in_array($permission, $permissions);
+    }
 }

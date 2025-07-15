@@ -1,6 +1,10 @@
-# Student Feedback Platform
+# Schoolar Feedback Platform
 
-A platform for students to provide anonymous feedback to teachers and for teachers to manage courses and view feedback analytics.
+A platform for students to provide anonymous feedback to teachers, for teachers to manage courses and view feedback analytics, and for admins to manage users, roles, and permissions.
+
+**Programming Language:** PHP (Laravel Framework)
+
+**Multilingual:** Supports English, French, and Arabic.
 
 ## Features
 
@@ -9,6 +13,30 @@ A platform for students to provide anonymous feedback to teachers and for teache
 - Anonymous Student Feedback
 - Feedback Analytics
 - File Upload Support (Student Pictures & Documents)
+- Role-based Permissions System
+- Multilingual Interface (EN, FR, AR)
+- Feedbacks can be submitted as Anonymous or Shown, and this status is visible and filterable in the dashboard and feedback management.
+
+## Permissions & Roles
+
+The platform uses a role-based permissions system. Each role can be assigned specific permissions for different models:
+
+| Model       | Permissions                                                                 |
+|-------------|------------------------------------------------------------------------------|
+| Students    | add_student, access_students, edit_student, delete_student                   |
+| Users       | add_user, access_users, edit_user, delete_user                               |
+| Courses     | add_course, access_courses, edit_course, delete_course                       |
+| Teachers    | add_teacher, access_teachers, edit_teacher, delete_teacher                   |
+| Roles       | add_role, access_roles, edit_role, delete_role                               |
+| Feedbacks   | access_feedbacks, delete_feedback                                            |
+| Departments | add_department, access_departments, edit_department, delete_department       |
+
+**Note:** Feedbacks can be either **Anonymous** or **Shown**. The anonymity status is displayed in both the dashboard and feedback management, and you can filter feedbacks by this status.
+
+- **add_X**: Create a new X
+- **access_X**: View/list X
+- **edit_X**: Edit/update X
+- **delete_X**: Delete X
 
 ## Requirements
 

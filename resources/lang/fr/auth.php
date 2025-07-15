@@ -17,5 +17,10 @@ return [
     'password' => 'Le mot de passe fourni est incorrect.',
     'throttle' => 'Trop de tentatives de connexion. Veuillez réessayer dans :seconds secondes.',
     'inactive_account' => 'Votre compte est inactif. Veuillez contacter un administrateur.',
+    'welcome_back' => 'Bon retour !',
+    'login_to_your_account' => 'Connectez-vous à votre compte',
+    'email' => 'Email',
+    'remember_me' => 'Se souvenir de moi',
+    'login' => 'Connexion',
 
 ]; 

@@ -41,6 +41,10 @@ return [
     'students' => 'الطلاب',
     'users' => 'المستخدمون',
     'courses' => 'الدورات',
+    'teachers' => 'المعلمين',
+    'roles' => 'الأدوار',
+    'feedbacks' => 'الملاحظات',
+    'departments' => 'الأقسام',
 
     // Permissions
     'add_student' => 'إضافة طالب',
@@ -55,6 +59,20 @@ return [
     'access_courses' => 'الوصول للدورات',
     'edit_course' => 'تعديل الدورة',
     'delete_course' => 'حذف الدورة',
+    'add_teacher' => 'إضافة معلم',
+    'access_teachers' => 'الوصول للمعلمين',
+    'edit_teacher' => 'تعديل المعلم',
+    'delete_teacher' => 'حذف المعلم',
+    'add_role' => 'إضافة دور',
+    'access_roles' => 'الوصول للأدوار',
+    'edit_role' => 'تعديل الدور',
+    'delete_role' => 'حذف الدور',
+    'access_feedbacks' => 'الوصول للملاحظات',
+    'delete_feedback' => 'حذف الملاحظة',
+    'add_department' => 'إضافة قسم',
+    'access_departments' => 'الوصول للأقسام',
+    'edit_department' => 'تعديل القسم',
+    'delete_department' => 'حذف القسم',
 
     // Messages
     'created_successfully' => 'تم إنشاء الدور بنجاح.',

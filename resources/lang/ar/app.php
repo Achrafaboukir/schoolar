@@ -102,5 +102,10 @@ return [
     'active' => 'نشط',
     'inactive' => 'غير نشط',
     'no_teacher' => 'لا يوجد معلم معين',
+    'no_feedbacks_found' => 'لم يتم العثور على أي تعليقات.',
+    'welcome' => 'مرحباً',
+    'documents' => 'المستندات',
+    'no_videos_yet' => 'لا توجد فيديوهات بعد',
+    'no_videos_description' => 'ستظهر فيديوهات الدورة هنا بمجرد رفعها من قبل معلمك',
 
 ]; 

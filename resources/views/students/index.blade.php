@@ -57,7 +57,7 @@
                 <td>{{ $student->number }}</td>
                 <td>{{ $student->group->name ?? '' }}</td>
                 <td>
-                    <span class="status-badge {{ $student->status }}">{{ strtoupper($student->status) }}</span>
+                    <span class="status-badge {{ $student->status ? 'active' : 'inactive' }}">{{ $student->status ? 'ACTIVE' : 'INACTIVE' }}</span>
                 </td>
                 <td class="actions-cell">
                     <div class="d-flex gap-2">

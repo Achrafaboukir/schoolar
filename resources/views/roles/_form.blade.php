@@ -13,9 +13,14 @@
             <div class="row g-3">
                 @php
                     $models = [
-                        'students' => ['add_student', 'access_student', 'edit_student', 'delete_student'],
+                        'students' => ['add_student', 'access_students', 'edit_student', 'delete_student'],
                         'users' => ['add_user', 'access_users', 'edit_user', 'delete_user'],
                         'courses' => ['add_course', 'access_courses', 'edit_course', 'delete_course'],
+                        'teachers' => ['add_teacher', 'access_teachers', 'edit_teacher', 'delete_teacher'],
+                        'roles' => ['add_role', 'access_roles', 'edit_role', 'delete_role'],
+                        'feedbacks' => ['access_feedbacks', 'delete_feedback'],
+                        'departments' => ['add_department', 'access_departments', 'edit_department', 'delete_department'],
+                        'groups' => ['add_group', 'access_groups', 'edit_group', 'delete_group'],
                     ];
                     $modelKeys = array_keys($models);
                     $selected = isset($role) ? (array) json_decode($role->permissions ?? '[]', true) : (old('permissions') ?? []);

@@ -136,7 +136,7 @@
 <div class="table-section">
     <div class="table-header">
         <h2 class="table-title">{{ __('dashboard.recent_feedbacks') }}</h2>
-        <a href="{{ url('/feedbacks') }}" class="btn btn-link">{{ __('dashboard.see_all') }}</a>
+        <a href="{{ route('feedback.index') }}" class="btn btn-link">{{ __('dashboard.see_all') }}</a>
     </div>
     <table class="data-table">
         <thead>
@@ -147,49 +147,39 @@
                 <th>{{ __('dashboard.group') }}</th>
                 <th>{{ __('dashboard.course') }}</th>
                 <th>{{ __('dashboard.content') }}</th>
+                <th>{{ __('app.anonymity') }}</th>
             </tr>
         </thead>
         <tbody>
+            @forelse($recentFeedbacks as $feedback)
             <tr>
-                <td>1</td>
-                <td>Achraf aboukir (kiddan)</td>
-                <td>Mohamed hamdoun</td>
-                <td>3isi dev</td>
-                <td>OOP java cours 1</td>
-                <td>We need more exemples</td>
+                <td>{{ $feedback->id }}</td>
+                <td>
+                    @if($feedback->is_anonymous)
+                        {{ __('dashboard.anonymous') }}
+                    @elseif($feedback->student)
+                        {{ $feedback->student->full_name }}
+                    @else
+                        N/A
+                    @endif
+                </td>
+                <td>{{ $feedback->course && $feedback->course->teacher ? $feedback->course->teacher->full_name : 'N/A' }}</td>
+                <td>{{ $feedback->course && $feedback->course->group ? $feedback->course->group->name : 'N/A' }}</td>
+                <td>{{ $feedback->course ? $feedback->course->title : 'N/A' }}</td>
+                <td>{{ $feedback->content }}</td>
+                <td>
+                    @if($feedback->is_anonymous)
+                        <span class="badge bg-secondary">{{ __('app.anonymous') }}</span>
+                    @else
+                        <span class="badge bg-success">{{ __('app.shown') }}</span>
+                    @endif
+                </td>
             </tr>
+            @empty
             <tr>
-                <td>2</td>
-                <td>Ibrahim touhami (chowen)</td>
-                <td>Yassir amrani</td>
-                <td>3isi dev</td>
-                <td>OOP java cours 1</td>
-                <td>Teacher can you please ad...</td>
+                <td colspan="7" class="text-center">{{ __('app.no_feedbacks_found') }}</td>
             </tr>
-            <tr>
-                <td>3</td>
-                <td>Asmaa toungh (kiddan)</td>
-                <td>Tarik targam</td>
-                <td>3isi dev</td>
-                <td>OOP java cours 1</td>
-                <td>Can you slow down</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Achraf aboukir (kiddan)</td>
-                <td>Mohamed hamdoun</td>
-                <td>3isi dev</td>
-                <td>OOP java cours 1</td>
-                <td>Teacher you missed the pa...</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>Achraf aboukir (kiddan)</td>
-                <td>Mohamed hamdoun</td>
-                <td>3isi dev</td>
-                <td>OOP java cours 1</td>
-                <td>We need more exemples</td>
-            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

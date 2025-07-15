@@ -41,6 +41,10 @@ return [
     'students' => 'Étudiants',
     'users' => 'Utilisateurs',
     'courses' => 'Cours',
+    'teachers' => 'Enseignants',
+    'roles' => 'Rôles',
+    'feedbacks' => 'Retours',
+    'departments' => 'Départements',
 
     // Permissions
     'add_student' => 'Ajouter un Étudiant',
@@ -55,6 +59,20 @@ return [
     'access_courses' => 'Accéder aux Cours',
     'edit_course' => 'Modifier le Cours',
     'delete_course' => 'Supprimer le Cours',
+    'add_teacher' => 'Ajouter un Enseignant',
+    'access_teachers' => 'Accéder aux Enseignants',
+    'edit_teacher' => 'Modifier l\'Enseignant',
+    'delete_teacher' => 'Supprimer l\'Enseignant',
+    'add_role' => 'Ajouter un Rôle',
+    'access_roles' => 'Accéder aux Rôles',
+    'edit_role' => 'Modifier le Rôle',
+    'delete_role' => 'Supprimer le Rôle',
+    'access_feedbacks' => 'Accéder aux Retours',
+    'delete_feedback' => 'Supprimer le Retour',
+    'add_department' => 'Ajouter un Département',
+    'access_departments' => 'Accéder aux Départements',
+    'edit_department' => 'Modifier le Département',
+    'delete_department' => 'Supprimer le Département',
 
     // Messages
     'created_successfully' => 'Rôle créé avec succès.',

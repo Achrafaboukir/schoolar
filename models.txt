@@ -1,0 +1,37 @@
+Main Interfaces:
+- Users
+  Description: Manage user accounts, including creation, editing, and role assignment.
+- Students
+  Description: Manage student records, enrollment, and student-specific data.
+- Teachers
+  Description: Manage teacher profiles, assignments, and related data.
+- Groups
+  Description: Organize students and teachers into groups for courses or activities.
+- Departments
+  Description: Manage academic departments and their associated courses and staff.
+- Roles
+  Description: Define and assign roles (admin, teacher, student, etc.) for access control.
+- Courses
+  Description: Manage course information, schedules, and enrollment.
+- Course Documents
+  Description: Upload and manage documents and resources related to courses.
+- Feedback
+  Description: Collect and review feedback from students about courses or teachers.
+- Connexion (Login) Interface for Admins
+  Description: Secure login page for administrators to access the admin dashboard and management tools.
+- Dashboard (Admin)
+  Description: Main admin interface providing an overview of system statistics, quick access to management features, and recent activity.
+
+Student Interfaces:
+- Login
+  Description: Student login page for secure access to their dashboard and resources.
+- Dashboard
+  Description: Student home page showing stats, quick links, and recent activity.
+- Courses
+  Description: View and manage enrolled courses, including course details and materials.
+- Course Details
+  Description: Detailed view of a specific course, including documents, teacher info, and feedback options.
+- Feedback Form
+  Description: Submit feedback about courses or teachers, including ratings and comments.
+- Profile
+  Description: View and update personal information, such as name, email, and group assignment. 

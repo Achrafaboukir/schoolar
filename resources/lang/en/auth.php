@@ -14,8 +14,13 @@ return [
     */
 
     'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
+    'password' => 'password',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'inactive_account' => 'Your account is inactive. Please contact an administrator.',
+    'welcome_back' => 'Welcome back!',
+    'login_to_your_account' => 'Sign in to your account',
+    'email' => 'Email',
+    'remember_me' => 'Remember me',
+    'login' => 'Login',
 
 ]; 

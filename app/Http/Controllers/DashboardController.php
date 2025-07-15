@@ -33,6 +33,11 @@ class DashboardController extends Controller
             'total_courses' => Course::where('is_deleted', false)->count(),
         ];
 
-        return view('dashboard', compact('stats', 'teachers'));
+        $recentFeedbacks = \App\Models\Feedback::with(['student', 'course', 'course.teacher', 'course.group'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('dashboard', compact('stats', 'teachers', 'recentFeedbacks'));
     }
 }

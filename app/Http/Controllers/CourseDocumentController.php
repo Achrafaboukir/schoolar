@@ -45,137 +45,37 @@ class CourseDocumentController extends Controller
     public function store(Request $request, Course $course)
     {
         try {
-
-            // Debug: Log the request data
-            Log::info('Document upload request received', [
-                'has_file' => $request->hasFile('document'),
-                'all_files' => $request->allFiles(),
-                'post_data' => $request->except('document'),
-                'content_type' => $request->header('Content-Type'),
-            ]);
-            
-            // First, check if file was uploaded
-            if (!$request->hasFile('document')) {
-                Log::warning('No document file found in request');
+            if (!$request->hasFile('document') || !$request->file('document')->isValid()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => ['document' => ['No file was uploaded.']],
+                    'message' => 'Invalid or missing file.',
                 ], 422);
             }
+
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string|max:1000',
+                'file_type' => 'required|in:video,image,pdf',
+                'document' => 'required|file|mimes:pdf,jpeg,jpg,png,mp4,avi,mov,webm|max:10240',
+            ]);
 
             $file = $request->file('document');
-            
-            // Debug: Log file information
-            Log::info('File upload details', [
-                'original_name' => $file->getClientOriginalName(),
-                'size' => $file->getSize(),
-                'mime_type' => $file->getMimeType(),
-                'extension' => $file->getClientOriginalExtension(),
-                'is_valid' => $file->isValid(),
-                'error_code' => $file->getError(),
-                'error_message' => $file->getErrorMessage(),
-            ]);
-            
-            // Check if file is valid
-            if (!$file->isValid()) {
-                $errorCode = $file->getError();
-                $errorMessages = [
-                    UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive.',
-                    UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive.',
-                    UPLOAD_ERR_PARTIAL => 'The uploaded file was only partially uploaded.',
-                    UPLOAD_ERR_NO_FILE => 'No file was uploaded.',
-                    UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder.',
-                    UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
-                    UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload.',
-                ];
-                $message = $errorMessages[$errorCode] ?? 'Unknown upload error.';
-                
-                Log::warning('File upload validation failed', [
-                    'error_code' => $errorCode,
-                    'error_message' => $message,
-                ]);
-                
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => ['document' => ["The uploaded file is invalid. Error: $message (Code: $errorCode)"]],
-                ], 422);
-            }
-
-            // Validate other fields
-            try {
-                $validated = $request->validate([
-                    'title' => 'required|string|max:255',
-                    'description' => 'nullable|string|max:1000',
-                    'file_type' => 'required|in:video,image,pdf',
-                    'document' => [
-                        'required',
-                        'file',
-                        'mimes:pdf,jpeg,jpg,png,mp4,avi,mov,webm',
-                        'max:10240', // 10MB max
-                    ],
-                ]);
-                Log::info('Validation passed', ['validated_data' => $validated]);
-            } catch (ValidationException $e) {
-                Log::warning('Validation failed', ['errors' => $e->errors()]);
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $e->errors(),
-                ], 422);
-            }
-
-            // Validate file type matches extension
-            $fileType = $request->input('file_type');
             $extension = strtolower($file->getClientOriginalExtension());
-            
-            Log::info('File type validation', [
-                'selected_file_type' => $fileType,
-                'file_extension' => $extension,
-            ]);
-            
+
             $validExtensions = [
                 'video' => ['mp4', 'avi', 'mov', 'webm'],
                 'image' => ['jpeg', 'jpg', 'png'],
                 'pdf' => ['pdf']
             ];
-            
-            if (!in_array($extension, $validExtensions[$fileType])) {
-                Log::warning('File type mismatch', [
-                    'selected_type' => $fileType,
-                    'file_extension' => $extension,
-                    'valid_extensions' => $validExtensions[$fileType],
-                ]);
+
+            if (!in_array($extension, $validExtensions[$validated['file_type']])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => ['document' => ["The document extension ($extension) does not match the selected file type ($fileType)."]],
+                    'message' => 'Extension does not match file type.',
                 ], 422);
             }
 
-            // Verify storage directory
-            $storagePath = storage_path('app/public/documents');
-            if (!is_dir($storagePath)) {
-                if (!Storage::disk('public')->makeDirectory('documents')) {
-                    throw new \Exception('Failed to create storage directory: ' . $storagePath);
-                }
-            }
-            if (!is_writable($storagePath)) {
-                throw new \Exception('Storage directory is not writable: ' . $storagePath);
-            }
-
-            // Store the file
-            $file = $request->file('document');
             $path = $file->store('documents', 'public');
-            if (!$path) {
-                throw new \Exception('Failed to store the file in the documents directory.');
-            }
-
-            // Verify file exists
-            if (!Storage::disk('public')->exists($path)) {
-                throw new \Exception('File was not stored correctly at: ' . $path);
-            }
 
             $document = $course->documents()->create([
                 'title' => $validated['title'],
@@ -191,29 +91,22 @@ class CourseDocumentController extends Controller
                 'success' => true,
                 'message' => 'Document uploaded successfully',
                 'document' => $document,
-            ], 200);
-        } catch (ValidationException $e) {
-            Log::warning('Validation error during document upload', [
-                'errors' => $e->errors(),
-                'request' => $request->except('document'),
             ]);
+        } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Document upload error: ' . $e->getMessage(), [
-                'exception' => $e,
-                'request' => $request->except('document'),
-            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Server error occurred while uploading the document.',
-                'errors' => ['document' => ['Server error: ' . $e->getMessage()]],
+                'errors' => ['document' => [$e->getMessage()]],
             ], 500);
         }
     }
+
 
     /**
      * Show the form for editing a document.

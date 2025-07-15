@@ -188,6 +188,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('users/{user}/delete-modal', [App\Http\Controllers\UserController::class, 'deleteModal'])->name('users.delete-modal');
     Route::get('users/{user}/reset-password-modal', [App\Http\Controllers\UserController::class, 'resetPasswordModal'])->name('users.reset-password-modal');
     Route::resource('users', UserController::class);
+
+    // Feedback management routes
+    Route::get('/feedback', [App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::delete('/feedback/{id}', [App\Http\Controllers\FeedbackController::class, 'destroy'])->name('feedback.destroy');
 });
 
 Route::get('/phpinfo', function () {
