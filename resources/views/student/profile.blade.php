@@ -1,3 +1,6 @@
+@extends('layouts.student')
+@section('title', __('app.profile') . ' - ' . config('app.name', 'Akademi'))
+@section('content')
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -29,6 +32,9 @@
             --gradient-primary: linear-gradient(135deg, #1E3A8A 0%, #2DD4BF 100%);
             --gradient-secondary: linear-gradient(135deg, #F472B6 0%, #F9A8D4 100%);
         }
+        .navbar{
+            padding:1em;
+        }
 
         * {
             margin: 0;
@@ -43,33 +49,6 @@
             line-height: 1.5;
         }
 
-        .navbar {
-            background: var(--primary-color);
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: var(--white) !important;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: var(--white) !important;
-            font-weight: 500;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            transform: translateY(-2px);
-        }
 
         .main-content {
             padding: 2rem 0;
@@ -318,33 +297,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                {{ config('app.name', 'Akademi') }}
-            </a>
-            
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link me-3" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>
-                    {{ __('app.dashboard') }}
-                </a>
-                <a class="nav-link me-3" href="{{ route('student.courses') }}">
-                    <i class="fas fa-book me-1"></i>
-                    {{ __('app.courses') }}
-                </a>
-                <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="fas fa-sign-out-alt me-1"></i>
-                        {{ __('app.logout') }}
-                    </button>
-                </form>
-            </div>
-        </div>
-    </nav>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -487,3 +439,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+@endsection

@@ -797,12 +797,11 @@ body {
 .toggle-sidebar-btn {
     position: fixed;
     top: 1rem;
-    left: 1rem;
     z-index: 1001;
     background: var(--primary-color);
     color: white;
     border: none;
-    padding: 0.75rem;
+    padding: 10px;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);

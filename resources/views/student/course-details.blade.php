@@ -1,3 +1,6 @@
+@extends('layouts.student')
+@section('title', $course->title . ' - ' . config('app.name', 'Akademi'))
+@section('content')
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -52,138 +55,7 @@
             font-size: 16px;
         }
 
-        /* Navigation */
-        .navbar {
-            background: var(--bg-white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            gap: 0.75rem;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 800;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-link {
-            color: var(--text-muted);
-            font-weight: 500;
-            font-size: 0.875rem;
-            padding: 0.5rem 1rem;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-link:hover {
-            color: var(--primary-color);
-            background: var(--bg-light);
-        }
-
-        .nav-link.active {
-            color: var(--primary-color);
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .logout-btn {
-            background: var(--danger-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logout-btn:hover {
-            background: #dc2626;
-            transform: translateY(-1px);
-        }
-
-        /* Mobile Navigation */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.25rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--bg-white);
-                border-top: 1px solid var(--border-color);
-                flex-direction: column;
-                padding: 1rem;
-                gap: 0.5rem;
-            }
-            
-            .nav-links.show {
-                display: flex;
-            }
-            
-            .nav-link {
-                width: 100%;
-                justify-content: flex-start;
-            }
-        }
+        
 
         /* Main Container */
         .main-container {
@@ -697,43 +569,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <div class="logo">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <span>{{ config('app.name', 'Akademi') }}</span>
-            </a>
-            
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <div class="nav-links" id="navLinks">
-                <a class="nav-link" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home"></i>
-                    <span>{{ __('app.dashboard') }}</span>
-                </a>
-                <a class="nav-link active" href="{{ route('student.courses') }}">
-                    <i class="fas fa-book"></i>
-                    <span>{{ __('app.courses') }}</span>
-                </a>
-                <a class="nav-link" href="{{ route('student.profile') }}">
-                    <i class="fas fa-user"></i>
-                    <span>{{ __('app.profile') }}</span>
-                </a>
-                <form method="POST" action="{{ route('student.logout') }}" class="d-inline">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>{{ __('app.logout') }}</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </nav>
 
     <!-- Main Content -->
     <div class="main-container">
@@ -984,3 +819,4 @@
     </script>
 </body>
 </html>
+@endsection
