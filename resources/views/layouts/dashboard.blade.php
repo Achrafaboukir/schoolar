@@ -6,6 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Akademi') }} - @yield('page-title', 'Dashboard')</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('storage/logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('storage/logo.png') }}">
+    
     <!-- Preconnect to external domains for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,70 +46,70 @@
                         <span>{{ __('app.dashboard') }}</span>
                     </a>
                 </li>
+                @if(auth()->user()->hasPermission('access_students'))
                 <li class="nav-item {{ request()->is('students*') ? 'active' : '' }}">
-                    @if(auth()->user()->hasPermission('access_students'))
                     <a href="{{ url('/students') }}" class="nav-link">
                         <i class="fas fa-user-graduate"></i>
                         <span>{{ __('app.students') }}</span>
                     </a>
-                    @endif
                 </li>
+                @endif
+                @if(auth()->user()->hasPermission('access_teachers'))
                 <li class="nav-item {{ request()->is('teachers*') ? 'active' : '' }}">
-                    @if(auth()->user()->hasPermission('access_teachers'))
                     <a href="{{ url('/teachers') }}" class="nav-link">
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>{{ __('app.teachers') }}</span>
                     </a>
-                    @endif
                 </li>
+                @endif
+                @if(auth()->user()->hasPermission('access_groups'))
                 <li class="nav-item {{ request()->is('groups*') ? 'active' : '' }}">
-                    @if(auth()->user()->hasPermission('access_groups'))
                     <a href="{{ url('/groups') }}" class="nav-link">
                         <i class="fas fa-users"></i>
                         <span>{{ __('app.groups') }}</span>
                     </a>
-                    @endif
                 </li>
+                @endif
+                @if(auth()->user()->hasPermission('access_departments'))
                 <li class="nav-item {{ request()->is('departments*') ? 'active' : '' }}">
-                    @if(auth()->user()->hasPermission('access_departments'))
                     <a href="{{ url('/departments') }}" class="nav-link">
                         <i class="fas fa-building"></i>
                         <span>{{ __('app.departments') }}</span>
                     </a>
-                    @endif
                 </li>
+                @endif
+                @if(auth()->user()->hasPermission('access_users'))
                 <li class="nav-item {{ request()->is('users*') ? 'active' : '' }}">
-                    @if(auth()->user()->hasPermission('access_users'))
                     <a href="{{ url('/users') }}" class="nav-link">
                         <i class="fas fa-user"></i>
                         <span>{{ __('app.users') }}</span>
                     </a>
-                    @endif
                 </li>
+                @endif
+                @if(auth()->user()->hasPermission('access_roles'))
                 <li class="nav-item {{ request()->is('roles*') ? 'active' : '' }}">
-                    @if(auth()->user()->hasPermission('access_roles'))
                     <a href="{{ url('/roles') }}" class="nav-link">
                         <i class="fas fa-shield-alt"></i>
                         <span>{{ __('app.roles') }}</span>
                     </a>
-                    @endif
                 </li>
+                @endif
+                @if(auth()->user()->hasPermission('access_courses'))
                 <li class="nav-item {{ request()->is('courses*') ? 'active' : '' }}">
-                    @if(auth()->user()->hasPermission('access_courses'))
                     <a href="{{ url('/courses') }}" class="nav-link">
                         <i class="fas fa-book"></i>
                         <span>{{ __('app.courses') }}</span>
                     </a>
-                    @endif
                 </li>
+                @endif
+                @if(auth()->user()->hasPermission('access_feedbacks'))
                 <li class="nav-item {{ request()->is('feedback') ? 'active' : '' }}">
-                    @if(auth()->user()->hasPermission('access_feedbacks'))
                     <a href="{{ route('feedback.index') }}" class="nav-link">
                         <i class="fas fa-comment-dots"></i>
                         <span>Feedback</span>
                     </a>
-                    @endif
                 </li>
+                @endif
             </ul>
         </div>
 
@@ -131,7 +135,7 @@
                                 @elseif(app()->getLocale() == 'fr')
                                     <span class="flag-icon flag-icon-fr"></span>
                                 @elseif(app()->getLocale() == 'ar')
-                                    <span class="flag-icon flag-icon-sa"></span>
+                                    <span class="flag-icon flag-icon-ma"></span>
                                 @endif
                             </span>
                         </button>
@@ -155,7 +159,7 @@
                             </li>
                             <li>
                                 <a class="dropdown-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}" href="{{ route('language.switch', 'ar') }}">
-                                    <span class="flag-icon flag-icon-sa me-2"></span>{{ __('app.arabic') }}
+                                    <span class="flag-icon flag-icon-ma me-2"></span>{{ __('app.arabic') }}
                                     @if(app()->getLocale() == 'ar')
                                         <i class="fas fa-check ms-auto"></i>
                                     @endif

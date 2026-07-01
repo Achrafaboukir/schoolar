@@ -51,7 +51,11 @@
                     <td>{{ $feedback->course ? $feedback->course->title : __('app.not_specified') }}</td>
                     <td>
                         @if($feedback->is_anonymous)
-                            {{ __('dashboard.anonymous') }}
+                            @if(auth()->user()->hasPermission('delete_feedback'))
+                                {{ $feedback->student ? $feedback->student->full_name : __('app.not_specified') }}
+                            @else
+                                {{ __('app.anonymous') }}
+                            @endif
                         @elseif($feedback->student)
                             {{ $feedback->student->full_name }}
                         @else

@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'Schoolar') }} - @yield('title')</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('storage/logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('storage/logo.png') }}">
+    
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
