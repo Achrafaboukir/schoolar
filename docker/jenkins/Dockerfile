@@ -23,4 +23,6 @@ RUN apt-get update \
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
+RUN git config --system --add safe.directory '*'
+
 USER jenkins
