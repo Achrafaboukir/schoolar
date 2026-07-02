@@ -61,5 +61,13 @@ pipeline {
                 sh 'php artisan test'
             }
         }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    sh 'sonar-scanner -Dsonar.host.url=http://sonarqube:9000 -Dsonar.token=$SONAR_TOKEN'
+                }
+            }
+        }
     }
 }

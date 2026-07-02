@@ -101,6 +101,8 @@ The Docker setup starts:
 - `nginx`: web server pointing to Laravel's `public` directory
 - `mysql`: MySQL 8.4 with a persisted `schoolar` database
 - `jenkins`: Jenkins LTS for CI jobs
+- `sonarqube`: SonarQube Community for code quality analysis
+- `sonar_db`: PostgreSQL database used by SonarQube
 
 The app uses `.env.docker` inside Docker. If you imported an existing database, keep automatic migrations disabled:
 ```env
@@ -124,12 +126,53 @@ Get the first admin password:
 docker compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
-This repository includes a basic `Jenkinsfile` that installs Composer dependencies, installs Node dependencies, builds Vite assets, and runs Laravel tests.
+This repository includes a `Jenkinsfile` that installs Composer dependencies, installs Node dependencies, builds Vite assets, runs Laravel tests, and sends analysis to SonarQube.
+
+### SonarQube
+
+SonarQube is available at:
+```text
+http://localhost:9000
+```
+
+Default login:
+```text
+Username: admin
+Password: admin
+```
+
+On first login, SonarQube asks you to change the admin password.
+
+Create a project/token:
+
+1. Open SonarQube at `http://localhost:9000`.
+2. Create a local project with project key:
+```text
+schoolar
+```
+3. Generate a token for analysis.
+4. In Jenkins, add a credential:
+```text
+Kind: Secret text
+Secret: <your SonarQube token>
+ID: sonarqube-token
+Description: SonarQube token for Schoolar
+```
+
+The SonarQube scanner configuration lives in `sonar-project.properties`.
+
+If SonarQube restarts with an H2 database error after changing versions, reset only the SonarQube volumes. Do not use `docker compose down -v` unless you also want to delete the MySQL database volume.
+```bash
+docker compose stop sonarqube
+docker volume rm schoolar_sonarqube_data schoolar_sonarqube_extensions schoolar_sonarqube_logs
+docker compose up -d sonarqube sonar_db
+```
 
 Useful commands:
 ```bash
 docker compose exec app php artisan migrate
 docker compose exec app php artisan test
+docker compose up -d --build jenkins sonarqube
 docker compose down
 docker compose down -v
 ```
