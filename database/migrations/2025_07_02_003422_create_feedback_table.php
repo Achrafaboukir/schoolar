@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('student_id');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+            $table->integer('course_id');
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->string('title');
             $table->text('content');
             $table->integer('rating')->default(5); // 1-5 rating

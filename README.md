@@ -81,6 +81,59 @@ chmod -R 755 uploads
 
 7. Configure your web server to point to the `public` directory.
 
+## Docker Setup
+
+You can run the app with Docker instead of installing PHP, Composer, Node, and MySQL locally.
+
+1. Build and start the containers:
+```bash
+docker compose up --build
+```
+
+2. Open the app:
+```text
+http://localhost:8000
+```
+
+The Docker setup starts:
+
+- `app`: PHP 8.3 FPM with Composer dependencies installed
+- `nginx`: web server pointing to Laravel's `public` directory
+- `mysql`: MySQL 8.4 with a persisted `schoolar` database
+- `jenkins`: Jenkins LTS for CI jobs
+
+The app uses `.env.docker` inside Docker. If you imported an existing database, keep automatic migrations disabled:
+```env
+RUN_MIGRATIONS=false
+```
+
+### Jenkins
+
+Jenkins is available at:
+```text
+http://localhost:8080
+```
+
+Start Jenkins with the rest of the project:
+```bash
+docker compose up -d --build
+```
+
+Get the first admin password:
+```bash
+docker compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+This repository includes a basic `Jenkinsfile` that installs Composer dependencies, installs Node dependencies, builds Vite assets, and runs Laravel tests.
+
+Useful commands:
+```bash
+docker compose exec app php artisan migrate
+docker compose exec app php artisan test
+docker compose down
+docker compose down -v
+```
+
 ## API Documentation
 
 ### Authentication
