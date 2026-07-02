@@ -8,9 +8,6 @@ pipeline {
                 sh 'git config --global --add safe.directory "$WORKSPACE"'
                 sh 'cp .env.docker .env'
                 sh 'grep -q "^APP_KEY=" .env || printf "\\nAPP_KEY=\\n" >> .env'
-                sh 'php artisan key:generate --force'
-                sh 'php artisan config:clear'
-                sh 'php artisan cache:clear'
             }
         }
 
@@ -35,6 +32,14 @@ pipeline {
         stage('Install PHP Dependencies') {
             steps {
                 sh 'composer install --no-interaction --prefer-dist'
+            }
+        }
+
+        stage('Prepare Laravel') {
+            steps {
+                sh 'php artisan key:generate --force'
+                sh 'php artisan config:clear'
+                sh 'php artisan cache:clear'
             }
         }
 
